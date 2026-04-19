@@ -1,0 +1,242 @@
+# =============================================================================
+# UPR — .gitignore
+# -----------------------------------------------------------------------------
+# Список файлов и папок, которые Git НЕ должен сохранять в репозиторий.
+# Состав сделан под наш стек из docs/stack.md:
+#   - Мобильное приложение: Flutter (Dart)
+#   - Бэкенд: Python + FastAPI
+#   - БД на MVP: SQLite (один файл на диске)
+#   - Хранилище видео на MVP: локальная папка
+#
+# Принцип: «нужное сейчас» + «заложено на будущее, чтобы потом ничего не
+# протекло в репо в первый же день, когда появится код».
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# macOS — системный мусор
+# -----------------------------------------------------------------------------
+# macOS незаметно создаёт эти файлы в каждой папке (миниатюры, метаданные).
+# В репозиторий им не место.
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.fseventsd
+.TemporaryItems
+
+
+# -----------------------------------------------------------------------------
+# IDE и редакторы — личные настройки разработчика
+# -----------------------------------------------------------------------------
+# У каждого разработчика своя IDE и свои настройки. В репо их не тащим.
+.idea/
+*.iml
+*.iws
+.vscode/
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
+.history/
+.ionide/
+
+# Cursor IDE: правила проекта (.cursor/rules/) и AGENTS.md — ОСТАВЛЯЕМ
+# в репозитории, они общие для всех агентов и людей.
+# Здесь игнорируем только локальные логи/кэш Cursor, если появятся.
+.cursor/logs/
+
+
+# -----------------------------------------------------------------------------
+# Секреты, ключи, переменные окружения
+# -----------------------------------------------------------------------------
+# КРИТИЧЕСКИ ВАЖНО: ключи к AI-провайдерам (Gemini), пароли к БД,
+# токены — НИКОГДА не коммитим. Хранятся в .env локально и в секрет-хранилище.
+.env
+.env.*
+!.env.example
+!.env.template
+*.pem
+*.key
+*.pfx
+*.p12
+*.crt
+*.cer
+secrets/
+secrets.json
+credentials.json
+
+
+# -----------------------------------------------------------------------------
+# Python (бэкенд: FastAPI, SQLAlchemy и т.п.)
+# -----------------------------------------------------------------------------
+# Скомпилированный байткод, виртуальные окружения, кэши.
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Виртуальные окружения (изолированный «питон» под проект).
+# Названия популярных:
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# Установленные пакеты и сборки.
+*.egg
+*.egg-info/
+.eggs/
+build/
+dist/
+wheels/
+share/python-wheels/
+pip-wheel-metadata/
+*.manifest
+*.spec
+
+# Тесты и линтеры.
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+dmypy.json
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+nosetests.xml
+.cache/
+
+# Jupyter / IPython (если будет использоваться для экспериментов с AI).
+.ipynb_checkpoints/
+profile_default/
+ipython_config.py
+
+
+# -----------------------------------------------------------------------------
+# Flutter / Dart (мобильное приложение)
+# -----------------------------------------------------------------------------
+# Источник: официальный шаблон Flutter .gitignore.
+# Эти файлы создаются командой `flutter` автоматически — в репо им не место.
+
+# Общее
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+.metadata
+
+# Сгенерированные локальные настройки
+**/generated_plugin_registrant.*
+**/generated/
+
+# Покрытие тестами
+coverage/
+
+# Web (если включится Flutter Web)
+lib/generated_plugin_registrant.dart
+
+# iOS — личные/сгенерированные файлы Xcode
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets/
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Podfile.lock
+**/ios/build/
+**/ios/DerivedData/
+**/ios/*.xcworkspace/xcuserdata/
+**/ios/*.xcodeproj/xcuserdata/
+**/ios/*.xcodeproj/project.xcworkspace/xcuserdata/
+
+# Android — личные/сгенерированные файлы Gradle
+**/android/**/gradle-wrapper.jar
+**/android/.gradle
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.java
+**/android/key.properties
+**/android/app/debug
+**/android/app/profile
+**/android/app/release
+
+
+# -----------------------------------------------------------------------------
+# Базы данных
+# -----------------------------------------------------------------------------
+# SQLite — главный файл БД на MVP. Содержит данные пользователя,
+# в репо его класть нельзя (и из-за приватности, и из-за бинарности).
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-shm
+*.db-wal
+
+
+# -----------------------------------------------------------------------------
+# Хранилище загруженных видео (локальная папка на MVP)
+# -----------------------------------------------------------------------------
+# На MVP видео пользователя лежат в локальной папке (см. stack.md
+# → «Хранилище видео»). В репо их класть нельзя.
+storage/
+uploads/
+media/
+videos/
+tmp/
+temp/
+
+
+# -----------------------------------------------------------------------------
+# Логи
+# -----------------------------------------------------------------------------
+*.log
+logs/
+log/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+# -----------------------------------------------------------------------------
+# Прочее
+# -----------------------------------------------------------------------------
+# Временные файлы редакторов
+*~
+*.swp
+*.swo
+*.bak
+*.orig
+
+# Архивы (обычно случайно)
+*.zip
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+# Системное / Windows (на всякий, если кто-то будет работать с Windows)
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
