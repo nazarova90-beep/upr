@@ -2,7 +2,7 @@
 status: in-progress
 last_updated: 2026-04-19
 owner: Кристина
-related: ../index.md, mvp-product-spec.md, ../../product.md, ../../product-specs/product.md, ../../stack.md, ../../../ARCHITECTURE.md, ../../ui/index.md, ../../design-docs/core-beliefs.md
+related: ../index.md, mvp-product-spec.md, ../../product.md, ../../product-specs/product.md, ../../product-specs/exercises-base.md, ../../product-specs/workout.md, ../../user-flows/upload-video-and-get-feedback.md, ../../stack.md, ../../../ARCHITECTURE.md, ../../ui/index.md, ../../design-docs/core-beliefs.md
 ---
 
 # UPR — Roadmap (главный план верхнего уровня)
@@ -291,6 +291,7 @@ flowchart TD
 | 2026-04-19 | По умолчанию **дневник подходов (вес × повторения)** не входит в Single-scenario MVP — переезжает в Фазу 4. | Уточняющий вопрос в чате; ответ B. |
 | 2026-04-19 | Из списка упражнений на экране тренировки **переход сразу в чат** этого упражнения. **Никакого промежуточного «экрана упражнения»** с описанием техники / дневником / отдельной кнопкой загрузки видео — нет. Чат и есть «экран упражнения»; кнопка «загрузить видео» живёт прямо в чате (как аттач). Это сокращает Single-scenario MVP до **двух главных экранов**: экран тренировки и экран чата. Описание техники упражнения — Post-MVP / Фаза 4 (либо как отдельный экран, либо как первое системное сообщение в чате — решим там). | Чат, уточнение от 2026-04-19. |
 | 2026-04-19 | В Single-scenario MVP **нет съёмки видео внутри приложения** — только подгрузка уже готового файла из галереи устройства через системный пикер. Это убирает из скоупа: интеграцию с камерой, превью записи, разрешения на камеру, обработку прерываний во время записи. Юзер снимает видео сторонней камерой телефона до прихода в приложение. Возврат in-app съёмки — не раньше Фазы 4. | Чат, уточнение от 2026-04-19. |
+| 2026-04-19 | **Track A Фазы 1 закрыт.** Зафиксированы: 3 стартовых упражнения (`romanian_deadlift`, `lat_pulldown_to_chest`, `dumbbell_biceps_curl`) с минимальным набором полей (`id`, `name`, `technique`); единственная захардкоженная тренировка «Вайбкодинговая тренировка» от 19.04.2026 с описанной анатомией экрана и карточки; единственный user flow `upload-video-and-get-feedback.md`; врезки «Single-scenario MVP: что упрощено» добавлены в approved-документы `exercise-chat.md` и `videosinstruction.md`. Чат имеет два состояния (пустой / активный), второе включается после первого ответа AI. Загрузка видео — instant send без промежуточного экрана-превью. Готово к старту Track B (мокапы 2 экранов + поп-ап). | `docs/product-specs/exercises-base.md`, `docs/product-specs/workout.md`, `docs/user-flows/upload-video-and-get-feedback.md`, врезки в `docs/product-specs/exercise-chat.md` и `docs/product-specs/videosinstruction.md`, галочки в `docs/exec-plans/active/mvp-product-spec.md`. |
 
 ---
 

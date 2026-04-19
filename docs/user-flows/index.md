@@ -1,8 +1,8 @@
 ---
 status: in-progress
-last_updated: 2026-04-18
+last_updated: 2026-04-19
 owner: Кристина
-related: ../product-specs/index.md, ../ui/index.md
+related: ../product-specs/index.md, ../ui/index.md, ../exec-plans/active/roadmap.md
 ---
 
 # User Flows — оглавление
@@ -17,17 +17,25 @@ related: ../product-specs/index.md, ../ui/index.md
 
 | Файл | Сценарий | Статус |
 |---|---|---|
-| `onboarding.md` | Первый вход в приложение, регистрация, сбор стартовых данных | TBD |
+| `upload-video-and-get-feedback.md` | **Главный сценарий Single-scenario MVP**: открыл приложение → экран тренировки → тап по упражнению → чат → загрузить видео из галереи → ответ AI → уточняющий вопрос. | in-progress (MVP-версия закрыта) |
+| `onboarding.md` | Первый вход в приложение, регистрация, сбор стартовых данных. **Не входит в Single-scenario MVP** — переезжает в Фазу 5 [`roadmap.md`](../exec-plans/active/roadmap.md) (закрытое тестирование). | TBD |
 
-### Будущие сценарии (TBD)
+### Будущие сценарии (TBD, по фазам [`roadmap.md`](../exec-plans/active/roadmap.md))
+
+**Фаза 5 (закрытое тестирование, регистрация):**
 
 - `login.md` — вход существующего юзера.
 - `registration.md` — регистрация (если выделим из онбординга).
-- `start-workout.md` — старт тренировки и прохождение её до конца.
-- `upload-video-and-get-feedback.md` — главный сценарий разбора видео.
-- `manage-subscription.md` — оформление и отмена подписки.
 - `delete-account.md` — удаление аккаунта.
 - `password-reset.md` — восстановление пароля.
+
+**Фаза 4 (расширение до Full MVP):**
+
+- `start-workout.md` — старт тренировки и прохождение её до конца (с дневником подходов, на 20 упражнениях).
+
+**Фаза 7 (монетизация):**
+
+- `manage-subscription.md` — оформление и отмена подписки.
 
 ## Шаблон документа сценария
 

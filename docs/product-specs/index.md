@@ -2,7 +2,7 @@
 status: in-progress
 last_updated: 2026-04-19
 owner: Кристина
-related: ../../AGENTS.md, ../PRODUCT_SENSE.md, ../product.md
+related: ../../AGENTS.md, ../PRODUCT_SENSE.md, ../product.md, ../exec-plans/active/roadmap.md
 ---
 
 # Product Specs — оглавление
@@ -18,10 +18,10 @@ related: ../../AGENTS.md, ../PRODUCT_SENSE.md, ../product.md
 | Файл | О чём | Статус |
 |---|---|---|
 | `product.md` | Верхнеуровневый обзор продукта (концепция, ЦА, MVP, конкуренты, риски) | approved (черновик MVP) |
-| `exercise-chat.md` | Главная фича — чат с упражнением | approved |
-| `videosinstruction.md` | Работа с видео: загрузка, анализ, ошибки, очередь, хранение | approved |
-| `exercises-base.md` | База 20 упражнений MVP | TBD |
-| `workout.md` | Тренировка и тренировочный дневник | TBD |
+| `exercise-chat.md` | Главная фича — чат с упражнением. Approved для Full MVP; в начале файла врезка «Single-scenario MVP: что упрощено» | approved |
+| `videosinstruction.md` | Работа с видео: загрузка, анализ, ошибки, очередь, хранение. Approved для Full MVP; в начале файла врезка «Single-scenario MVP: что упрощено» | approved |
+| `exercises-base.md` | База упражнений. Раздел «MVP: 3 стартовых упражнения» утверждён (Track A Фазы 1); раздел Full MVP (20 упражнений) — заглушка для Фазы 4 | in-progress (MVP-раздел готов) |
+| `workout.md` | Тренировка. Раздел «MVP: единственная захардкоженная тренировка» утверждён (Track A Фазы 1); Full MVP (workout builder, дневник подходов и т.д.) — заглушка для Фазы 4 | in-progress (MVP-раздел готов) |
 
 ## Связанные папки
 
