@@ -1,6 +1,6 @@
 ---
 status: in-progress
-last_updated: 2026-04-19
+last_updated: 2026-04-27
 owner: Кристина
 related: ../../AGENTS.md, tech-debt-tracker.md, active/roadmap.md
 ---
@@ -30,6 +30,7 @@ related: ../../AGENTS.md, tech-debt-tracker.md, active/roadmap.md
 
 - **`active/roadmap.md`** — главный план верхнего уровня (Roadmap). Зафиксирован 2026-04-19.
 - **`active/mvp-product-spec.md`** — проработка продуктовой спецификации MVP. **Является частью Фазы 1 / Track A** в roadmap.
+- **`active/phase1-track-c-skeleton.md`** — структурный скелет проектов `backend/` и `mobile/`. **Track C Фазы 1** в roadmap. Запущен 2026-04-27.
 
 ## Завершённые планы
 
