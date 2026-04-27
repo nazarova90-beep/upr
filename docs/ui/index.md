@@ -1,41 +1,35 @@
 ---
 status: in-progress
-last_updated: 2026-04-19
+last_updated: 2026-04-27
 owner: Кристина
 related: ../user-flows/index.md, ../FRONTEND.md, design-system/README.md
 ---
 
-# UI — дизайн и визуал
+# UI
 
-Здесь хранится всё, что связано с **визуальной частью** приложения: дизайн-система, мокапы экранов, иконки, иллюстрации, стилевые правила.
+Visual layer: design system, screen mockups, icons, illustrations, style rules.
 
-## Статус
+## Status
 
-**Дизайн-система Lucent загружена в проект** (HTML + CSS, статус — draft). Лежит в `design-system/`. Это «исходник правды по визуалу». Перенос значений в код мобильного приложения (React Native + Expo, TypeScript — см. `../FRONTEND.md`) — будет отдельной задачей, когда начнём писать приложение: значения из `style.css` переедут в `theme.ts` как константы для `StyleSheet`. Подробнее — `design-system/README.md`.
+Lucent design system loaded in project (HTML + CSS, draft) at `design-system/`. Source of truth for visuals. Code transfer (`style.css` → `theme.ts` constants for React Native `StyleSheet`) — separate task. Details: `design-system/README.md`.
 
-Мокапы экранов и описание компонентов — пока не начаты, появятся по мере проработки сценариев.
+Screen mockups and component spec — not started; arrive with scenario work.
 
-## Структура папки
+## Folder structure
 
-| Подпапка / файл | Статус | Что внутри |
+| Path | Status | Contents |
 |---|---|---|
-| `design-system/` | **есть (draft)** | Стайл-гайд **Lucent**: `index.html` (живой превью в браузере), `style.css` (дизайн-токены), `Lucent.png` (обложка бренда). Подробности — `design-system/README.md`. |
-| `components.md` | TBD | Описание UI-компонентов (кнопки, карточки, инпуты) — отдельным документом, со ссылками на `design-system/`. |
-| `mockups/` | TBD | Скриншоты / Figma-ссылки на мокапы экранов. |
-| `flows-visual/` | TBD | Визуальные диаграммы пользовательских сценариев. |
-| `voice-and-tone.md` | TBD | Принципы текстов в интерфейсе (как говорим с юзером). |
+| `design-system/` | draft | Lucent style guide: `index.html` (browser preview), `style.css` (design tokens), `Lucent.png` (brand cover). See `design-system/README.md`. |
+| `components.md` | TBD | UI component spec (buttons, cards, inputs), references `design-system/`. |
+| `mockups/` | TBD | Mockup screenshots / Figma links. |
+| `flows-visual/` | TBD | Visual user-flow diagrams. |
+| `voice-and-tone.md` | TBD | UI text principles. |
 
-## Принципы (предварительные)
+## Principles
 
-1. **Минимализм.** Один экран — одно главное действие.
-2. **Большие тапабельные зоны.** Юзер в зале, потные руки, плохой свет.
-3. **Тёмная тема обязательна.** Зал часто плохо освещён, телефон в карман — глаза не слепит.
-4. **Без агрессивной геймификации.** Никаких блестящих значков «GG WP», уровней «Pro Lifter» и т.п. Спокойный поддерживающий тон.
-5. **Доступность (a11y).** Хороший контраст, поддержка крупного шрифта, VoiceOver/TalkBack.
-6. **Язык UI в MVP — русский; тексты готовим «переводимо».** Все пользовательские строки считаем будущими ключами локализации: избегать непереводимых каламбуров там, где можно; длины кнопок закладывать с запасом (другие языки часто длиннее). Политика продукта: `../product.md` → «Язык интерфейса»; реализация: `../FRONTEND.md` → «Язык интерфейса и локализация».
-
-## Связанные документы
-
-- `../user-flows/` — что мы визуализируем.
-- `../FRONTEND.md` — техническая часть мобильного приложения.
-- `../product.md` → раздел «Принципы продуктовых решений».
+1. **Minimalism.** One screen = one primary action.
+2. **Large tap targets.** Gym context: sweaty hands, poor light.
+3. **Dark theme required.** Gym lighting, phone in pocket — no eye-strain.
+4. **No aggressive gamification.** Calm, supportive tone. No "GG WP" badges, no "Pro Lifter" levels.
+5. **Accessibility (a11y).** Sufficient contrast, large-font support, VoiceOver / TalkBack.
+6. **MVP UI language — Russian; strings prepared as translatable.** All user-facing strings = future localization keys: avoid untranslatable wordplay where possible; size buttons with slack for longer languages. Policy: `../product.md`. Implementation: `../FRONTEND.md`.

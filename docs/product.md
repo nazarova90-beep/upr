@@ -5,298 +5,241 @@ owner: Кристина
 related: ../README.md, stack.md, exec-plans/active/roadmap.md, product-specs/index.md, user-flows/index.md, ui/index.md
 ---
 
-# UPR — продукт целиком
+# UPR — product
 
-Это **единственный** документ верхнего уровня по продукту: концепция, аудитория, рынок, MVP-скоуп, монетизация, риски и принципы продуктовых решений. Раньше эта информация была раскидана по трём файлам (`product.md`, `product-specs/product.md`, `PRODUCT_SENSE.md`) — теперь всё здесь.
+Single top-level product document: concept, audience, market position, MVP scope, monetization, risks, decision principles.
 
-**Что НЕ входит в этот файл:** пошаговые сценарии (`user-flows/`), макеты экранов (`ui/`), детальные спецификации фич (`product-specs/exercise-chat.md`, `videosinstruction.md`, `exercises-base.md`, `workout.md`), технологический стек (`stack.md`), архитектура (`../ARCHITECTURE.md`).
+Out of scope here: step-by-step scenarios (`user-flows/`), screen mockups (`ui/`), per-feature specs (`product-specs/exercise-chat.md`, `videosinstruction.md`, `exercises-base.md`, `workout.md`), stack (`stack.md`), architecture (`../ARCHITECTURE.md`).
 
----
+## 1. One-liner
 
-## 1. Продукт в одном предложении
+Mobile AI coach for strength-exercise technique. User submits a set video → AI returns review and continues per-exercise dialogue. Per-exercise chat persists technique history over time.
 
-UPR — **мобильный AI-тренер по технике силовых упражнений** для людей, которые тренируются в зале сами: пользователь передаёт запись выполнения упражнения, получает разбор и продолжает диалог в привязке к **конкретному упражнению** так, что история техники накапливается во времени, а не сбрасывается после каждого разбора.
+## 2. Problem and JTBD
 
-> Снял подход на телефон → загрузил в приложение → получил разбор техники от AI-тренера в чате → исправил ошибки → стал лучше.
+**Problem:** gym beginner can't see themselves, uncertain about technique, fears injury and wasted effort. Live trainer is inaccessible / undesirable / distrusted for part of the audience.
 
----
+**Job-to-be-done:** deliver accessible, in-the-moment, personally accumulating technique feedback close in spirit to a trainer conversation, with continuity per exercise.
 
-## 2. Проблема и «работа, которую нанимают»
+## 3. Target audience
 
-**Проблема:** новичок в зале не видит себя со стороны, не уверен в технике, боится травм и бессмысленных усилий; живой тренер для части аудитории **недоступен, нежелатен или вызывает недоверие**.
+- **Age:** 18+ only. Upper reference ~49; no hard upper bound. Under-18 not in audience and cannot register. Deliberate strategic decision excluding minor data / media legal risk.
+- **Gender:** men and women, no narrow gender niche.
+- **Experience:** primarily beginners with technique-confidence deficit.
+- **Context:** strength exercises in a gym; MVP focuses on a limited exercise set.
+- **Behavioral cut:** part of audience avoids in-person trainer help due to embarrassment, cost, schedule, or competence doubts. Product positioned as safe alternative to in-person contact, not as replacement for all trainers.
 
-**Работа продукта:** дать **доступную, в моменте понятную и персонально накопительную** обратную связь по технике, близкую по духу к разговору с тренером, с возможностью уточнять и возвращаться к теме того же упражнения позже — без обязательности строить отношения с персоналом зала.
+## 4. Market and niche
 
----
+Market contains apps with **video-based technique scoring** (narrow-specialized and broad-coverage) and **strong workout journals** without deep video analysis.
 
-## 3. Целевая аудитория
+**Observation:** competitors typically offer a one-shot transaction (upload → score → forget). No accumulated context per movement.
 
-- **Возраст:** **только совершеннолетние пользователи — от 18 лет.** Верхний ориентир — около 49 лет; жёсткий верхний порог не устанавливается. Лица младше 18 лет **не входят** в целевую аудиторию и не должны иметь возможности зарегистрироваться. Это **сознательное стратегическое решение** для исключения юридических рисков, связанных с обработкой данных и медиа-материалов несовершеннолетних.
-- **Пол:** мужчины и женщины, без узкой гендерной ниши.
-- **Опыт:** преимущественно **новички**, ощущающие дефицит уверенности в технике.
-- **Контекст:** силовые упражнения в тренажёрном зале; фокус MVP — **ограниченный набор упражнений**.
-- **Поведенческий срез:** часть пользователей **избегает** очной помощи зал-тренеров из-за стеснения, стоимости, графика или **сомнений в компетенции** — продукт позиционируется как **безопасная альтернатива** очному контакту, а не как «замена всем тренерам».
+**Niche:** chat-first experience with **per-exercise long-term memory**; Russian-speaking beginners; honesty about AI limits; ladder to live trainer for trust and monetization.
 
----
+### Competitors and positioning
 
-## 4. Рыночный контекст и наша ниша
+**Direct (AI video analysis):**
+- Gymscore — market leader, 2500+ exercises, 0–100 score.
+- Formax — iPhone-only, 4-parameter analysis.
+- IronCoach — narrow niche (3 exercises).
+- Perfect Form — 3D pose analysis.
+- Bench Only — web app on GPT-4o vision.
 
-Рынок уже содержит приложения с **оценкой техники по видео** (узкоспециализированные и крупные по охвату упражнений), а также сильные **дневники тренировок** без глубокого разбора видео.
+**Indirect (workout journals without AI):** Hevy, Strong, Fitbod, JEFIT.
 
-**Наблюдение:** у конкурентов разбор обычно — **разовая транзакция** («загрузил → получил оценку → забыл»), без накопительного контекста по конкретному движению.
+**UPR position:** chat-first AI coach for Russian-speaking beginners with persistent per-exercise memory; live human trainer hookup option in v2+.
 
-**Наша ниша:** «чат-первый» опыт с **долговременной памятью по упражнению**, ориентация на **русскоязычных** новичков, честность про ограничения AI и **путь к живому человеку** как к усилению доверия и монетизации.
+## 5. Central product thesis
 
-### Конкуренты и позиционирование
+1. **Technique > workout-completion check.** Core value is movement confidence, not weight/rep tracking.
+2. **Per-exercise memory is a strategic asset.** One persistent channel per exercise improves both advice quality and return habit.
+3. **Trust is layered:** AI quality + emotional safety + data transparency + (optional) human verification.
+4. **In-gym speed and relevance** > daily content feed. Used between sets and after training, not as a daily app.
 
-**Прямые (AI-разбор по видео):**
-- **Gymscore** — лидер рынка, 2500+ упражнений, оценка 0–100.
-- **Formax** — iPhone-only, разбор по 4 параметрам.
-- **IronCoach** — узкая ниша (3 упражнения).
-- **Perfect Form** — 3D-анализ позы.
-- **Bench Only** — веб-приложение на GPT-4o vision.
+## 6. Strategic pillars
 
-**Косвенные (дневники тренировок без AI):** Hevy, Strong, Fitbod, JEFIT.
-
-**Позиция UPR:** «чат-первый» AI-тренер для русскоязычных новичков, с **«вечной памятью»** по каждому упражнению и опцией подключения живого человека-тренера в v2+.
-
----
-
-## 5. Центральный продуктовый тезис
-
-1. **Техника важнее галочки «тренировка сделана».** Главная ценность — уверенность в движении, а не только учёт веса и повторений.
-2. **Память по упражнению — стратегический актив.** Один долгоживущий канал общения по каждому упражнению усиливает и качество советов, и привычку возвращаться.
-3. **Доверие строится слоями:** качество AI, эмоциональная безопасность, прозрачность про данные, опционально — **человеческое подтверждение**.
-4. **Скорость и уместность в зале** важнее «объёма ленты контента»: продукт хорошо работает **в моменты паузы между подходами** и **после тренировки**, а не в режиме «ежедневной соцсети».
-
----
-
-## 6. Стратегические столпы
-
-| Столп | Смысл |
-|-------|--------|
-| **Разбор техники** | Ядро ценности: осмысленный ответ на запись выполнения, с визуальной привязкой к ошибке там, где это возможно. |
-| **Диалог и накопление контекста** | Не одноразовый отчёт, а продолжение разговора по тому же упражнению с историей. |
-| **Дневник как опора** | Базовый учёт тренировки создаёт точку, где возникает запрос «проверь именно это движение сейчас». |
-| **Доверие и безопасность** | И перцепция («меня не осудят»), и реальность (данные, согласия, удаление, минимизация). |
-| **Честность AI** | Не выдавать уверенность там, где её нет; обрабатывать несоответствие упражнения и записи. |
-| **Маршрут к человеку** | Лестница от «только AI» до «человек ведёт оценку, AI — вспомогательно». |
-
----
-
-## 7. Главные сущности продукта
-
-- **Упражнение** — единица из каталога (например, «Приседания со штангой»). У каждого упражнения есть описание техники и собственный чат с AI.
-- **Каталог упражнений** — набор движений в приложении. На MVP — **20** самых популярных силовых упражнений (детально: `product-specs/exercises-base.md`).
-- **Тренировка** — список упражнений на одну сессию в зале. Юзер собирает её сам из каталога (`product-specs/workout.md`).
-- **Подход (Set)** — вес × повторения внутри упражнения.
-- **Чат, привязанный к упражнению** — главная фича: бессрочная переписка с AI по конкретному движению (`product-specs/exercise-chat.md`).
-- **Видео подхода** — то, что юзер отправляет на разбор (`product-specs/videosinstruction.md`).
-- **Тариф и память переписки** — бесплатный уровень с ограниченным горизонтом хранения сообщений vs платный с расширенным.
-
----
-
-## 8. Главный пользовательский сценарий (Full MVP)
-
-> На текущей фазе мы делаем **сужённую версию** этого сценария — Single-scenario MVP. Что именно сужено и почему — в `exec-plans/active/roadmap.md` → раздел 3.
-
-1. Юзер открывает приложение → выбирает свою тренировку → жмёт **«Начать тренировку»**.
-2. Видит список упражнений в этой тренировке.
-3. Тыкает на упражнение → попадает на экран упражнения с описанием техники, дневником подходов (вес × повторения) и кнопкой **«Загрузить видео»**.
-4. Снимает или выбирает видео → пишет необязательный комментарий («проверь глубину») → **«Отправить на разбор»**.
-5. Открывается чат, AI присылает разбор: текст в стиле живого тренера + размеченный кадр из видео.
-6. Юзер задаёт уточняющие вопросы, продолжает переписку, при желании отправляет следующее видео в этот же чат.
-7. Возвращается к тренировке, делает следующее упражнение.
-
----
-
-## 9. Что входит в Full MVP
-
-### Функции
-- Каталог **20 силовых упражнений** с описанием техники.
-- Сборка собственной тренировки из каталога.
-- Прохождение тренировки: дневник подходов (вес × повторения).
-- Чат с AI-тренером по каждому упражнению (один чат = одно упражнение, бессрочно).
-- Загрузка одного видео подхода.
-- Разбор видео AI: текст + размеченный кадр.
-- Распознавание упражнения на видео и проверка соответствия чату.
-- Двухэтапная проверка качества видео (на устройстве + AI).
-- Уточняющие вопросы текстом в чате.
-- Хранение истории сообщений: **2 месяца** на бесплатном тарифе, **бессрочно** на платной подписке.
-
-### Платформы
-- iOS и Android (через React Native + Expo — см. `stack.md`).
-
-### Язык интерфейса
-- **MVP:** интерфейс и ответы AI — **на русском**.
-- **Закладка:** мультиязычность с первого дня кода (i18n через `i18next`); второй язык в релиз MVP не входит.
-
-### Ограничения MVP
-- В дневнике — только **вес и повторения** (никаких RPE, темпа, времени отдыха).
-- Только **одно видео за раз** на разбор.
-- **Один анализ в очереди** на пользователя.
-- Юзер ждёт ответа в чате (поле ввода заблокировано). Никаких плавающих индикаторов.
-- Без push-уведомлений.
-
----
-
-## 10. Что отложено на v2+
-
-| Что | Когда |
+| Pillar | Meaning |
 |---|---|
-| Подключение **живого тренера-человека** в чат — по интервью ЦА это ядро доверия и монетизации (приглашение в чат / лимит в подписке / база тренеров / супер-премиум) | v2+, поэтапно |
-| Плавающая кнопка-индикатор анализа поверх экранов | v2 |
-| Push-уведомления о готовности разбора | v2 |
-| Сравнение нескольких видео в одном разборе | v2 |
-| Дополнительные метрики (RPE, темп, время отдыха) | v2+ |
-| Расширение базы упражнений | постепенно |
-| Социальные фичи, лента прогресса | TBD |
-| Готовые программы тренировок | TBD |
+| Technique analysis | Substantive answer to a recorded set, with visual error markup where possible. |
+| Dialogue and accumulated context | Not a one-shot report — ongoing exercise-specific conversation with history. |
+| Set log | Basic workout tracking creates the moment "check this movement now". |
+| Trust and safety | Both perception ("won't be judged") and reality (data, consent, deletion, minimization). |
+| AI honesty | Don't fake confidence; handle exercise/recording mismatch. |
+| Path to human | Ladder from AI-only to human-led with AI assist. |
 
----
+## 7. Core entities
 
-## 11. AI: роль и качество
+- **Exercise** — catalog item (e.g. "Romanian deadlift"). Each has technique description and dedicated AI chat.
+- **Exercise catalog** — set of movements. MVP: 20 most-popular strength exercises (`product-specs/exercises-base.md`).
+- **Workout** — list of exercises for one gym session. User-built (`product-specs/workout.md`).
+- **Set** — weight × reps within an exercise.
+- **Per-exercise chat** — persistent AI conversation per movement (`product-specs/exercise-chat.md`).
+- **Set video** — submitted recording (`product-specs/videosinstruction.md`).
+- **Tier and chat retention** — free tier with limited message horizon vs paid with extended.
 
-AI — **не оракул**, а **интерактивный помощник**, который:
+## 8. Main user scenario (Full MVP)
 
-- обязан быть **конкретным** там, где есть видимая информация; избегать «воды из интернета»;
-- должен **учитывать пользовательский запрос** к разбору, если он задан;
-- при несовпадении упражнения и записи — **не молчать**, а инициировать корректное ветвление (перепривязка / отказ от разбора в этом контексте);
-- в коммуникации MVP — **на русском языке**.
+> Single-scenario MVP narrows this — see `exec-plans/active/roadmap.md` → section 3.
 
-**Стратегический риск №1:** если качество разбора низкое, продукт **не удерживается** — это зафиксировано и в конкурентном анализе, и в качественных интервью. Значит: инвестиции в качество ответа, валидацию, тестирование на реальных записях и в перспективе — **маршрут к человеку** как к подстраховке доверия.
+1. Open app → select workout → tap **"Начать тренировку"**.
+2. See exercise list.
+3. Tap exercise → exercise screen with technique, set log (weight × reps), **"Загрузить видео"** button.
+4. Capture or select video → optional comment ("проверь глубину") → **"Отправить на разбор"**.
+5. Chat opens; AI replies: trainer-style text + annotated video frame.
+6. User asks follow-up questions, may submit next video to same chat.
+7. Return to workout, next exercise.
 
-**Тон:** поддержка и похвала важны для ЦА; при этом запрос на **настраиваемый характер** общения принимается как долгосрочное требование к персонализации, в рамках запрета на унижение и токсичность (см. раздел 13).
+## 9. Full MVP scope
 
----
+### Functions
+- Catalog of **20 strength exercises** with technique descriptions.
+- User-built workouts from catalog.
+- Workout flow: set log (weight × reps).
+- Per-exercise AI chat (one chat = one exercise, persistent).
+- One set-video upload.
+- AI analysis: text + annotated frame.
+- Exercise recognition + chat-match check.
+- Two-stage video quality check (device + AI).
+- Free-text follow-ups.
+- Message retention: **2 months free**, **unlimited paid**.
 
-## 12. Видео, данные и приватность (стратегия)
+### Platforms
+- iOS and Android (React Native + Expo — `stack.md`).
 
-Видео — **чувствительный актив**:
+### UI language
+- MVP: UI and AI replies in Russian.
+- i18n wired from day one (`i18next`); second language not in MVP release.
 
-- **Минимизация:** хранить и передавать только то, что нужно для разбора и законного учёта.
-- **Прозрачность для пользователя:** куда попадает запись, кто имеет доступ, как долго живёт, что происходит при удалении аккаунта.
-- **Съёмка в зале** — не только технический, но и **социальный барьер** (осуждение, люди в кадре, правила зала, неудобство ракурса). Продукт обязан снижать барьер **образовательными и практическими** средствами — простые подсказки по установке устройства.
-- **Передача к AI-провайдеру** — осознанный компромисс: пользователь должен понимать этот факт до или в момент согласия.
+### MVP limits
+- Set log: weight + reps only (no RPE, tempo, rest time).
+- One video at a time.
+- One analysis per user in queue.
+- User waits for reply (input field locked). No floating indicators.
+- No push notifications.
 
-Активные правила безопасности на текущий этап — `SECURITY.md`. Полный чек-лист на будущее — `design-docs/security-future-reference.md`.
+## 10. Deferred to v2+
 
----
-
-## 13. Принципы продуктовых решений (как мы выбираем)
-
-> Эти принципы — **тест** для любого продуктового спора. Раньше они жили в отдельном `PRODUCT_SENSE.md`; теперь — здесь, рядом со стратегией.
-
-### Главный тест: ценность для новичка в зале
-В любом споре побеждает тот вариант, который **проще и понятнее для нашего ядра ЦА** — совершеннолетнего новичка, который пришёл в зал самостоятельно.
-> «Поймёт ли это человек, который **первый раз в зале**?» Если ответ «нет» — упрощаем.
-
-### Фокус важнее фич
-В MVP — только то, что напрямую закрывает главную боль: **«я не уверен, что делаю упражнение правильно»**. Когда возникает идея новой фичи: **«закрывает главную боль или просто прикольно?»**
-
-### Один путь — один способ
-В каждом сценарии **один основной путь**, без разветвлений «сделать так или эдак». Пример: загрузить видео можно только из экрана упражнения внутри тренировки — не из общего раздела.
-
-### Эмоциональная безопасность
-Юзер делится **видео себя в зале** — это уязвимая ситуация. AI должен:
-- никогда не унижать;
-- начинать с того, что юзер делает хорошо;
-- по умолчанию — тон поддерживающего тренера.
-
-Дальше — настройка тона (мягче / строже / другое), но без отмены базового запрета.
-
-### Качество разбора как условие выживания
-Самые частые причины оттока (по интервью): AI **ошибается**, отвечает **слишком общо**, навязчивая монетизация, не сложилась привычка. Приоритет: **конкретика и точность** выше количества второстепенных фич.
-
-### Честность
-- Не обещаем «AI заменит тренера» — обещаем «AI поможет, когда тренера рядом нет».
-- Если AI не уверен — он говорит об этом, а не выдумывает.
-- Дисклеймеры про здоровье — ясные, не спрятанные мелким шрифтом.
-
-### Мягкая монетизация на входе
-Агрессивные paywall на старте коррелируют с причинами ухода в интервью. Сначала — **ценность и прозрачность**, оплату предлагаем там, где человек уже понимает, за что платит.
-
-### Уважение к времени
-Юзер в зале → каждый клик считается. Минимум тапов до загрузки видео. Никаких рекламных модалок и опросов «оцените нас» в продуктивные моменты.
-
----
-
-## 14. Монетизация (черновик)
-
-Подписочная модель **freemium**:
-
-- **Бесплатно:** базовый функционал, разборы видео с лимитом, история сообщений 2 месяца.
-- **Платная подписка:** бессрочная история, повышенный/безлимитный лимит разборов, расширенные фичи.
-- **Живой тренер** (по видению из интервью — **лестница**, а не одна опция):
-  - приглашение тренера в чат **единоразово** или с лимитом запросов в рамках одной подписки;
-  - отдельная подписка или **поштучная оплата** за работу с живым тренером;
-  - выбор тренера из **базы** на постоянное сопровождение;
-  - **супер-премиум:** основная оценка у живого человека, AI — при необходимости как дополнение.
-
-Конкретные цены, лимиты бесплатного тарифа и состав подписок — определяются позже (см. `exec-plans/active/roadmap.md`, Фаза 7).
-
----
-
-## 15. Ключевые риски
-
-1. **Качество и конкретика AI** — existential для категории.
-2. **Стоимость инференса и хранения видео** — давление на маржу и лимиты free.
-3. **Психология и этика съёмки в зале** — барьер входа, репутационные риски.
-4. **Юридические и медицинские границы советов** — регуляторика и доверие сторов.
-5. **Конкуренция со зрелыми игроками** — необходимость чёткого отличия (память по упражнению, русскоязычная аудитория, человеко-центричная лестница).
-6. **Навязчивость монетизации** — риск оттока сильнее, чем у «чисто утилитарных» приложений из-за эмоциональной уязвимости сценария.
-
----
-
-## 16. Инсайты из интервью с ЦА (сжато)
-
-### Барьеры съёмки в зале
-Беспокоит: осуждение, чужие люди в кадре, непонятно куда уходит видео, нет штатива / неудобный ракурс, правила зала.
-Реально снижает дискомфорт: **чёткие подсказки**, куда поставить телефон в типичных ситуациях.
-
-### Мотивация возвращаться
-Важна **похвала и поддержка** от AI. Приложение воспринимается как **безопасная альтернатива** очному общению с тренером (стеснение, стоимость, сомнения в компетенции).
-
-### Доверие к разбору
-Запрос на **«якорь» доверия**: периодическое или точечное **подтверждение от живого тренера** (human-in-the-loop), не только «чистый» AI.
-
-### Контекст использования
-Не «ежедневная лента», а точечно — **между подходами** (быстрый совет, перечитать разбор) и **после тренировки** (более спокойный разбор, план на следующий раз).
-
-### Тон AI
-Запрос на **настраиваемый характер** (жёстче / мягче), а не один стиль для всех.
-
-### Первые 5–10 минут после установки
-Сочетание: демо AI на готовом видео, программа для новичка, мини-уроки по упражнениям, тур по интерфейсу, прозрачность по данным, возможность потрогать без paywall, представление AI-тренера как «персонажа». Длинная анкета на старте — **не** обязательна.
-
-### Риски оттока
-AI ошибается / общие ответы / навязчивые paywall / не сложилась привычка.
-
----
-
-## 17. Открытые стратегические вопросы
-
-- Точные **лимиты** бесплатного уровня и состав платных пакетов в цифрах.
-- **Скорость и порядок** вывода ступеней с живым тренером.
-- **География** выхода за пределы русскоязычного сегмента после MVP.
-- **Критерии отбора** тренеров в будущий пул и модель их ответственности.
-- **Название и бренд-тон** — влияют на позиционирование.
-
----
-
-## 18. Связанные документы
-
-| Что нужно | Куда |
+| Item | When |
 |---|---|
-| Принципы работы команды и агентов | `design-docs/core-beliefs.md` |
-| Главный план верхнего уровня (фазы) | `exec-plans/active/roadmap.md` |
-| Чат с упражнением — детали | `product-specs/exercise-chat.md` |
-| Видео: загрузка, очередь, ошибки, хранение | `product-specs/videosinstruction.md` |
-| База упражнений, тренировка | `product-specs/exercises-base.md`, `product-specs/workout.md` |
-| Сценарии пользователя | `user-flows/index.md` |
-| Дизайн и визуал | `ui/index.md` |
-| Технологический стек и план масштабирования | `stack.md` |
-| Архитектура (домены и слои) | `../ARCHITECTURE.md` |
-| Бэкенд / фронтенд / БД | `BACKEND.md`, `FRONTEND.md`, `DATABASE.md` |
-| Безопасность (актуальные правила) | `SECURITY.md` |
-| Безопасность (полный чек-лист на будущее) | `design-docs/security-future-reference.md` |
+| Live human trainer in chat (invite / subscription quota / trainer pool / super-premium) | v2+, phased |
+| Floating analysis indicator over screens | v2 |
+| Push on analysis ready | v2 |
+| Multi-video comparison in one analysis | v2 |
+| Extra metrics (RPE, tempo, rest time) | v2+ |
+| Catalog expansion | gradual |
+| Social features, progress feed | TBD |
+| Pre-built workout programs | TBD |
+
+## 11. AI: role and quality
+
+AI is interactive assistant, not oracle:
+- Specific where visible information exists; no internet boilerplate.
+- Honors user's analysis prompt when present.
+- On exercise/recording mismatch — don't go silent; branch correctly (rebind / refuse-here).
+- MVP communication language: Russian.
+
+**Existential risk:** low review quality → product fails to retain. Investments: answer quality, validation, real-recording testing, ladder to human.
+
+**Tone:** support and encouragement matter for audience; configurable persona is a long-term requirement under non-negotiable rules (no humiliation, no toxicity — see section 13).
+
+## 12. Video, data, privacy (strategy)
+
+Video is sensitive:
+
+- **Minimization:** store and transmit only what analysis and lawful tracking require.
+- **Transparency:** where the video lands, who has access, retention period, account-deletion behavior.
+- **Filming-in-gym** is also a social barrier (judgment, bystanders, gym rules, awkward angles). Lower it with educational and practical aids — placement hints.
+- **Transfer to AI provider** — informed compromise; user must understand it before consent.
+
+Active rules: `SECURITY.md`. Future checklist: `design-docs/security-future-reference.md`.
+
+## 13. Decision principles
+
+These are the test for any product dispute.
+
+### Beginner-value test
+Winner: option simpler and clearer for the core audience — adult beginner who entered the gym alone. "Will a first-time gym-goer understand this?" If no — simplify.
+
+### Focus over features
+MVP: only what directly closes the main pain — "I'm not sure I'm doing the exercise correctly." For new ideas: "closes the main pain or just neat?"
+
+### One path, one way
+Each scenario: one main path, no "do it this way or that." Example: video upload only from exercise screen inside workout — not from a global section.
+
+### Emotional safety
+User shares video of themselves in gym — vulnerable situation. AI:
+- Never humiliates.
+- Starts with what user does well.
+- Default tone: supportive trainer.
+
+Tone configurable later (softer / stricter / other) — never overrides base prohibition.
+
+### Quality as survival
+Top churn causes (interviews): AI errors, generic replies, aggressive monetization, no habit. Priority: specificity and accuracy over feature count.
+
+### Honesty
+- Don't promise "AI replaces trainer" — promise "AI helps when no trainer is around."
+- Uncertain → say so, don't fabricate.
+- Health disclaimers: clear, not buried.
+
+### Soft monetization onboarding
+Aggressive paywalls correlate with churn. Lead with value and transparency; payment offered after value understood.
+
+### Time respect
+User is in gym → every tap counts. Minimum taps to upload. No promotional modals or "rate us" prompts in productive moments.
+
+## 14. Monetization (draft)
+
+Freemium subscription:
+
+- **Free:** core features, video reviews with limit, message history 2 months.
+- **Paid:** unlimited history, raised/unlimited review quota, extended features.
+- **Live trainer (ladder, not single option):**
+  - One-time / quota-limited trainer-in-chat invite within a subscription;
+  - Separate subscription or per-piece payment for live-trainer work;
+  - Trainer pick from a **pool** for ongoing engagement;
+  - **Super-premium:** human-led with AI assist.
+
+Concrete prices, free-tier limits, paid-tier composition: defined later (`exec-plans/active/roadmap.md`, Phase 7).
+
+## 15. Key risks
+
+1. AI quality and specificity — existential.
+2. Inference + video storage cost — margin pressure on free-tier.
+3. Filming-in-gym psychology and ethics — onboarding barrier, reputation risk.
+4. Legal and medical advice boundaries — regulation and store trust.
+5. Mature competitors — need clear differentiation (per-exercise memory, Russian audience, human-centric ladder).
+6. Monetization aggression — churn risk amplified by emotional vulnerability.
+
+## 16. Audience interview takeaways
+
+### Filming-in-gym barriers
+Concerns: judgment, bystanders in frame, unknown destination of video, no tripod / awkward angle, gym rules.
+Real reducer: clear placement hints for typical setups.
+
+### Return motivation
+AI praise and support important. App perceived as safe alternative to in-person trainer (embarrassment, cost, competence doubts).
+
+### Trust in analysis
+Demand for trust **anchor**: periodic or selective live-trainer confirmation (human-in-the-loop) — not pure AI.
+
+### Usage context
+Not daily feed — between sets (quick advice, re-read review) and post-training (deeper review, plan for next time).
+
+### AI tone
+Demand for configurable persona (stricter / softer), not one tone for all.
+
+### First 5–10 minutes after install
+Combination: AI demo on prepared video + beginner program + exercise mini-lessons + UI tour + data transparency + paywall-free trial + AI persona introduction. Long onboarding survey **not** mandatory.
+
+### Churn risks
+AI mistakes / generic replies / aggressive paywall / no habit formed.
+
+## 17. Open strategic questions
+
+- Free-tier exact limits and paid-tier composition in numbers.
+- Speed and order of live-trainer ladder.
+- Geography beyond Russian-speaking after MVP.
+- Trainer-pool selection criteria and accountability model.
+- Name and brand tone — affect positioning.

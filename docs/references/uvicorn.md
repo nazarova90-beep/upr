@@ -5,35 +5,33 @@ owner: Кристина
 related: ../BACKEND.md, ../stack.md, fastapi.md, index.md
 ---
 
-# Uvicorn — research-справка
+# Uvicorn — research note
 
-> **Источник.** Собрано через MCP `user-context7`, library ID `/kludex/uvicorn` (Source Reputation: High; Benchmark Score: 94.75; 242 сниппета). Дата сбора: 2026-04-27.
+Source: MCP `user-context7`, library ID `/kludex/uvicorn` (Source Reputation: High; Benchmark Score: 94.75; 242 snippets). Fetched: 2026-04-27.
 
-## Зачем нужна в нашем проекте
+## Purpose in project
 
-Uvicorn — ASGI-сервер для Python: то, что **физически слушает порт** на машине и вызывает приложение FastAPI на каждый входящий HTTP-запрос. Сам по себе FastAPI — это «обработчик»; чтобы он работал, его нужно «положить» в сервер. Uvicorn — стандартный выбор для FastAPI и идёт в комплекте с `fastapi[standard]`.
+ASGI server for Python: listens on port, dispatches HTTP requests to FastAPI app. Standard FastAPI server, bundled with `fastapi[standard]`.
 
-> **Аналогия.** FastAPI — это «повар на кухне», умеет готовить. Uvicorn — это «зал ресторана»: впускает гостей, передаёт заказы повару, выносит блюда. Без Uvicorn повар сидит на кухне один, никто к нему не приходит.
+## Version
 
-## Версия
+- Stable branch `uvicorn >= 0.30`. Python 3.13 supported.
+- Included in `fastapi[standard]` as extra. Standalone: `uvicorn[standard]>=0.30,<0.40`. `[standard]` extra brings `watchfiles` (for `--reload`) and `httptools` (fast HTTP parser).
 
-- Стабильная ветка `uvicorn >= 0.30`. На момент справки — 0.30+ серия. Совместима с Python 3.13.
-- Включена в `fastapi[standard]` как extra. Можно ставить отдельно: `uvicorn[standard]>=0.30,<0.40`. Extra `[standard]` подтягивает `watchfiles` (для `--reload`) и `httptools` (быстрый HTTP-парсер).
+## Key API
 
-## Ключевое API
-
-### 1. Запуск из командной строки (для разработки)
+### 1. CLI launch (development)
 
 ```bash
 uvicorn app.main:app --reload --port 8000
 ```
 
-- `app.main:app` — путь к python-объекту приложения: модуль `app.main`, переменная `app`.
-- `--reload` — автоперезапуск при изменении файлов (только для разработки! на проде нельзя).
-- `--port 8000` — порт. По умолчанию 8000.
-- `--host 0.0.0.0` — слушать на всех интерфейсах (нужно, чтобы iPhone в той же Wi-Fi-сети мог достучаться до бэкенда на ноуте). По умолчанию `127.0.0.1` (только локально).
+- `app.main:app` — Python object path: module `app.main`, variable `app`.
+- `--reload` — auto-restart on file changes. Dev only; not for production.
+- `--port 8000` — default 8000.
+- `--host 0.0.0.0` — listen on all interfaces (required so iPhone on same Wi-Fi can reach backend on laptop). Default `127.0.0.1`.
 
-### 2. Запуск программно (если нужно из скрипта)
+### 2. Programmatic launch
 
 ```python
 import uvicorn
@@ -42,9 +40,9 @@ if __name__ == "__main__":
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True, log_level="info")
 ```
 
-Удобно положить в `backend/app/main.py` под `if __name__ == "__main__":` — тогда можно запускать `python -m app.main`.
+Place in `backend/app/main.py` under `if __name__ == "__main__":` to enable `python -m app.main`.
 
-### 3. Расширенная настройка `--reload`
+### 3. `--reload` configuration
 
 ```python
 uvicorn.run(
@@ -57,35 +55,33 @@ uvicorn.run(
 )
 ```
 
-Полезно, чтобы сервер не перезапускался при изменении тестов или нерелевантных файлов.
+Avoids restart on test or irrelevant file changes.
 
-### 4. Источники конфигурации (приоритет)
+### 4. Configuration source priority
 
-Из официальной документации:
-1. **Командная строка** (`--host`, `--port`) — высший приоритет.
-2. **Аргументы `uvicorn.run(...)`** — равны командной строке.
-3. **Переменные окружения с префиксом `UVICORN_`** (например, `UVICORN_PORT=8000`) — низший приоритет.
+1. CLI flags (`--host`, `--port`) — highest priority.
+2. `uvicorn.run(...)` arguments — equal to CLI.
+3. Env vars with `UVICORN_` prefix (e.g. `UVICORN_PORT=8000`) — lowest priority.
 
-## Подводные камни
+## Gotchas
 
-| Камень | Что делать |
+| Issue | Mitigation |
 |---|---|
-| `--reload` нельзя сочетать с `--workers N` (несколько процессов). | На разработке — только `--reload`. На проде — `--workers`. |
-| По умолчанию `host=127.0.0.1`: с другого устройства (iPhone) до сервера не достучаться. | На разработке поднимать с `--host 0.0.0.0`. |
-| `--reload` использует библиотеку `watchfiles`. Если не установлена (без extras `[standard]`) — fallback на менее эффективный watcher. | Ставить `uvicorn[standard]`. |
-| Сообщения об ошибках при импорте приложения иногда «съедаются». | При ошибке стартовать без `--reload`, пока не поймёшь, что не так. |
-| На macOS firewall может спросить разрешение на входящие соединения при `--host 0.0.0.0`. | Один раз согласиться. |
+| `--reload` incompatible with `--workers N`. | Dev: `--reload`. Prod: `--workers`. |
+| Default `host=127.0.0.1` blocks remote devices (iPhone). | Dev: `--host 0.0.0.0`. |
+| `--reload` uses `watchfiles`; without `[standard]` extra → less efficient fallback watcher. | Install `uvicorn[standard]`. |
+| App-import errors sometimes swallowed. | On error: launch without `--reload` to surface stack trace. |
+| macOS firewall may prompt on `--host 0.0.0.0`. | Approve once. |
 
-## Что нам важно из этой библиотеки прямо сейчас
+## Skeleton scope
 
-Для **структурного скелета**:
-- В `backend/pyproject.toml` указать зависимость `fastapi[standard]` (uvicorn придёт автоматически как extra) — отдельно `uvicorn` ставить не обязательно.
-- В `backend/README.md` зафиксировать команду запуска: `uvicorn app.main:app --reload --host 0.0.0.0 --port 8000` (понадобится при следующем шаге — hello-world).
-- Никаких реальных запусков сейчас не делаем.
+- `backend/pyproject.toml` declares `fastapi[standard]` (uvicorn comes as extra; no separate install needed).
+- `backend/README.md` records launch command: `uvicorn app.main:app --reload --host 0.0.0.0 --port 8000` (used in hello-world next step).
+- No actual launches at skeleton stage.
 
-## Ссылки
+## Links
 
-- Официальная документация: <https://www.uvicorn.org/>
+- Docs: <https://www.uvicorn.org/>
 - Settings: <https://www.uvicorn.org/settings/>
 - Deployment: <https://www.uvicorn.org/deployment/>
 - GitHub: <https://github.com/encode/uvicorn>

@@ -5,23 +5,15 @@ owner: Кристина
 related: ../../AGENTS.md, ../product.md, ../exec-plans/active/roadmap.md
 ---
 
-# Product Specs — оглавление
+# Product specs
 
-**Сначала** прочитайте **`../product.md`** — единый документ верхнего уровня по продукту (концепция, ЦА, MVP, конкуренты, монетизация, риски, принципы продуктовых решений).
+Per-feature specifications. Top-level product strategy: `../product.md`.
 
-Здесь, в `product-specs/`, лежат **детальные спецификации по фичам**: что именно мы делаем, как это работает, что в скоупе MVP, что отложено.
+## Documents
 
-## Документы
-
-| Файл | О чём | Статус |
+| File | Subject | Status |
 |---|---|---|
-| `exercise-chat.md` | Главная фича — чат с упражнением. В начале файла врезка «Single-scenario MVP: что упрощено». | approved |
-| `videosinstruction.md` | Работа с видео: загрузка, анализ, ошибки, очередь, хранение. В начале файла врезка «Single-scenario MVP: что упрощено». | approved |
-| `exercises-base.md` | База упражнений. Раздел «MVP: 3 стартовых упражнения» утверждён (Track A Фазы 1); раздел Full MVP (20 упражнений) — заглушка для Фазы 4. | in-progress (MVP-раздел готов) |
-| `workout.md` | Тренировка. Раздел «MVP: единственная захардкоженная тренировка» утверждён (Track A Фазы 1); Full MVP (workout builder, дневник подходов и т.д.) — заглушка для Фазы 4. | in-progress (MVP-раздел готов) |
-
-## Связанные папки
-
-- `../user-flows/` — пошаговые сценарии пользователя.
-- `../ui/` — визуальный дизайн.
-- `../design-docs/` — обоснование решений «почему именно так».
+| `exercise-chat.md` | Per-exercise chat. Opens with "Single-scenario MVP simplifications" note. | approved |
+| `videosinstruction.md` | Video handling: upload, analysis, errors, queue, retention. Opens with "Single-scenario MVP simplifications" note. | approved |
+| `exercises-base.md` | Exercise base. "MVP: 3 starting exercises" approved (Phase 1 Track A); Full MVP 20-exercise section — Phase 4 stub. | in-progress (MVP section done) |
+| `workout.md` | Workout. "MVP: single hardcoded workout" approved (Phase 1 Track A); Full MVP (workout builder, set log) — Phase 4 stub. | in-progress (MVP section done) |

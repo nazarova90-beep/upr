@@ -7,59 +7,30 @@ related: AGENTS.md, ARCHITECTURE.md, docs/stack.md, docs/product.md
 
 # UPR
 
-**AI-тренер в кармане для тех, кто занимается в тренажёрном зале.**
+Mobile (iOS/Android) AI coach for strength training. The user uploads a video of their set; AI returns a technique review in a per-exercise long-lived chat with text and an annotated frame.
 
-UPR — мобильное приложение для iOS и Android, которое помогает новичкам в зале правильно выполнять силовые упражнения. Юзер снимает видео своего подхода, отправляет в приложение и получает разбор техники от AI-тренера прямо в чате — с подсказками, что поправить, и графической разметкой ошибок на видео.
+## Audience
 
-## В двух словах
+Adults 18+, primarily gym beginners, Russian-speaking. UI and AI replies in MVP — Russian (i18n-ready).
 
-> Снял подход на телефон → загрузил в приложение → получил разбор техники от AI-тренера в чате → исправил ошибки → стал лучше.
+## MVP
 
-## Для кого
+Two stages:
 
-- Совершеннолетние мужчины и женщины (от **18 лет**), верхний ориентир — около 49 лет.
-- Новички в тренажёрном зале.
-- Те, кто по разным причинам не пользуется услугами живого тренера: дорого, стесняется, неудобно по графику или хочет независимости.
+- **Single-scenario MVP** (built first): no auth, hardcoded user, one hardcoded workout with three exercises, video upload from gallery → AI review → chat continuation.
+- **Full MVP**: catalog of 20 exercises, user-built workouts, set log (weight × reps), message-history retention policy (2 months free / unlimited paid).
 
-## Главная идея
+Full picture: `docs/product.md`. Roadmap: `docs/exec-plans/active/roadmap.md`.
 
-Каждому упражнению в приложении соответствует **отдельный чат с AI-тренером**, который ведётся бессрочно. Все видео по «Приседаниям» из любых тренировок попадают в один общий чат «Приседания» — AI видит весь прогресс юзера во времени и даёт персонализированные советы, а не общие фразы.
+## Documentation entry points
 
-## Что входит в MVP (первая версия)
+- `AGENTS.md` — agent map (start here for any task).
+- `ARCHITECTURE.md` — domains and layers.
+- `docs/product.md` — product strategy + MVP scope + decisions.
+- `docs/stack.md` — stack + scaling triggers.
+- `docs/BACKEND.md`, `docs/FRONTEND.md`, `docs/DATABASE.md`, `docs/SECURITY.md` — domain overviews.
+- `docs/exec-plans/active/roadmap.md` — phases and triggers.
 
-- **База из 20 самых популярных силовых упражнений** с описанием техники.
-- **Тренировочный дневник:** юзер собирает свою тренировку из упражнений базы, фиксирует вес и повторения по подходам.
-- **Чат с AI-тренером** по каждому упражнению.
-- **Загрузка видео подхода** прямо с экрана упражнения, разбор техники AI с текстом и размеченным скрином.
-- **Распознавание упражнения** на видео (если прислано не то, AI спросит, перепривязать ли).
-- **Хранение истории сообщений 2 месяца** на бесплатном тарифе, бессрочно — на платной подписке.
-- **Интерфейс и ответы AI в MVP — на русском языке**; в разработке закладывается **мультиязычность** для следующих версий (подробнее: `docs/product.md`).
+## Status
 
-## Что планируется после MVP
-
-- **Подключение живого тренера-человека** в тот же AI-чат за дополнительную плату (по подписке или поштучно за проверки).
-- Расширение базы упражнений.
-- Сравнение нескольких подходов в одном разборе.
-- Push-уведомления, плавающая кнопка-индикатор анализа.
-- Дополнительные метрики тренировки (RPE, темп, время отдыха и т.д.).
-
-## Структура документации
-
-Подробная навигация — в `AGENTS.md`. Если коротко:
-
-- `AGENTS.md` — короткая карта проекта (вход для AI-агентов).
-- `docs/product.md` — **продукт целиком**: стратегия, MVP, конкуренты, монетизация, риски, принципы продуктовых решений.
-- `ARCHITECTURE.md` — верхнеуровневая архитектура (домены и слои).
-- `docs/stack.md` — выбранный технологический стек и план масштабирования.
-- `docs/BACKEND.md`, `docs/FRONTEND.md`, `docs/DATABASE.md` — короткие обзоры по доменам.
-- `docs/SECURITY.md` — активные правила безопасности (полный чек-лист на будущее — `docs/design-docs/security-future-reference.md`).
-- `docs/product-specs/` — детальные спецификации фич.
-- `docs/user-flows/` — пошаговые сценарии пользователя.
-- `docs/ui/` — дизайн и визуал.
-- `docs/design-docs/` — принципы (`core-beliefs.md`) и обоснования решений.
-- `docs/exec-plans/` — планы работ (главная точка — `active/roadmap.md`).
-- `docs/references/` — справки по используемым библиотекам.
-
-## Статус
-
-Этап **продуктового проектирования MVP завершён в основной части**. Стек технологий **выбран** — детали в `docs/stack.md`. На очереди — детальные спецификации (`exercises-base.md`, `workout.md`, онбординг) и затем переход к реализации.
+Product design for MVP largely complete. Stack chosen (`docs/stack.md`). Skeleton of `mobile/` and `backend/` committed (`docs/exec-plans/completed/2026-04-27-phase1-track-c-skeleton.md`). Next: Phase 2 (thin slice).

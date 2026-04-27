@@ -1,116 +1,109 @@
 ---
 status: approved
-last_updated: 2026-04-19
+last_updated: 2026-04-27
 owner: Кристина
 related: ../stack.md, ../FRONTEND.md, ../exec-plans/active/roadmap.md, index.md
 ---
 
-# Expo (React Native) — research-справка по выбранному стеку
+# Expo (React Native) — research note
 
-> **Статус.** Это **исследовательская справка**, собранная через MCP `user-context7` (источники: `/llmstxt/expo_dev_llms_txt`, `/llmstxt/expo_dev_llms-full_txt`). На основе этой справки **2026-04-19 принято решение** перевести frontend-часть стека с Flutter на **React Native + Expo (TypeScript)** — см. журнал решений в `docs/stack.md` и `docs/FRONTEND.md`. Дальше документ описывает, что именно из Expo мы используем и какие у него ограничения.
+Source: MCP `user-context7` (`/llmstxt/expo_dev_llms_txt`, `/llmstxt/expo_dev_llms-full_txt`). Basis for 2026-04-19 stack decision: Flutter → React Native + Expo (TypeScript). See `docs/stack.md` and `docs/FRONTEND.md`.
 
-## Что такое Expo (двумя предложениями)
+## What Expo provides
 
-Expo — это «обёртка» над React Native, которая (а) даёт готовый набор стандартных API (камера, галерея, видео-плеер, файлы, нотификации и т.д.) одной библиотекой, (б) даёт инструменты разработки и сборки, и (в) даёт **режим Expo Go** — стандартное приложение из App Store / Google Play, в котором можно запустить своё приложение **без локальной установки Xcode и Android Studio**, через QR-код.
+Wrapper over React Native: (a) bundled standard APIs (camera, gallery, video, file system, notifications); (b) dev/build tooling; (c) **Expo Go** mode — App Store / Google Play app that runs your project via QR code without local Xcode / Android Studio.
 
-Аналогия: React Native — это «голый двигатель», Expo — «двигатель + кузов + панель приборов + мобильный сервис, который сам приедет починить». Стартовать на Expo проще; когда нужны хитрые тюнинги — придётся выходить из «сервиса» и копаться руками.
+## Expo Go vs Development Build
 
-## Ключевой режим: Expo Go vs Development Build
-
-| Что это | Как работает | Когда нужен |
+| Mode | How it works | Required when |
 |---|---|---|
-| **Expo Go** | Стандартное приложение из App Store / Google Play. Запускаешь свой проект — в терминале появляется QR-код. Сканируешь камерой телефона — приложение открывается **прямо в Expo Go** на твоём настоящем iPhone/Android. Hot reload (~1 сек). | Пока используешь стандартные SDK-пакеты Expo. Подходит для **большей части Single-scenario MVP**. |
-| **Development Build** (через EAS Build или локально) | Собирается **твоё собственное приложение** с нужными нативными модулями. Устанавливается на устройство как обычное приложение. | Когда подключаешь нативные модули, которых нет в Expo Go: например, MediaPipe, кастомные плагины камеры/ML, настройки `infoPlist`/AndroidManifest сверх стандарта. Для локальной сборки — нужен Xcode (iOS) или Android Studio (Android). |
+| **Expo Go** | App from App Store / Google Play. CLI prints QR; phone camera scan opens the project inside Expo Go on real iPhone/Android. Hot reload ~1 s. | Project uses only standard Expo SDK packages. Covers most of Single-scenario MVP. |
+| **Development Build** (EAS Build or local) | Custom build with required native modules. Installs as a normal app. | Native modules absent from Expo Go (e.g. MediaPipe), custom camera/ML plugins, non-default `infoPlist` / AndroidManifest entries. Local build needs Xcode (iOS) or Android Studio (Android). |
 
-> **Важно.** Не «Expo Go ИЛИ dev build навсегда» — можно начать с Expo Go, и в момент, когда упрёшься в нативный модуль, перейти на dev build. Кодовая база остаётся та же.
+Migration path: start in Expo Go, switch to Dev Build when blocked by a native module. Codebase stays the same.
 
-## Что точно поддерживается в Expo Go (нужно для Single-scenario MVP)
+## Verified Expo Go support (Single-scenario MVP needs)
 
-Проверено через Context7 (источник: `docs.expo.dev/versions/latest/sdk/...`):
+Source: `docs.expo.dev/versions/latest/sdk/...`.
 
-| Возможность | Пакет | Работает в Expo Go | Источник |
+| Feature | Package | Expo Go | Source |
 |---|---|---|---|
-| Выбор готового видео из галереи (системный пикер) | `expo-image-picker` (`launchImageLibraryAsync`) | **Да** | `docs.expo.dev/versions/latest/sdk/imagepicker` |
-| Доступ к медиатеке устройства (получить метаданные / asset URI) | `expo-media-library` | **Да** (с ограничением: на Android нельзя создавать пустые альбомы — нерелевантно для MVP) | `docs.expo.dev/versions/latest/sdk/media-library` |
-| Проигрывание видео в чате (плеер с контролами) | `expo-video` (`useVideoPlayer`, `VideoView`) | **Да** | `docs.expo.dev/versions/latest/sdk/video` |
-| Загрузка файла на бэкенд (HTTP-аплоад) | стандартный `fetch` / `expo-file-system` | **Да** | базовый JS / Expo SDK |
-| Тёмная тема, шрифты Manrope / Material Symbols (как в Lucent) | `expo-font`, стандартный `StyleSheet` | **Да** | базовый Expo |
-| i18n (русский в MVP) | `expo-localization` + любая JS-библиотека (например, `i18next`) | **Да** | базовый Expo |
+| Pick video from gallery (system picker) | `expo-image-picker` (`launchImageLibraryAsync`) | Yes | `docs.expo.dev/versions/latest/sdk/imagepicker` |
+| Media library access (metadata / asset URI) | `expo-media-library` | Yes (Android cannot create empty albums — irrelevant) | `docs.expo.dev/versions/latest/sdk/media-library` |
+| Video playback in chat | `expo-video` (`useVideoPlayer`, `VideoView`) | Yes | `docs.expo.dev/versions/latest/sdk/video` |
+| HTTP upload to backend | `fetch` / `expo-file-system` | Yes | base JS / Expo SDK |
+| Dark theme + Manrope / Material Symbols | `expo-font`, `StyleSheet` | Yes | base Expo |
+| i18n (Russian in MVP) | `expo-localization` + `i18next` | Yes | base Expo |
 
-**Вывод по MVP-сценарию.** Главный пользовательский сценарий Single-scenario MVP (`docs/user-flows/upload-video-and-get-feedback.md`) — экран тренировки → чат → системный пикер галереи → загрузка видео на бэк → ответ AI с проигрываемым видео в ленте — целиком укладывается в **Expo Go**, без необходимости ставить Xcode или Android Studio локально.
+Conclusion: Single-scenario MVP scenario (`docs/user-flows/upload-video-and-get-feedback.md`) — workout screen → chat → gallery picker → upload → AI reply with playable video — fits entirely in Expo Go, no Xcode / Android Studio needed.
 
-## Что НЕ работает в Expo Go (или работает с ограничениями)
+## Not supported in Expo Go (or limited)
 
-| Что | Кто это в нашем стеке | Когда нам это нужно |
+| Item | Role in stack | Required at |
 |---|---|---|
-| **MediaPipe** на устройстве (двухэтапная проверка качества видео) | Нативный модуль, требует кастомной интеграции | **Фаза 3** (полировка Single-scenario MVP). До этого момента не нужен. |
-| Кастомные нативные плагины камеры (внутриаппная съёмка с тонким контролем) | Не используем | Не нужен — съёмки внутри приложения в MVP нет (`roadmap.md`, раздел 3). |
-| `expo-task-manager` (фоновые задачи) | Возможно, для фонового аплоада | Не нужен в MVP — аплоад идёт в активном чате; фоновый режим — не раньше Фазы 6. |
-| Push-уведомления через свой бэкенд / нестандартные настройки | Не используем в MVP | Фаза 6+. |
-| `UIDesignRequiresCompatibility` и подобные кастомные `infoPlist`-ключи | Не используем | Может понадобиться позже при тонкой настройке iOS — тогда dev build. |
+| **MediaPipe** on-device (two-stage video quality check) | Native module, custom integration | Phase 3 (Single-scenario MVP polish). |
+| Custom native camera plugins | Not used | Not needed — no in-app capture in MVP (`roadmap.md` § 3). |
+| `expo-task-manager` (background tasks) | Possibly background upload | Not needed in MVP — upload runs in foreground. Background mode ≥ Phase 6. |
+| Push via custom backend / non-default config | Not used in MVP | Phase 6+. |
+| `UIDesignRequiresCompatibility` and similar custom `infoPlist` keys | Not used | Possibly later → Dev Build. |
 
-**Вывод.** Первый раз необходимость уйти в dev build (а значит — в Xcode или Android Studio) у нас возникает **в Фазе 3** при подключении MediaPipe. До этого момента (Фазы 1–2 = весь Single-scenario MVP в коде) живём на чистом Expo Go.
+First Dev Build trigger: Phase 3 with MediaPipe. Phases 1–2 (Single-scenario MVP code) run on Expo Go.
 
-## Что нужно установить локально, чтобы стартовать на Expo
+## Local install for Expo Go workflow
 
-Минимальный набор для разработки в режиме Expo Go:
+1. **Node.js** (LTS) — installer from `nodejs.org`, ~80 MB.
+2. **Expo CLI** — via `npx` / `npm`, no separate install.
+3. **Expo Go** on phone — App Store / Google Play, ~100 MB.
 
-1. **Node.js** (LTS-версия) — «движок» для запуска JavaScript на компьютере. Устанавливается одним инсталлером с `nodejs.org`. ~80 МБ.
-2. **Expo CLI** — ставится одной командой через `npx`/`npm`. Отдельно скачивать ничего не надо.
-3. **Expo Go** на телефоне — бесплатное приложение из App Store / Google Play. ~100 МБ на телефоне.
+Not required (vs Flutter):
 
-**Что НЕ нужно (в отличие от Flutter):**
+- Xcode (~15 GB, Mac App Store).
+- Android Studio (~10 GB).
+- iOS Simulator / Android Emulator.
 
-- Xcode (~15 ГБ, ставится только из Mac App Store).
-- Android Studio (~10 ГБ).
-- Симулятор iOS / эмулятор Android.
+Required later (Phase 3 for MediaPipe), not now.
 
-(Они понадобятся позже — на Фазе 3 для MediaPipe. Но не сейчас.)
-
-## Цикл «изменил код → увидел результат»
+## Edit-to-result loop
 
 ```
-Сохранил файл в редакторе
-        ↓
-Metro bundler пересобирает JS-бандл (~0.5–2 сек)
-        ↓
-Expo Go на твоём iPhone/Android получает обновление по Wi-Fi
-        ↓
-Экран на телефоне обновляется автоматически (~0.5–1 сек)
+Save file in editor
+    → Metro bundler rebuild JS bundle (~0.5–2 s)
+    → Expo Go on iPhone/Android updates over Wi-Fi
+    → Screen reloads automatically (~0.5–1 s)
 ```
 
-То есть итерация занимает **1–3 секунды на настоящем устройстве**, без запуска эмулятора.
+1–3 s iteration on real device, no emulator.
 
-## Версии и рекомендации
+## Versions
 
-- **Текущая стабильная версия Expo SDK на 2026-04-19:** SDK 54 (есть превью SDK 55, для production пока берём 54).
-- **React Native:** идёт в комплекте с Expo SDK 54 (версию задаёт Expo, ручной апгрейд не нужен).
-- **Язык:** TypeScript (стандарт для современных Expo-проектов; шаблон `npx create-expo-app` создаёт TS-проект по умолчанию).
+- **Expo SDK (stable, 2026-04-19):** SDK 54. SDK 55 in preview; production stays on 54.
+- **React Native:** version pinned by Expo SDK 54; manual upgrade not needed.
+- **Language:** TypeScript (`npx create-expo-app` defaults to TS).
 
-## Подводные камни (за что разработчики ругают Expo)
+## Common gotchas
 
-| Камень | В чём суть | Применимо ли к нам |
+| Gotcha | Detail | Applies to us |
 |---|---|---|
-| «Expo Go ограничивает функционал» | Часть нативных модулей не работает | Не блокирует MVP; на Фазе 3 переходим на dev build. |
-| «EAS Build платный» | Облачная сборка от Expo на бесплатном тарифе имеет лимиты | Можно собирать локально — бесплатно. EAS — удобство, не обязанность. |
-| «Бандл больше, чем у голого React Native» | Expo тащит много стандартных модулей | Не критично для приложения такого размера. |
-| «Если уйти с Expo — больно» | Eject в bare React Native — операция, которую сложно откатить | Снимается так: сразу строим архитектуру так, чтобы при необходимости можно было вытащить нативные модули и продолжить — но это редкая необходимость. |
+| Expo Go limits functionality | Some native modules unavailable | Does not block MVP; Phase 3 → Dev Build. |
+| EAS Build is paid | Cloud build has free-tier limits | Local build is free. EAS optional. |
+| Larger bundle than bare RN | Expo bundles standard modules | Non-critical at this app size. |
+| Eject to bare RN is painful | Hard to revert | Mitigated by stack design; rarely required. |
 
-## Что сейчас рекомендуется в документации Expo
+## Current Expo recommendations
 
-- Использовать **`expo-router`** для навигации между экранами (file-based routing, аналог Next.js для мобильных приложений). Подходит нам — у нас всего 2 экрана + поп-ап, любая система навигации справится.
-- Использовать **TypeScript** (типизированный JavaScript — помогает отлавливать ошибки до запуска).
-- Для UI-стиля — стандартный `StyleSheet` или библиотеки типа `nativewind` (Tailwind-подобный). Под Lucent проще всего описать токены руками в `theme.ts` и использовать `StyleSheet`.
+- **`expo-router`** for navigation (file-based, Next.js-style). Fits — only 2 screens + pop-up.
+- **TypeScript** required.
+- UI styling — `StyleSheet` or `nativewind` (Tailwind-like). For Lucent: hand-roll tokens in `mobile/src/theme/*.ts` + `StyleSheet`.
 
-## Источники (через Context7)
+## Sources (via Context7)
 
-- `/llmstxt/expo_dev_llms_txt` — основной дамп документации Expo (дата сбора: SDK 54, актуально на момент справки).
+- `/llmstxt/expo_dev_llms_txt` — main Expo docs dump (SDK 54).
 - `docs.expo.dev/versions/latest/sdk/imagepicker`
 - `docs.expo.dev/versions/latest/sdk/media-library`
 - `docs.expo.dev/versions/latest/sdk/video`
 - `docs.expo.dev/debugging/devtools-plugins`
-- `docs.expo.dev/versions/latest/sdk/task-manager` (для понимания ограничений Expo Go)
+- `docs.expo.dev/versions/latest/sdk/task-manager`
 
-## Вердикт (на основе которого принято решение 2026-04-19)
+## Decision result (2026-04-19)
 
-**Главный критерий — «не ставить Xcode / Android Studio на этапе Single-scenario MVP» — Expo (Expo Go) выполняет.** Все ключевые возможности MVP (выбор видео из галереи, проигрывание видео, чат, HTTP-загрузка на бэк) поддерживаются в Expo Go без dev build. Первая жёсткая необходимость в локальной нативной сборке возникает не раньше Фазы 3 — и только при подключении on-device MediaPipe (само по себе опциональное решение). На основании этого вердикта стек обновлён: `docs/stack.md` → React Native + Expo (TypeScript). Полный журнал и аргументы — в `docs/stack.md` (раздел «Журнал решений по стеку») и `docs/exec-plans/active/roadmap.md` (раздел 8).
+Primary criterion: avoid Xcode / Android Studio at Single-scenario MVP stage — satisfied by Expo Go. All MVP features (gallery video picker, video playback, chat, HTTP upload) supported in Expo Go without Dev Build. First hard need for native build: Phase 3, only with on-device MediaPipe (itself optional). Stack updated: `docs/stack.md` → React Native + Expo (TypeScript). Full journal: `docs/stack.md` § "Decision log", `docs/exec-plans/active/roadmap.md` § 8.

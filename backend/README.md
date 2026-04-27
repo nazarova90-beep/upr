@@ -1,76 +1,67 @@
 # UPR backend
 
-Сервер UPR на **Python + FastAPI**. На текущий момент — **структурный скелет** (Phase 1 / Track C, см. [`../docs/exec-plans/active/phase1-track-c-skeleton.md`](../docs/exec-plans/active/phase1-track-c-skeleton.md)). Эндпоинтов нет, БД пустая, AI-провайдер — заглушка. Это намеренно: следующий шаг (отдельная задача) — рабочий hello-world.
+Python + FastAPI server. Status: structural skeleton only (Phase 1 / Track C — see `../docs/exec-plans/completed/2026-04-27-phase1-track-c-skeleton.md`). No endpoints, empty DB, stub AI provider. Next step: hello-world.
 
-## Зависимости
+## Dependencies
 
-- **Python 3.13** (зафиксировано в `.python-version`).
-- Внешние библиотеки — в `pyproject.toml`. Справки по каждой:
-  - [FastAPI](../docs/references/fastapi.md) — веб-каркас;
-  - [SQLModel](../docs/references/sqlmodel.md) — ORM + Pydantic-схемы;
-  - [pydantic-settings](../docs/references/pydantic-settings.md) — настройки из `.env`;
-  - [Uvicorn](../docs/references/uvicorn.md) — ASGI-сервер (идёт в `fastapi[standard]`).
+- Python 3.13 (pinned in `.python-version`).
+- External libs declared in `pyproject.toml`. References:
+  - FastAPI → `../docs/references/fastapi.md`
+  - SQLModel → `../docs/references/sqlmodel.md`
+  - pydantic-settings → `../docs/references/pydantic-settings.md`
+  - Uvicorn → `../docs/references/uvicorn.md` (bundled with `fastapi[standard]`)
 
-## Поднять локально (для будущего hello-world)
+## Local launch (future hello-world)
 
-> На сегодняшнем шаге **запускать не нужно** — пока нет ни одного эндпоинта, нечего проверять. Команды ниже — инструкция «как это будет работать», когда мы перейдём к hello-world.
+Skeleton stage: do not launch (no endpoints to hit). Commands below are the contract for hello-world step.
 
 ```bash
 cd backend
 
-# 1. Создать виртуальное окружение (изолированную «коробку» для зависимостей).
 python3.13 -m venv .venv
-
-# 2. Активировать окружение в текущем терминале.
 source .venv/bin/activate
-
-# 3. Установить зависимости из pyproject.toml.
 pip install -e ".[dev]"
-
-# 4. Скопировать шаблон настроек и заполнить под себя.
 cp .env.example .env
-
-# 5. Запустить сервер (когда появится app/main.py с эндпоинтами).
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-После запуска интерактивная документация будет доступна на `http://localhost:8000/docs`.
+Interactive docs: `http://localhost:8000/docs`.
 
-## Структура
+## Structure
 
-Соответствует [`../docs/BACKEND.md`](../docs/BACKEND.md) (раздел «Структура проекта»):
+Matches `../docs/BACKEND.md` "Project structure":
 
 ```
 backend/
 ├── pyproject.toml
 ├── .python-version
 ├── .env.example
-├── README.md            ← этот файл
+├── README.md
 ├── app/
-│   ├── main.py          # FastAPI() без эндпоинтов
+│   ├── main.py          # FastAPI() without endpoints
 │   ├── core/            # config, logging
-│   ├── workout/         # домен «тренировка»
-│   ├── exercise_chat/   # домен «чат упражнения»
-│   ├── video_analysis/  # домен «приём и анализ видео»
-│   ├── ai_coach/        # домен «логика тренера»
-│   ├── ai_provider/     # абстракция AI-провайдера + заглушка Gemini
-│   ├── storage/         # абстракция хранилища + локальная реализация
-│   └── db/              # SQLModel-сессия + модели сущностей
-└── tests/               # pytest (пока пусто)
+│   ├── workout/         # domain
+│   ├── exercise_chat/   # domain
+│   ├── video_analysis/  # domain
+│   ├── ai_coach/        # domain
+│   ├── ai_provider/     # adapter + Gemini stub
+│   ├── storage/         # adapter + local impl
+│   └── db/              # SQLModel session + entity models
+└── tests/               # pytest (empty)
 ```
 
-## Что НЕ делаем сейчас
+## Out of scope at skeleton stage
 
-- Не запускаем сервер (нет эндпоинтов).
-- Не создаём БД-файл (`SQLModel.metadata.create_all` ещё не вызывается).
-- Не подключаем настоящие AI-провайдеры — только заглушки.
-- Не пишем тесты — только структура каталога.
+- No server launch (no endpoints).
+- No DB file creation (`SQLModel.metadata.create_all` not called).
+- No real AI providers (stubs only).
+- No tests (folders only).
 
-Всё это появится в следующих задачах: hello-world → thin slice (Phase 2).
+Adopted in: hello-world → thin slice (Phase 2).
 
-## Связанные документы
+## Related
 
-- [`../docs/BACKEND.md`](../docs/BACKEND.md) — назначение бэкенда и принципы.
-- [`../docs/stack.md`](../docs/stack.md) — почему именно FastAPI + SQLModel + SQLite.
-- [`../ARCHITECTURE.md`](../ARCHITECTURE.md) — слои и домены.
-- [`../docs/SECURITY.md`](../docs/SECURITY.md) — правила обращения с секретами.
+- `../docs/BACKEND.md` — backend purpose and principles.
+- `../docs/stack.md` — FastAPI + SQLModel + SQLite rationale.
+- `../ARCHITECTURE.md` — layers and domains.
+- `../docs/SECURITY.md` — secret handling rules.

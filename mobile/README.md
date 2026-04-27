@@ -1,39 +1,39 @@
-# UPR — мобильное приложение (skeleton)
+# UPR — mobile app (skeleton)
 
-Это **структурный скелет** мобильного клиента UPR на React Native + Expo (TypeScript). Сейчас здесь только каркас: экраны-заглушки, токены дизайн-системы Lucent и инфраструктура i18n. Реального UI и обращений к бэкенду ещё нет — это следующая задача (hello-world).
+React Native + Expo (TypeScript) structural skeleton. Stub screens, Lucent design tokens, i18n infra. No real UI, no backend calls. Next step: hello-world.
 
-## Стек
+## Stack
 
-- **Expo SDK 54** + **React Native 0.81** — фреймворк (см. [`docs/references/expo.md`](../docs/references/expo.md)).
-- **TypeScript** — язык.
-- **expo-router** — файловая навигация: один файл в `app/` = один экран (см. [`docs/references/expo-router.md`](../docs/references/expo-router.md)).
-- **i18next** + **react-i18next** + **expo-localization** — переводы и определение языка устройства (см. соответствующие справки в `docs/references/`).
+- Expo SDK 54 + React Native 0.81 (`../docs/references/expo.md`).
+- TypeScript.
+- expo-router — file-based navigation (`../docs/references/expo-router.md`).
+- i18next + react-i18next + expo-localization (refs in `docs/references/`).
 
-## Структура
+## Structure
 
 ```
 mobile/
-├── app/                    # экраны (expo-router)
-│   ├── _layout.tsx         # корневой layout, инициализирует i18n
-│   ├── index.tsx           # экран тренировки (заглушка), маршрут `/`
+├── app/                    # screens (expo-router)
+│   ├── _layout.tsx         # root layout, inits i18n
+│   ├── index.tsx           # workout screen stub, route `/`
 │   └── chat/
-│       └── [exerciseId].tsx  # экран чата, маршрут `/chat/<id>`
+│       └── [exerciseId].tsx  # chat screen stub, route `/chat/<id>`
 ├── src/
-│   ├── theme/              # токены Lucent (цвета, отступы, радиусы, типографика)
-│   ├── i18n/               # init i18next + словари ru/en
-│   ├── domain/             # TS-типы (зеркало backend-моделей)
-│   ├── components/         # переиспользуемые UI-компоненты (пусто)
-│   └── api/                # HTTP-клиент к бэку (пусто)
-├── assets/                 # иконки, splash (сгенерировано create-expo-app)
-├── app.json                # конфиг Expo
+│   ├── theme/              # Lucent tokens (colors, spacing, radii, typography)
+│   ├── i18n/               # i18next init + ru/en dictionaries
+│   ├── domain/             # TS types (mirror of backend models)
+│   ├── components/         # shared UI (empty)
+│   └── api/                # backend HTTP client (empty)
+├── assets/                 # icons, splash (create-expo-app generated)
+├── app.json
 └── package.json
 ```
 
-Алиас путей: `~/foo` → `src/foo` (см. `tsconfig.json`).
+Path alias: `~/foo` → `src/foo` (`tsconfig.json`).
 
-## Запуск (для будущих шагов)
+## Launch (future)
 
-> Пока **не делаем** — это часть следующей задачи (hello-world). Сейчас здесь только зависимости в `package.json`, чтобы они закоммитились и были видимы AI-агенту.
+Skeleton stage: do not run. Commands below are the contract for hello-world step.
 
 ```bash
 cd mobile
@@ -41,17 +41,17 @@ npm install
 npx expo start
 ```
 
-Затем — открыть приложение **Expo Go** на iPhone (тот же Wi-Fi, что и Mac), отсканировать QR-код из терминала.
+Open **Expo Go** on iPhone (same Wi-Fi as Mac), scan QR from terminal.
 
-## Что НЕ включено в этом коммите
+## Out of scope at skeleton stage
 
-- Шрифт **Manrope** — отдельный шаг через `expo-font`.
-- Иконки **Material Symbols Rounded** — отдельный шаг.
-- HTTP-клиент к бэкенду — Phase 2.
-- Реальные строки UI на русском — появятся вместе с UI.
+- Manrope font — separate step via `expo-font`.
+- Material Symbols Rounded icons — separate step.
+- Backend HTTP client — Phase 2.
+- Real Russian UI strings — added with real UI.
 
-## Связанные документы
+## Related
 
-- [`docs/FRONTEND.md`](../docs/FRONTEND.md) — общее описание мобильного клиента.
-- [`docs/ui/design-system/README.md`](../docs/ui/design-system/README.md) — Lucent (источник дизайн-токенов).
-- [`docs/exec-plans/active/phase1-track-c-skeleton.md`](../docs/exec-plans/active/phase1-track-c-skeleton.md) — план этого этапа.
+- `../docs/FRONTEND.md` — mobile client overview.
+- `../docs/ui/design-system/README.md` — Lucent (design token source).
+- `../docs/exec-plans/completed/2026-04-27-phase1-track-c-skeleton.md` — phase plan.

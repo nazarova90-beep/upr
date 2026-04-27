@@ -5,93 +5,58 @@ owner: Кристина
 related: ../../AGENTS.md
 ---
 
-# Core Beliefs — наши принципы работы
+# Core beliefs
 
-Это **фундамент проекта**. Здесь — короткий список принципов, которым следуем все: и человек-заказчик, и AI-агенты. Это **правила**, не «рекомендации».
+Operating principles for humans and AI agents working on this project. Rules, not guidelines.
 
-Принципы вдохновлены статьёй OpenAI ["Harness engineering: leveraging Codex in an agent-first world"](https://openai.com/index/harness-engineering/) (февраль 2026), но **сознательно адаптированы** под наш масштаб (один непрограммист + AI-агенты, MVP для одного пользователя). Полный набор принципов из статьи рассчитан на команду из 7 инженеров и инфраструктурный бюджет — нам это сейчас не подходит.
+Adapted from OpenAI ["Harness engineering: leveraging Codex in an agent-first world"](https://openai.com/index/harness-engineering/) (Feb 2026); scaled down for one non-programmer owner + AI agents (single-user MVP). Team-scale tooling (architecture-boundary linters, full test coverage, per-worktree observability) is deliberately out.
 
-## 1. Документация — система записи
+## 1. Repository is the system of record
 
-**Если решение не записано в `docs/`, его не существует.**
+Decision not in `docs/` ⇒ does not exist. Do not rely on chat memory, human memory, or code comments. Every significant decision → commit → specific file under `docs/`.
 
-Не полагаемся на:
-- чаты с агентом (контекст теряется);
-- память человека (всё забывается через неделю);
-- комментарии в коде (агент не обязан их найти).
+## 2. Top-level docs are maps, not encyclopedias
 
-Любое существенное решение → коммит в репозиторий → конкретный файл в `docs/`.
+`AGENTS.md` ≈ 100 lines, table-of-contents only. Same applies to other top-level files: short entry points, push details into deeper files. Reasons:
 
-> **Аналогия:** новый сотрудник, пришедший в команду через год, должен уметь понять весь проект, открыв только этот репозиторий. Ничего больше у него нет.
+- Agent context is scarce — large files crowd out code and the task.
+- "If everything is important, nothing is important."
+- Large files rot fast.
 
-## 2. AGENTS.md — карта, а не энциклопедия
+## 3. Boring tech first
 
-`AGENTS.md` короткий (~100 строк) — это **оглавление**, которое говорит «правила про X — иди туда». Тот же принцип применяем ко всем «верхнеуровневым» документам: маленькие точки входа со ссылками на детали.
+Prefer well-established libraries and frameworks: well-represented in agent training data, stable APIs, large community. When choosing between proven and trendy — pick proven.
 
-Почему не один большой файл со всеми правилами:
-- Контекст агента — дефицитный ресурс. Большой файл вытесняет код и саму задачу.
-- «Если всё важное — то ничего не важное» — агент перестаёт понимать приоритеты.
-- Большой файл устаревает мгновенно и превращается в кладбище.
+## 4. Library research via MCP `user-context7` before code
 
-## 3. Boring tech > shiny new
+Before introducing any third-party library, the agent must:
 
-При выборе библиотек и фреймворков отдаём предпочтение **проверенным «скучным»** технологиям:
-- хорошо описаны в данных, на которых обучен AI → агент пишет более правильный код;
-- стабильное API → меньше «слома» при обновлениях;
-- большое community → проще найти ответы.
+1. Fetch current docs via MCP `user-context7`.
+2. Record purpose, version, key API, gotchas, source link in `docs/references/<library>.md`.
+3. Only then write code.
 
-Если есть выбор между «проверенным» и «новым модным» — берём проверенное.
+Required because training data goes stale and libraries update.
 
-## 4. Перед использованием библиотеки — Context7
+## 5. Layered architecture with explicit boundaries
 
-Перед внедрением **любой** сторонней библиотеки агент **обязан**:
+Layered, domain-first structure (see `../../ARCHITECTURE.md`). Each external dependency (AI provider, video storage, DB) lives behind an abstraction. Out of scope at current stage: architecture-boundary linters, 100% test coverage, custom observability stack — added when real pain appears.
 
-1. Получить актуальную документацию через MCP-сервер `user-context7`.
-2. Зафиксировать ключевые правила и примеры в `docs/references/<library>.md`.
-3. Только потом писать код.
+## 6. Owner is non-programmer
 
-Это особенно важно, потому что обучающие данные AI устаревают, а библиотеки обновляются часто.
+Documentation files are agent-optimized: facts, constraints, schemas, decisions. Analogies and beginner explanations live in chat output, not in files. Russian is the product/UI language; documentation language is mixed (Russian for product content, English allowed for technical reference). Emoji only on explicit request.
 
-## 5. Архитектура важнее свободы (но без перебора)
+## 7. No feature without explicit approval
 
-Когда пишем код — придерживаемся **слоистой архитектуры** с понятными границами доменов (см. `../../ARCHITECTURE.md`). Это позволяет двигаться быстро без хаоса.
+Agent must not introduce product behavior absent from `docs/product.md` or `docs/product-specs/`. Workflow for new ideas:
 
-> **Аналогия:** жёсткая разметка дороги позволяет ехать быстрее, чем поле без правил.
+1. Surface in chat.
+2. Get explicit "yes".
+3. Write decision into the right doc.
+4. Then implement.
 
-**Чего мы НЕ делаем сейчас** (это для команды, не для одного человека):
-- свои линтеры архитектурных границ;
-- 100% покрытие тестами;
-- собственный observability-стек на каждый worktree.
-Эти вещи появятся, **когда будет реальная боль**, а не «на всякий случай».
+## Document headers
 
-## 6. Объясняем непрограммисту
-
-Заказчик — **не программист и без технического образования**. Это формирует стиль всех документов и общения:
-
-- Технические термины **обязательно** объясняем через простые аналогии (как другу за чаем).
-- Шаги маленькие и понятные.
-- При показе кода — кратко поясняем, что он делает.
-- Русский — основной язык документации продукта.
-- Эмодзи — только по явной просьбе.
-
-## 7. Не добавляем фичи без явного решения
-
-Агент **не имеет права** самостоятельно вводить в продукт функциональность, которой нет в `docs/product.md` или `docs/product-specs/`.
-
-Если появилась идея новой фичи или изменения поведения:
-
-1. Озвучить в чате заказчику.
-2. Дождаться явного «да».
-3. Зафиксировать решение в нужном документе.
-4. Только после этого — реализовывать.
-
-> **Аналогия:** строитель не пристраивает к дому веранду «по своей инициативе», даже если она кажется ему хорошей идеей. Сначала — согласование с владельцем дома.
-
----
-
-## Шапки документов (упрощённое правило)
-
-В **верхнеуровневых стратегических** файлах (`AGENTS.md`, `README.md`, `ARCHITECTURE.md`, `docs/product.md`, `docs/stack.md`, `docs/design-docs/core-beliefs.md`) — полная YAML-шапка:
+Top-level strategic files (`AGENTS.md`, `README.md`, `ARCHITECTURE.md`, `docs/product.md`, `docs/stack.md`, `docs/design-docs/core-beliefs.md`) — full YAML header:
 
 ```yaml
 ---
@@ -102,12 +67,12 @@ related: ../path/to/related.md
 ---
 ```
 
-В **остальных** документах достаточно одной строки под заголовком: `_Обновлено: YYYY-MM-DD_`. Если есть полная шапка — оставляем, переписывать ради ритуала не нужно.
+Other files — single line `_Updated: YYYY-MM-DD_` under the title.
 
-## Перед большими изменениями — спрашиваем
+## Structural changes
 
-Структурное изменение (переименование папок, перемещение файлов, переписывание ключевого документа) — **только после явного «да»** от заказчика. Маленькие правки (уточнить фразу, обновить дату) — без отдельного разрешения.
+Renames, moves, rewrites of top-level docs — require explicit owner approval. Minor edits (wording, dates) — no approval needed.
 
-## Эволюция этого документа
+## Document evolution
 
-Файл живой. По мере накопления опыта **добавляем новые принципы** или уточняем существующие — но осторожно: каждый новый принцип проедает контекст агента, и большая часть «принципов на всякий случай» превращается в шум.
+This file is living. Add or refine principles as experience accumulates — sparingly: each new principle eats agent context.

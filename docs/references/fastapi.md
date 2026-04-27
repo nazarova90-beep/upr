@@ -5,25 +5,23 @@ owner: Кристина
 related: ../BACKEND.md, ../stack.md, sqlmodel.md, uvicorn.md, pydantic-settings.md, index.md
 ---
 
-# FastAPI — research-справка
+# FastAPI — research note
 
-> **Источник.** Собрано через MCP `user-context7`, library ID `/fastapi/fastapi` (Source Reputation: High; Benchmark Score: 82.27). Дата сбора: 2026-04-27.
+Source: MCP `user-context7`, library ID `/fastapi/fastapi` (Source Reputation: High; Benchmark Score: 82.27). Fetched: 2026-04-27.
 
-## Зачем нужна в нашем проекте
+## Purpose in project
 
-FastAPI — каркас веб-сервера на Python. Это **главная библиотека бэкенда UPR**: она принимает HTTP-запросы от мобильного клиента, валидирует входные данные через Pydantic, отдаёт JSON-ответы, автоматически генерирует интерактивную документацию `/docs`. Выбрана в [stack.md](../stack.md) как baseline бэкенда (см. раздел «Почему именно эти варианты, а не другие» — почему FastAPI, а не Django).
+Python web framework. Backbone of UPR backend: HTTP intake from mobile client, Pydantic validation, JSON responses, auto-generated `/docs`. Selected in `stack.md` as backend baseline (FastAPI, not Django).
 
-> **Аналогия.** FastAPI — это «администратор на ресепшене»: принимает запрос от клиента, проверяет, что заполнены нужные поля, передаёт нужному отделу (роутеру), забирает ответ и выдаёт обратно.
+## Version
 
-## Версия
+- Current at fetch: 0.115–0.128 (stable). Minor releases can break — pin version.
+- Supports Python 3.13 (3.14 added in 0.118.3, 2025-10-10).
+- Pin pattern: `fastapi[standard]>=0.118.0,<0.119.0` (patches allowed, no minor bump).
 
-- На момент справки актуальные версии: 0.115–0.128 (стабильная ветка). В [release notes](https://fastapi.tiangolo.com/release-notes/) виден строгий semver: минорные версии могут содержать ломающие изменения, поэтому версию **пинуем**.
-- **Поддерживает Python 3.13** (с релиза 0.118.3 от 2025-10-10 добавлена поддержка 3.14, наша 3.13 поддерживается давно).
-- Рекомендация официальной документации: пиннинг через `fastapi[standard]>=0.118.0,<0.119.0` (минор разрешён к патчам, мажор — нет).
+## Key API
 
-## Ключевое API
-
-### 1. Создание приложения
+### 1. Application creation
 
 ```python
 from fastapi import FastAPI
@@ -36,11 +34,11 @@ def read_root():
     return {"Hello": "World"}
 ```
 
-`FastAPI()` — фабрика приложения. Декораторы `@app.get`, `@app.post` и т.д. навешивают эндпоинты. Можно использовать `def` (синхронный) или `async def` (асинхронный) — FastAPI принимает оба варианта.
+`FastAPI()` — application factory. Decorators `@app.get`, `@app.post`, etc. attach endpoints. Both `def` and `async def` accepted.
 
-### 2. Разделение по модулям через `APIRouter`
+### 2. Module split via `APIRouter`
 
-Для большого проекта (как наш — несколько доменов) создаём по `APIRouter` на каждый домен и подключаем через `include_router`:
+One `APIRouter` per domain, mounted via `include_router`:
 
 ```python
 from fastapi import APIRouter
@@ -57,11 +55,11 @@ async def list_items():
 app.include_router(router, prefix="/api/items", tags=["items"])
 ```
 
-**В нашем проекте** каждый домен (`workout`, `exercise_chat`, `video_analysis`, `ai_coach`) кладёт свой `router = APIRouter()` в `routes.py` и подключается из `app/main.py` — это соответствует [BACKEND.md](../BACKEND.md), раздел «Структура проекта».
+In project: each domain (`workout`, `exercise_chat`, `video_analysis`, `ai_coach`) places `router = APIRouter()` in its `routes.py`, mounted from `app/main.py`. Matches `BACKEND.md` "Project structure".
 
-### 3. Структура «Bigger Applications»
+### 3. Bigger-applications layout
 
-Из официальной документации FastAPI рекомендуется структура с `app` как python-пакетом, подкаталогами-доменами с `__init__.py`. Это **ровно та форма**, что у нас в [BACKEND.md](../BACKEND.md):
+FastAPI-recommended layout: `app` as Python package with domain subpackages (`__init__.py`). Same form as `BACKEND.md`:
 
 ```
 app/
@@ -76,25 +74,24 @@ app/
 └── ...
 ```
 
-## Подводные камни
+## Gotchas
 
-| Камень | Что делать |
+| Issue | Mitigation |
 |---|---|
-| FastAPI меняет API между минорными версиями (например, 0.115 → 0.116). | Всегда пиннить версию (`>=0.X.Y,<0.X+1.0`). |
-| `fastapi` без extras — голая библиотека. Для запуска нужны `uvicorn`, `python-multipart`, `email-validator`. | Ставить как `fastapi[standard]` — пакет включает рекомендуемые extras. |
-| По умолчанию валидация ответа — медленная при больших списках. | На MVP не критично; на стадии оптимизации использовать `response_model_exclude_unset=True`. |
-| Эндпоинты с `def` (без `async`) выполняются в thread pool — это нормально, но не блокировать долгими IO. | Долгие IO (вызов AI, чтение файлов) — только через `async def` + `await`. |
+| Minor versions can break API (e.g. 0.115 → 0.116). | Always pin (`>=0.X.Y,<0.X+1.0`). |
+| Bare `fastapi` lacks runtime deps (`uvicorn`, `python-multipart`, `email-validator`). | Install as `fastapi[standard]`. |
+| Default response validation slow on large lists. | Non-critical at MVP; later use `response_model_exclude_unset=True`. |
+| `def` endpoints run in thread pool — fine but don't block on long IO. | Long IO (AI calls, file reads) → `async def` + `await`. |
 
-## Что нам важно из этой библиотеки прямо сейчас
+## Skeleton scope
 
-Для **структурного скелета**:
-- `app/main.py` — `app = FastAPI()` без эндпоинтов;
-- по `routes.py` с `router = APIRouter()` (пустым) в каждом домене;
-- никаких реальных хендлеров — это уже логика, которая появится в hello-world и thin slice.
+- `app/main.py` — `app = FastAPI()`, no endpoints.
+- `routes.py` per domain with empty `router = APIRouter()`.
+- No real handlers — appears in hello-world and thin slice.
 
-## Ссылки
+## Links
 
-- Официальная документация: <https://fastapi.tiangolo.com/>
+- Docs: <https://fastapi.tiangolo.com/>
 - Bigger Applications: <https://fastapi.tiangolo.com/tutorial/bigger-applications/>
 - Release notes: <https://fastapi.tiangolo.com/release-notes/>
 - Versions and pinning: <https://fastapi.tiangolo.com/deployment/versions/>

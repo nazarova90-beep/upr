@@ -5,49 +5,44 @@ owner: Кристина
 related: stack.md, ../ARCHITECTURE.md, BACKEND.md, generated/
 ---
 
-# Database — база данных
+# Database
 
-> **Что это.** Короткая «карта-визитка» по хранению данных. Полная картина стека и план масштабирования — в `stack.md`. Конкретные модели и поля **рождаются вместе с кодом** в `backend/app/db/models/`; финальная схема будет автогенерироваться в `generated/db-schema.md` по факту, а не описываться заранее в этом документе.
+Data layer overview. Concrete fields finalize as code lands in `backend/app/db/models/`. Final schema auto-generates into `generated/db-schema.md`.
 
-## Стек
+## Stack
 
-- **MVP:** **SQLite** (один файл на диске).
-- **ORM:** **SQLAlchemy + SQLModel** — единый словарь моделей для приложения, миграций (Alembic) и будущей админки (SQLAdmin).
-- **Этап 3:** **PostgreSQL** — переезд через ту же ORM, без переписывания приложения.
+- **MVP:** SQLite (single file).
+- **ORM:** SQLAlchemy + SQLModel — single model dictionary for app, migrations (Alembic), future admin (SQLAdmin).
+- **Phase 6:** PostgreSQL via the same ORM (no app rewrite). Migration strategy: Alembic (introduced at Phase 5 first cloud deploy).
 
-Подробное обоснование — в `stack.md` → «Почему именно эти варианты».
+Rationale: `stack.md` → "Why these choices".
 
-## Главные сущности (на момент Single-scenario MVP)
+## Entities (Single-scenario MVP)
 
-Этого минимума достаточно, чтобы один сценарий «открыл приложение → выбрал упражнение → отправил видео → получил разбор → продолжил диалог» работал целиком:
+| Entity | Purpose |
+|---|---|
+| `Exercise` | Exercise catalog item. Fields (MVP): `id`, `name`, `technique`. |
+| `Workout` | Workout (MVP: one hardcoded). |
+| `ExerciseChat` | Chat per exercise (one per `user × exercise`). |
+| `ChatMessage` | Messages (text / video / annotation / system). |
+| `VideoAnalysis` | Analysis result (metadata + screenshot URI). |
 
-- **Exercise** — упражнение из каталога.
-- **Workout** — тренировка (на MVP — одна захардкоженная).
-- **ExerciseChat** — чат по упражнению (один на пару user × exercise).
-- **ChatMessage** — сообщения в чате (текст / видео / разметка / системное).
-- **VideoAnalysis** — результат разбора видео (метаданные + ссылка на скриншот).
+`User` — hardcoded singleton, no table; appears at Phase 5 with registration.
+`Set` (weight × reps), `Subscription` — appear at Phase 4 (set log) and Phase 7 (billing).
 
-**User** на MVP — захардкоженный синглтон без таблицы. Появится в Фазе 5 вместе с регистрацией.
-**Set** (вес × повторения), **Subscription** (тарифы) — появятся в Фазе 4 (дневник подходов) и Фазе 7 (биллинг) соответственно.
+## Video storage
 
-## Особенности хранения видео
+Videos are not stored in the main DB. DB stores **URI + metadata** (size, duration, type, owner, date).
 
-Видео **не хранится в основной БД** — слишком большие файлы. В БД лежит только **ссылка** + метаданные (размер, длительность, тип, владелец, дата).
+- **MVP:** URI points to local folder (via `storage/`).
+- **Phase 5+:** same URI points to S3-compatible storage — no DB schema change.
 
-- **MVP:** ссылка указывает на файл в **локальной папке** (через абстракцию `storage/` в бэкенде).
-- **Этап 2+:** та же ссылка указывает на S3-совместимое хранилище — без изменения схемы БД.
+## Phase additions
 
-## Что появится позже (по триггерам из `stack.md`)
-
-- ER-диаграмма и индексы — после реализации первых моделей (автогенерация в `generated/db-schema.md`).
-- Стратегия миграций (Alembic) — на Этапе 2 при первом облачном деплое.
-- Правила удаления данных (политика «2 мес / бессрочно») — на Этапе 7 (биллинг). Логика удаления видео при удалении аккаунта — на Этапе 5 (регистрация); см. чек-лист в `design-docs/security-future-reference.md`.
-- Бэкапы — Этап 2.
-- Шардинг / репликация — Этап 5+.
-
-## Связанные документы
-
-- `stack.md` — выбранный стек и план масштабирования.
-- `../ARCHITECTURE.md` — общая архитектура.
-- `BACKEND.md` — серверная часть.
-- `generated/` — автогенерируемая схема (появится после кода).
+| Trigger | Addition |
+|---|---|
+| First models exist | Auto-generated ER diagram and indexes in `generated/db-schema.md`. |
+| Phase 5 (first cloud deploy) | Alembic migrations. Account-deletion cascade (videos physically removed within 30 days — see `design-docs/security-future-reference.md`). |
+| Phase 7 (billing) | Retention policy: 2 months free / unlimited paid. |
+| Phase 5 | Backups. |
+| Phase 8+ | Sharding / replication. |

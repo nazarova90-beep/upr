@@ -1,55 +1,44 @@
 ---
 status: in-progress
-last_updated: 2026-04-19
+last_updated: 2026-04-27
 owner: Кристина
 related: ../product-specs/index.md, ../ui/index.md, ../exec-plans/active/roadmap.md
 ---
 
-# User Flows — оглавление
+# User flows
 
-Здесь лежат **пошаговые сценарии пользователя**: что и в каком порядке он делает, какие экраны видит, какие решения принимает.
+Step-by-step user scenarios: what user does in what order, which screens they see, which decisions they make. Not feature specs — those live in `product-specs/`.
 
-Это **не описание фич** (фичи — в `product-specs/`), а **навигация юзера через приложение**.
+## Documents
 
-> **Аналогия:** product-specs — это «инструкция к стиральной машине» (что она умеет). user-flows — это «как именно постирать конкретную рубашку».
-
-## Документы
-
-| Файл | Сценарий | Статус |
+| File | Scenario | Status |
 |---|---|---|
-| `upload-video-and-get-feedback.md` | **Главный сценарий Single-scenario MVP**: открыл приложение → экран тренировки → тап по упражнению → чат → загрузить видео из галереи → ответ AI → уточняющий вопрос. | in-progress (MVP-версия закрыта) |
-| `onboarding.md` | Первый вход в приложение, регистрация, сбор стартовых данных. **Не входит в Single-scenario MVP** — переезжает в Фазу 5 [`roadmap.md`](../exec-plans/active/roadmap.md) (закрытое тестирование). | TBD |
+| `upload-video-and-get-feedback.md` | **Main Single-scenario MVP scenario**: open app → workout screen → tap exercise → chat → upload video from gallery → AI reply → follow-up. | in-progress (MVP version closed) |
+| `onboarding.md` | First app entry, registration, initial data collection. Not in Single-scenario MVP — Phase 5 (closed testing). | TBD |
 
-### Будущие сценарии (TBD, по фазам [`roadmap.md`](../exec-plans/active/roadmap.md))
+## Planned
 
-**Фаза 5 (закрытое тестирование, регистрация):**
+**Phase 5 (closed testing, registration):**
 
-- `login.md` — вход существующего юзера.
-- `registration.md` — регистрация (если выделим из онбординга).
-- `delete-account.md` — удаление аккаунта.
-- `password-reset.md` — восстановление пароля.
+- `login.md` — existing-user login.
+- `registration.md` — sign-up (if separated from onboarding).
+- `delete-account.md` — account deletion.
+- `password-reset.md` — password reset.
 
-**Фаза 4 (расширение до Full MVP):**
+**Phase 4 (extend to Full MVP):**
 
-- `start-workout.md` — старт тренировки и прохождение её до конца (с дневником подходов, на 20 упражнениях).
+- `start-workout.md` — workout start through completion (with set log, 20 exercises).
 
-**Фаза 7 (монетизация):**
+**Phase 7 (monetization):**
 
-- `manage-subscription.md` — оформление и отмена подписки.
+- `manage-subscription.md` — subscribe / cancel.
 
-## Шаблон документа сценария
+## Flow document template
 
-Каждый flow-документ должен содержать:
-
-1. **Контекст** — кто юзер, в каком состоянии, чего хочет.
-2. **Триггер** — что запустило сценарий.
-3. **Шаги** — пронумерованный список действий и реакций системы.
-4. **Развилки** — что происходит при разных вариантах выбора юзера.
-5. **Edge cases** — нестандартные ситуации (нет интернета, ошибка сервера и т.д.).
-6. **Успешное завершение** — в каком состоянии юзер в конце.
-7. **Связанные экраны** — ссылки на UI-документы (когда появятся).
-
-## Связанные папки
-
-- `../product-specs/` — спецификации фич.
-- `../ui/` — визуал экранов, упоминаемых в сценариях.
+1. **Context** — user, state, intent.
+2. **Trigger** — what starts the scenario.
+3. **Steps** — numbered list of user actions + system reactions.
+4. **Branches** — alternative user choices.
+5. **Edge cases** — non-standard situations (no internet, server error, etc.).
+6. **Success state** — final user state.
+7. **Related screens** — links to UI docs.

@@ -5,25 +5,23 @@ owner: Кристина
 related: ../FRONTEND.md, ../stack.md, i18next.md, expo-localization.md, index.md
 ---
 
-# react-i18next — research-справка
+# react-i18next — research note
 
-> **Источник.** Собрано через MCP `user-context7`, library ID `/i18next/react-i18next` (Source Reputation: High; Benchmark Score: 78.94; 186 сниппетов). Дата сбора: 2026-04-27.
+Source: MCP `user-context7`, library ID `/i18next/react-i18next` (Source Reputation: High; Benchmark Score: 78.94; 186 snippets). Fetched: 2026-04-27.
 
-## Зачем нужна в нашем проекте
+## Purpose in project
 
-`react-i18next` — это «мост» между движком переводов [i18next](i18next.md) и React-компонентами. Без него можно — но придётся вручную тащить `i18next.t(...)` через все компоненты. С ним — стандартный React-хук `useTranslation()` и компонент `<Trans>` для встроенных в текст React-элементов. В Expo / React Native — стандартный выбор.
+React bindings for `i18next.md`. Provides `useTranslation()` hook and `<Trans>` component. Standard for Expo/React Native.
 
-> **Аналогия.** Если `i18next` — это «телефонная книга», то `react-i18next` — это «розетка», в которую втыкается каждый React-компонент, чтобы получить нужный перевод и автоматически перерисоваться при смене языка.
+## Version
 
-## Версия
+- Pairs with `i18next`. Current: `react-i18next >= 15`.
+- React 18+ / React Native 0.74+ (Expo SDK 54).
+- Pin: `react-i18next>=15,<17`.
 
-- Идёт в паре с `i18next`. На момент справки — `react-i18next >= 15`.
-- Совместим с React 18+ и React Native 0.74+ (то, что в Expo SDK 54).
-- Пиннуем `react-i18next>=15,<17`.
+## Key API
 
-## Ключевое API
-
-### 1. Подключение к i18next через `initReactI18next`
+### 1. Wire to i18next via `initReactI18next`
 
 ```ts
 // src/i18n/index.ts
@@ -40,19 +38,19 @@ i18n
       ru: { translation: ru },
     },
     interpolation: {
-      escapeValue: false, // React сам экранирует
+      escapeValue: false, // React handles escape
     },
     react: {
-      useSuspense: false, // на MVP без Suspense — проще для отладки
+      useSuspense: false, // MVP: no Suspense for simpler debugging
     },
   });
 
 export default i18n;
 ```
 
-`useSuspense: false` важно: с Suspense на момент загрузки переводов компонент будет «подвешен», а у нас ресурсы и так загружены статически — Suspense не нужен.
+`useSuspense: false`: resources are loaded statically, no Suspense needed; avoids component suspension.
 
-### 2. Хук `useTranslation` в функциональном компоненте
+### 2. `useTranslation` hook
 
 ```tsx
 import { Text, View } from "react-native";
@@ -68,23 +66,21 @@ export default function ChatScreen() {
 }
 ```
 
-С нэймспейсом и префиксом ключа:
+With namespace and keyPrefix:
 
 ```tsx
 const { t } = useTranslation("translation", { keyPrefix: "chat.empty" });
-t("placeholder"); // эквивалент t("chat.empty.placeholder")
+t("placeholder"); // ≡ t("chat.empty.placeholder")
 ```
 
-С возможностью переключить язык:
+Language switch:
 
 ```tsx
 const { t, i18n } = useTranslation();
 i18n.changeLanguage("en");
 ```
 
-### 3. Компонент `<Trans>` для текста с React-элементами внутри
-
-Для случаев, когда внутри переводимой фразы есть **JSX-элементы** (ссылка, `<strong>`, иконка):
+### 3. `<Trans>` for text with JSX
 
 ```tsx
 import { Trans } from "react-i18next";
@@ -95,43 +91,41 @@ import { Trans } from "react-i18next";
     termsLink: <Link href="/terms" />,
   }}
 >
-  Продолжая, вы соглашаетесь с <termsLink>условиями</termsLink>.
+  By continuing, you agree to the <termsLink>terms</termsLink>.
 </Trans>;
 ```
 
-В JSON-словаре:
+JSON dictionary:
 
 ```json
 {
   "terms": {
-    "agreement": "Продолжая, вы соглашаетесь с <termsLink>условиями</termsLink>."
+    "agreement": "By continuing, you agree to the <termsLink>terms</termsLink>."
   }
 }
 ```
 
-На MVP, скорее всего, обойдёмся без `<Trans>` — все строки простые. Но архитектурно `<Trans>` — стандартный способ для будущих сложных текстов.
+MVP likely won't need `<Trans>`; reserved for future complex strings.
 
-## Подводные камни
+## Gotchas
 
-| Камень | Что делать |
+| Issue | Mitigation |
 |---|---|
-| Suspense + статические ресурсы создают лишнюю асинхронность. | Ставить `react.useSuspense: false`. |
-| Ключи в JSON и в коде расходятся (опечатался — увидишь ключ вместо текста). | Включить TypeScript-типы переводов (отдельная фича, на MVP не подключаем — добавим, когда строк станет много). |
-| `i18n.changeLanguage(lng)` асинхронен. Перерисовка происходит после промиса. | На MVP язык один (`ru`), переключение не используем. Появится с фичей выбора языка. |
-| Двойной экранирование при `escapeValue: true` ломает символы вроде кавычек. | Всегда `escapeValue: false` в React/RN. |
-| `useTranslation` без аргументов берёт `defaultNS`. Если позже добавим неймспейсы (`errors`, `common`) — нужно будет обновить. | На MVP — один неймспейс `translation`. |
+| Suspense + static resources adds needless async. | Set `react.useSuspense: false`. |
+| Key drift between JSON and code (typos surface as raw keys). | Enable TS translation types when string count grows. |
+| `i18n.changeLanguage(lng)` is async; rerender after promise. | MVP: single language (`ru`); no switching. |
+| `escapeValue: true` breaks quotes etc. | Always `escapeValue: false` in React/RN. |
+| `useTranslation` without args uses `defaultNS`. Adding namespaces later requires updates. | MVP: single namespace `translation`. |
 
-## Что нам важно из этой библиотеки прямо сейчас
+## Skeleton scope
 
-Для **структурного скелета**:
+- `mobile/src/i18n/index.ts`: `.use(initReactI18next).init(...)`. MVP: no HTTP backend, no Language Detector (language from `expo-localization` directly).
+- `mobile/app/_layout.tsx`: `import "../src/i18n"` once at app start (init via import side-effect).
+- `useTranslation()` not used in stub screens (no real UI strings yet).
 
-- В `mobile/src/i18n/index.ts` — `.use(initReactI18next).init(...)`. На MVP — без HTTP-backend и без Language Detector (язык — `expo-localization` напрямую при инициализации).
-- В `mobile/app/_layout.tsx` — `import "../src/i18n"` (один раз при старте — этого достаточно, инициализация происходит на стороннем эффекте импорта).
-- Сам `useTranslation()` в экранах-заглушках можно пока не использовать — нет реальных строк UI.
+## Links
 
-## Ссылки
-
-- Официальная документация: <https://react.i18next.com/>
+- Docs: <https://react.i18next.com/>
 - `useTranslation`: <https://react.i18next.com/latest/usetranslation-hook>
 - `<Trans>`: <https://react.i18next.com/latest/trans-component>
 - GitHub: <https://github.com/i18next/react-i18next>

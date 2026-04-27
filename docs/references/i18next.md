@@ -5,27 +5,25 @@ owner: Кристина
 related: ../FRONTEND.md, ../stack.md, react-i18next.md, expo-localization.md, index.md
 ---
 
-# i18next — research-справка
+# i18next — research note
 
-> **Источник.** Собрано через MCP `user-context7`, library ID `/i18next/i18next` (Source Reputation: High; Benchmark Score: 63.5; версии `v23.11.5`, `v26.0.2`). Дата сбора: 2026-04-27.
+Source: MCP `user-context7`, library ID `/i18next/i18next` (Source Reputation: High; Benchmark Score: 63.5; versions `v23.11.5`, `v26.0.2`). Fetched: 2026-04-27.
 
-## Зачем нужна в нашем проекте
+## Purpose in project
 
-`i18next` — стандартная и «boring» система интернационализации (i18n) для JavaScript/TypeScript. В UPR — **движок переводов**: загружает JSON-словари (`ru.json` и в будущем `en.json`, `…`), отдаёт по ключу нужный текст. Плюс умеет: интерполяцию переменных (`Hello {{name}}`), плюрализацию («1 подход» / «2 подхода» / «5 подходов»), вложенные ключи, неймспейсы.
+i18n engine for JS/TS. Loads JSON dictionaries (`ru.json`, future `en.json`, …), returns text by key. Supports interpolation (`Hello {{name}}`), pluralization, nested keys, namespaces.
 
-**Связь с другими библиотеками.** Сам `i18next` — общий движок. В React-компонентах используем его через [react-i18next.md](react-i18next.md). Текущий язык устройства определяет [expo-localization.md](expo-localization.md). i18next просто читает результат.
+Stack relations: engine only. React components use via `react-i18next.md`. Device language detected by `expo-localization.md`.
 
-> **Аналогия.** `i18next` — это «телефонная книга» приложения. Везде в коде ты вместо текста пишешь его «номер» (ключ, например `chat.empty.placeholder`). Перевод хранится в книге. Меняешь книгу — меняется язык, код менять не надо.
+## Version
 
-## Версия
+- Stable: `v26`. LTS: `v23`. New projects: `v26`.
+- React Native + Expo compatible via `react-i18next`.
+- Pin: `i18next>=26,<27`.
 
-- Стабильная ветка: `v26`. Также есть `v23` LTS. Для нового проекта берём `v26`.
-- Совместимость с React Native + Expo — да, работает «из коробки» через стандартные пакеты `react-i18next`.
-- Пиннуем `i18next>=26,<27`.
+## Key API
 
-## Ключевое API
-
-### 1. Инициализация (минимум)
+### 1. Init (minimal)
 
 ```ts
 import i18next from "i18next";
@@ -39,35 +37,27 @@ i18next.init({
     ru: { translation: ru },
   },
   interpolation: {
-    escapeValue: false, // в React/RN экранирование уже делает сам React
+    escapeValue: false, // React/RN already escapes
   },
 });
 ```
 
-- `lng` — текущий язык. На MVP жёстко `"ru"`. Позже сюда подаём результат от `expo-localization`.
-- `fallbackLng` — какой язык брать, если ключ не найден в текущем.
-- `resources` — структура `{ <язык>: { <неймспейс>: <словарь> } }`.
+- `lng` — current language. MVP: hardcoded `"ru"`. Later: from `expo-localization`.
+- `fallbackLng` — fallback when key missing.
+- `resources` — `{ <lang>: { <namespace>: <dictionary> } }`.
 
-### 2. Использование `t(key)`
+### 2. `t(key)` usage
 
 ```ts
 i18next.t("welcome");
-// "Добро пожаловать"
-
 i18next.t("greeting", { name: "Кристина" });
-// "Привет, Кристина!"
-
 i18next.t("nested.deep.key");
-// "Глубоко вложенное значение"
-
-i18next.t("item", { count: 0 }); // "Нет элементов"
-i18next.t("item", { count: 1 }); // "Один элемент"
-i18next.t("item", { count: 5 }); // "5 элементов"
+i18next.t("item", { count: 0 });
+i18next.t("item", { count: 1 });
+i18next.t("item", { count: 5 });
 ```
 
-### 3. Структура JSON-словаря
-
-Стандартный формат — простой вложенный JSON:
+### 3. JSON dictionary format
 
 ```json
 {
@@ -83,39 +73,37 @@ i18next.t("item", { count: 5 }); // "5 элементов"
 }
 ```
 
-- Вложенность — через объекты, ключ обращения через точку: `chat.empty.placeholder`.
-- Плюрализация — через суффиксы `_one`, `_other` и т.д. (для русского правила — `_one`, `_few`, `_many`, `_other`).
+- Nested via objects; lookup via dot path: `chat.empty.placeholder`.
+- Pluralization via suffixes `_one`, `_other`, etc. Russian rules: `_one`, `_few`, `_many`, `_other`.
 
-### 4. Динамическое добавление ресурсов (на будущее)
+### 4. Dynamic resource bundles
 
 ```ts
 i18next.addResourceBundle("en", "translation", { welcome: "Welcome" }, true, false);
 ```
 
-Пригодится в Фазе 9, когда будем добавлять английский язык.
+Used in Phase 9 when adding English.
 
-## Подводные камни
+## Gotchas
 
-| Камень | Что делать |
+| Issue | Mitigation |
 |---|---|
-| `init()` асинхронен. Если до `init` выполнится `t()` — вернётся ключ как есть. | Ждать инициализации перед рендером (или использовать `react-i18next` — он сам справится). |
-| `interpolation.escapeValue: true` (по умолчанию) — двойное экранирование в React/RN. | В React всегда `escapeValue: false`. |
-| Перепутать `lng` и `fallbackLng` — можно случайно начать показывать английские строки на русском устройстве. | На MVP оба равны `"ru"`. |
-| Многоуровневые namespace'ы (`common`, `errors`) усложняют структуру без пользы для маленького проекта. | На MVP — один неймспейс `translation`. Разделение появится с ростом строк. |
-| Русские плюрализации работают только при правильных суффиксах: `key_one`, `key_few`, `key_many`, `key_other`. | Использовать стандартные суффиксы CLDR. |
+| `init()` async. `t()` before init returns the key. | Wait for init before render, or use `react-i18next`. |
+| `escapeValue: true` (default) double-escapes in React/RN. | Always `escapeValue: false` in React. |
+| Confusing `lng` and `fallbackLng` can leak wrong language. | MVP: both `"ru"`. |
+| Multi-namespace overkill for small projects. | MVP: single namespace `translation`. Split on growth. |
+| Russian plurals require correct CLDR suffixes (`_one`, `_few`, `_many`, `_other`). | Use standard CLDR suffixes. |
 
-## Что нам важно из этой библиотеки прямо сейчас
+## Skeleton scope (Single-scenario MVP)
 
-Для **структурного скелета** Single-scenario MVP:
+- `mobile/src/i18n/index.ts`: `i18next.init({ lng: "ru", fallbackLng: "ru", resources: { ru: { translation: ru } } })`.
+- `mobile/src/i18n/locales/ru.json`: `{}` or one test key (e.g. `app.name: "UPR"`).
+- Real UI strings added in Track B (mockups) and Phase 2 (thin slice).
+- Import i18n in `app/_layout.tsx` for single init at app start.
 
-- `mobile/src/i18n/index.ts` — `i18next.init({ lng: "ru", fallbackLng: "ru", resources: { ru: { translation: ru } } })`.
-- `mobile/src/i18n/locales/ru.json` — пустой объект `{}` или с одним тестовым ключом (например, `app.name: "UPR"`).
-- Реальные строки UI добавятся в Track B (мокапы) и в Phase 2 (thin slice).
-- Импорт i18n в `app/_layout.tsx`, чтобы инициализация выполнялась один раз при старте приложения.
+## Links
 
-## Ссылки
-
-- Официальная документация: <https://www.i18next.com/>
-- Configuration options: <https://www.i18next.com/overview/configuration-options>
+- Docs: <https://www.i18next.com/>
+- Configuration: <https://www.i18next.com/overview/configuration-options>
 - Plurals: <https://www.i18next.com/translation-function/plurals>
 - GitHub: <https://github.com/i18next/i18next>

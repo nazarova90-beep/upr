@@ -1,106 +1,100 @@
 ---
 status: in-progress
-last_updated: 2026-04-19
+last_updated: 2026-04-27
 owner: Кристина
 related: ../product-specs/exercise-chat.md, ../product-specs/videosinstruction.md, ../product-specs/exercises-base.md, ../product-specs/workout.md, ../exec-plans/active/roadmap.md, ../exec-plans/active/mvp-product-spec.md
 ---
 
-# User flow: загрузка видео и получение разбора (Single-scenario MVP)
+# User flow: upload video and get feedback (Single-scenario MVP)
 
-Это **главный (и единственный) пользовательский сценарий** Single-scenario MVP — то, что приложение должно уметь **в первую очередь** ([`roadmap.md`](../exec-plans/active/roadmap.md), Фазы 1-3). Если этот сценарий работает целиком — Single-scenario MVP считается реализованным.
+Main and only Single-scenario MVP scenario (`roadmap.md` Phases 1–3). End-to-end working state of this scenario = Single-scenario MVP delivered.
 
-> Аналогия: для нового ресторана главный сценарий — «гость зашёл, сел, заказал, поел, ушёл довольным». Можно сколько угодно работать над меню, музыкой и интерьером — но если этот один сценарий не работает, ресторана нет. У нас то же самое: «открыл приложение → загрузил видео → получил разбор от AI → задал уточняющий вопрос». Всё остальное — потом.
+## 1. Context
 
-## 1. Контекст
+- **User:** hardcoded singleton, no table. App does not distinguish users. No login, no registration, no onboarding form (`roadmap.md` § 3).
+- **State:** user already recorded a set with the device's stock camera (no in-app capture in Single-scenario MVP — `videosinstruction.md`). Video is in device gallery.
+- **Intent:** get AI technique review on this video and ask follow-ups.
 
-- **Кто юзер.** Захардкоженный синглтон без таблицы — то есть приложение **не различает** пользователей. Логина нет, регистрации нет, онбординг-анкеты нет. См. [`roadmap.md`](../exec-plans/active/roadmap.md), раздел 3.
-- **В каком состоянии.** Юзер уже снял видео своего подхода **сторонней камерой** (стандартной камерой телефона) — потому что съёмки внутри приложения в Single-scenario MVP нет ([`videosinstruction.md`](../product-specs/videosinstruction.md), врезка «Single-scenario MVP: что упрощено»). Видео лежит в галерее устройства.
-- **Чего хочет.** Получить от AI разбор техники по этому видео и иметь возможность задать уточняющий вопрос.
+## 2. Trigger
 
-## 2. Триггер
+User opens the app. No intermediate screens (login / onboarding / workout selection). App lands on workout screen.
 
-Юзер открывает приложение на телефоне. **Никаких промежуточных экранов** (логин / онбординг / выбор тренировки) — приложение сразу показывает **экран тренировки**.
+## 3. Steps (happy path)
 
-## 3. Шаги (happy path)
-
-| # | Что делает юзер | Что показывает система | Где описано детальнее |
+| # | User action | System reaction | Reference |
 |---|---|---|---|
-| 1 | Открывает приложение | Экран тренировки: шапка с названием «Вайбкодинговая тренировка», под ним дата «19.04.2026», под датой счётчик «3 упражнения». Ниже три карточки упражнений в порядке: Румынская тяга → Вертикальная тяга блока к груди → Подъём гантелей на бицепс. | [`workout.md`](../product-specs/workout.md), раздел «MVP: единственная захардкоженная тренировка» |
-| 2 | (опционально) Тапает на иконку «информация» в карточке упражнения | Поверх экрана раскрывается поп-ап с описанием техники (поле `technique` упражнения). Юзер читает, закрывает поп-ап по close-кнопке, остаётся на экране тренировки. | [`exercises-base.md`](../product-specs/exercises-base.md), раздел «Описания техники» |
-| 3 | Тапает по карточке упражнения (или по стрелке справа в карточке) | Переход на **экран чата** этого упражнения. В шапке чата: кнопка «Назад» + название упражнения. Лента сообщений пуста. По центру — placeholder-текст: **«Загрузи видео с выполнением упражнения, и я проверю технику выполнения»**. Внизу — крупная кнопка **«Загрузить видео»**. **Поля ввода текста и кнопки прикрепления файла на этом этапе нет.** | [`exercise-chat.md`](../product-specs/exercise-chat.md), врезка «Single-scenario MVP: что упрощено» |
-| 4 | Тапает «Загрузить видео» | Открывается **системный пикер галереи** устройства. Юзер выбирает файл. | [`videosinstruction.md`](../product-specs/videosinstruction.md), врезка |
-| 5 | Выбрал файл в пикере | Никакого промежуточного экрана-превью. **Видео уходит в работу сразу.** В ленте чата появляется сообщение от юзера со встроенным видео, а ниже — сообщение-плейсхолдер от AI «Анализирую твой подход…» с анимацией. Кнопка «Загрузить видео» становится **неактивной** (один анализ в очереди на пользователя — правило сохраняется). | [`exercise-chat.md`](../product-specs/exercise-chat.md) → раздел «Состояние "AI думает"» (для Full MVP, в MVP применимо то же поведение) |
-| 6 | (Опционально) Сворачивает приложение / выходит на экран тренировки кнопкой «Назад» | Анализ продолжается на сервере. При возвращении в чат юзер видит то же состояние: «Анализирую…» либо уже готовый ответ. | [`videosinstruction.md`](../product-specs/videosinstruction.md) → «Состояние AI думает» |
-| 7 | Возвращается / остаётся в чате; AI закончил разбор | Плейсхолдер «Анализирую…» **заменяется** настоящим сообщением от AI: текстовый разбор техники тёплым языком + (опционально) размеченный кадр из видео. Кнопка «Загрузить видео» снова активна. **Появляются** поле ввода текста и кнопка прикрепления файла внизу — чат «достраивается» из режима «загрузить первое видео» в режим полноценной переписки. | [`exercise-chat.md`](../product-specs/exercise-chat.md) → «Формат ответа AI» |
-| 8 | (Опционально) Пишет уточняющий вопрос текстом и отправляет | Сообщение появляется в ленте от имени юзера. AI отвечает текстом в этот же чат. | [`exercise-chat.md`](../product-specs/exercise-chat.md) |
-| 9 | (Опционально) Загружает ещё одно видео по этому же упражнению | То же поведение: instant send, плейсхолдер «Анализирую…», ответ AI с учётом всей предыдущей истории чата. | [`exercise-chat.md`](../product-specs/exercise-chat.md) → «Один чат = одно упражнение, навсегда» |
+| 1 | Open app | Workout screen: header "Вайбкодинговая тренировка" + date "19.04.2026" + counter "3 упражнения". Three exercise cards in order: Romanian deadlift → lat pulldown → biceps curl. | `workout.md` § "MVP: single hardcoded workout" |
+| 2 | (Optional) Tap "info" icon on exercise card | Pop-up over screen with technique description (`technique` field). Closed via close button. User stays on workout screen. | `exercises-base.md` § "Technique text" |
+| 3 | Tap exercise card (or right arrow) | Navigate to per-exercise chat. Header: "Back" + exercise name. Empty message feed. Center placeholder: **"Загрузи видео с выполнением упражнения, и я проверю технику выполнения"**. Bottom: large **"Загрузить видео"** button. **No text input field, no attach button at this stage.** | `exercise-chat.md` § "Single-scenario MVP simplifications" |
+| 4 | Tap "Загрузить видео" | System gallery picker opens. User picks file. | `videosinstruction.md` |
+| 5 | File picked | No preview screen. **Video sent immediately.** Chat feed shows user message with embedded video; below — AI placeholder "Анализирую твой подход…" with animation. "Загрузить видео" disabled (one analysis per user). | `exercise-chat.md` § "AI is thinking" |
+| 6 | (Optional) Background app or tap "Back" | Analysis continues server-side. Returning to chat shows current state ("Анализирую…" or finished reply). | `videosinstruction.md` § "AI is thinking" |
+| 7 | Stay in chat / return; AI finished | Placeholder replaced by real AI message: text review in human tone + (optional) annotated frame. "Загрузить видео" re-enabled. **Text input + attach button appear** — chat upgrades from "first video" mode to full conversation mode. | `exercise-chat.md` § "AI reply format" |
+| 8 | (Optional) Type follow-up question | User message in feed. AI replies in same chat. | `exercise-chat.md` |
+| 9 | (Optional) Send another video for the same exercise | Same behavior: instant send, "Анализирую…" placeholder, AI reply takes prior chat history into account. | `exercise-chat.md` § "Core concept" |
 
-## 4. Развилки
+## 4. Branches
 
-### 4.1. AI не смог разобрать видео
+### 4.1. AI cannot analyze video
 
-В Single-scenario MVP **полная двухэтапная проверка качества видео не реализуется** — это переезжает в Фазу 3 (см. врезку в [`videosinstruction.md`](../product-specs/videosinstruction.md)). Минимальное поведение в Фазе 2 (thin slice):
+Full two-stage video quality check is Phase 3, not Single-scenario MVP / Phase 2. Minimal Phase 2 behavior:
 
-- Если AI вернул ошибку или явно не понял видео — в чате вместо обычного разбора появляется сообщение от AI вида: **«Не смог разобрать твой подход. Попробуй переснять видео и загрузить ещё раз»**. Конкретные причины («темно», «не видно человека», «плохой ракурс») приходят без жёсткой структуры — то, что вернул AI.
-- Кнопка «Загрузить видео» активна — юзер может попробовать снова.
-- Поле ввода и кнопка прикрепления файла **открываются** (как и при удачном ответе) — потому что юзер уже взаимодействовал с AI.
+- AI returns error or clearly didn't understand → AI message: **"Не смог разобрать твой подход. Попробуй переснять видео и загрузить ещё раз"**. Specific reasons (dark / no person / bad angle) come unstructured.
+- "Загрузить видео" stays enabled — user can retry.
+- Text input + attach button open (same as on success) — user already interacted with AI.
 
-### 4.2. Юзер уходит из чата до получения ответа
+### 4.2. User leaves chat before reply arrives
 
-Юзер тапает «Назад» в шапке чата → возвращается на экран тренировки. На экране тренировки **никаких визуальных изменений** в Single-scenario MVP нет — карточка упражнения выглядит так же, как и до загрузки видео (без статусов/индикаторов). Если юзер тапнет в карточку повторно — он попадёт обратно в тот же чат и увидит актуальное состояние («Анализирую…» либо уже готовый ответ).
+User taps "Back" → workout screen. **No visual change** on workout screen in Single-scenario MVP — exercise card looks identical (no status / indicator). Re-tap → back into same chat with current state ("Анализирую…" or finished reply).
 
-> Идея с плавающей кнопкой-индикатором «AI разбирает» поверх всех экранов — отличная, но это **отдельная инженерная история**, отложена в v2 (см. [`exercise-chat.md`](../product-specs/exercise-chat.md)). В Single-scenario MVP индикатора между экранами нет.
+Floating cross-screen indicator deferred to v2 (`exercise-chat.md`).
 
-### 4.3. Юзер пытается открыть чат другого упражнения, пока первое разбирается
+### 4.3. User opens another exercise chat while first is processing
 
-Правило **«один анализ в очереди на пользователя»** ([`videosinstruction.md`](../product-specs/videosinstruction.md), раздел «Очередь анализа») сохраняется. Поведение в Single-scenario MVP:
+Rule **"one analysis per user"** (`videosinstruction.md` § "Analysis queue") preserved. Single-scenario MVP behavior:
 
-- Перейти в другой чат — **можно**, чат открывается.
-- Кнопка «Загрузить видео» в этом другом чате — **неактивна** (или показывается короткая подсказка «дождись завершения предыдущего разбора»). Точная формулировка/визуал — решит Track B.
+- Switching to another chat — allowed; chat opens.
+- "Загрузить видео" in that other chat — disabled (or short hint "дождись завершения предыдущего разбора"). Exact wording / visual — Track B.
 
 ## 5. Edge cases
 
-| Ситуация | Поведение в Single-scenario MVP |
+| Situation | Single-scenario MVP behavior |
 |---|---|
-| Нет интернета на момент загрузки видео | В Фазе 2 (thin slice) — простая ошибка-сообщение в чате «не получилось загрузить, проверь интернет». Подробной обработки оффлайна нет — переезжает в Фазу 3. |
-| Файл слишком длинный / большой / неподдерживаемый формат | Полная клиентская проверка (этап 1) переезжает в Фазу 3. В Фазе 2 — либо ошибка от сервера «не смог принять видео», либо ошибка AI «не смог разобрать» (см. 4.1). |
-| Юзер закрыл приложение целиком и открыл заново | Открывается экран тренировки (всегда стартовая точка). История чатов и видео сохранена в БД (без политики 2 мес — храним всё бессрочно). При возврате в чат юзер видит свою историю. |
-| Видео упражнения не совпадает с упражнением чата (например, в чат «Румынская тяга» прислано видео тяги блока) | Распознавание упражнения и проверка соответствия чату в Single-scenario MVP / Фазе 2 **не реализуется** — переезжает в Фазу 3. AI пытается разобрать любое видео, отправленное в чат. |
+| No internet at upload | Phase 2: simple error message in chat "не получилось загрузить, проверь интернет". Detailed offline handling — Phase 3. |
+| File too long / large / unsupported format | Full client-side check (stage 1) — Phase 3. Phase 2: server "не смог принять видео" or AI "не смог разобрать" (see 4.1). |
+| User closes and reopens app | Lands on workout screen (always entry point). Chat + video history preserved in DB (no 2-month policy — kept indefinitely). Returning to chat shows history. |
+| Video doesn't match exercise (e.g. lat pulldown video into Romanian-deadlift chat) | Exercise recognition + chat-match check not in Single-scenario MVP / Phase 2 — Phase 3. AI tries to analyze any video sent. |
 
-## 6. Успешное завершение
+## 6. Success state
 
-Сценарий считается успешно пройденным, когда:
+- Chat contains user message with video.
+- Same chat contains AI reply with technique review (text and/or annotated frame).
+- User reads reply.
+- (Optional) Chat contains follow-up question + AI reply.
 
-- В чате упражнения есть **сообщение юзера с видео**.
-- В этом же чате есть **ответ AI** с разбором техники (текст и/или размеченный кадр).
-- Юзер **видит ответ** и понимает, что прочитанное — это разбор именно его подхода.
-- (Опционально) В чате есть **уточняющий вопрос юзера и ответ AI** на него.
+## 7. Related screens
 
-Это и есть «лифт поехал с этажа 1 на этаж 3» из аналогии [`roadmap.md`](../exec-plans/active/roadmap.md), раздел 3.
+Two screens + one pop-up in this scenario:
 
-## 7. Связанные экраны
+1. **Workout screen** — entry point, always. Spec: `workout.md` § "MVP: single hardcoded workout". Mockup: Track B.
+2. **Per-exercise chat** — opened from card tap. Spec: `exercise-chat.md` (Full MVP) + "Single-scenario MVP simplifications". Mockup: Track B. Two visual states:
+   - **Empty (before first AI reply):** only "Загрузить видео" button + placeholder text. No text input, no attach button.
+   - **Active (after first AI reply):** standard messenger: feed + text input + attach button + "Загрузить видео" (or same behavior via attach — Track B).
+3. **Technique pop-up** — over workout screen, opened from info icon. Spec: `workout.md` § "Exercise card anatomy". Mockup: Track B.
 
-В Single-scenario MVP в этом сценарии всего **два экрана** + один поп-ап:
+## 8. Open questions (for Track B + Phase 2)
 
-1. **Экран тренировки** — стартовая точка приложения, всегда. Описан в [`workout.md`](../product-specs/workout.md), раздел «MVP: единственная захардкоженная тренировка». Мокап — Track B.
-2. **Экран чата упражнения** — открывается тапом по карточке. Описан в [`exercise-chat.md`](../product-specs/exercise-chat.md) (Full MVP) + врезка «Single-scenario MVP: что упрощено». Мокап — Track B. **Особенность Single-scenario MVP:** имеет два визуальных состояния:
-   - **Чат пустой (до первого ответа AI):** только кнопка «Загрузить видео» + placeholder-текст. Поля ввода и кнопки прикрепления файла нет.
-   - **Чат активный (после первого ответа AI):** обычная переписка: лента сообщений + поле ввода + кнопка прикрепления файла + кнопка «Загрузить видео» (или то же поведение через прикрепление файла — решит Track B).
-3. **Поп-ап с описанием техники** — открывается поверх экрана тренировки по иконке «информация» в карточке. Описан в [`workout.md`](../product-specs/workout.md), раздел «Анатомия одной карточки упражнения». Мокап — Track B.
+Non-blocking for Track A; resolve at Track B (mockups) or Phase 2 (implementation).
 
-## 8. Открытые вопросы (для Track B и Фазы 2)
+- Exact transition from "empty chat" to "active chat" — how does the input field appear?
+- Where does the camera-angle hint live (side for deadlift + biceps; front or 3⁄4 for lat pulldown)? Options: (a) inside empty-chat placeholder, (b) AI system message in chat, (c) hint on "Загрузить видео" tap, (d) inside technique pop-up.
+- Exact "не смог разобрать" wording — list of mockup variants.
+- "One analysis in queue" behavior in another chat — disabled button + tooltip vs system message?
 
-Эти вопросы **не блокируют** Track A — они должны быть закрыты при работе над мокапами (Track B) или при реализации (Фаза 2).
+## 9. Decision log
 
-- Точное визуальное состояние «чат пустой» vs «чат активный» — как именно появляется поле ввода?
-- Где ровно живёт подсказка про ракурс съёмки («сбоку» для румынской тяги и подъёма на бицепс, «спереди или 3⁄4» для тяги блока)? Варианты: (а) внутри placeholder-текста в пустом чате, (б) системное сообщение от AI в чате, (в) подсказка в момент тапа «Загрузить видео», (г) в поп-апе с описанием техники.
-- Точная формулировка ошибки «не смог разобрать» — нужен короткий список «макетных» вариантов сообщений от AI.
-- Точное поведение при «один анализ в очереди» в другом чате — заблокированная кнопка с тултипом или системное сообщение?
-
-## 9. Журнал решений
-
-| Дата | Решение | Где обсуждалось |
+| Date | Decision | Source |
 |---|---|---|
-| 2026-04-19 | Чат имеет **два состояния**: пустой (только placeholder-текст и кнопка «Загрузить видео») и активный (поле ввода и кнопка прикрепления файла появляются после первого ответа AI). В шапке чата — кнопка «Назад» и название упражнения. | Чат, Track A Фазы 1, шаг 6. |
-| 2026-04-19 | Загрузка видео — **instant send**: после выбора файла в пикере галереи никакого промежуточного экрана-превью нет, видео сразу появляется в чате как сообщение юзера, а ниже — плейсхолдер «Анализирую…» от AI. | Чат, Track A Фазы 1, шаг 6. |
-| 2026-04-19 | В Single-scenario MVP / Фазе 2 (thin slice) **не реализуются**: распознавание упражнения и сверка с чатом, полная двухэтапная проверка качества видео, плавающая кнопка-индикатор между экранами. Всё это переезжает в Фазу 3. | Чат, Track A Фазы 1, шаг 6; врезки в [`exercise-chat.md`](../product-specs/exercise-chat.md) и [`videosinstruction.md`](../product-specs/videosinstruction.md). |
+| 2026-04-19 | Chat has two states: empty (placeholder + "Загрузить видео" only) and active (text input + attach appear after first AI reply). Header: "Back" + exercise name. | Chat, Phase 1 / Track A, step 6. |
+| 2026-04-19 | Video upload — instant send: no preview screen after gallery picker; video appears in chat as user message immediately + AI placeholder "Анализирую…" below. | Chat, Phase 1 / Track A, step 6. |
+| 2026-04-19 | Single-scenario MVP / Phase 2 excludes: exercise recognition + chat-match check, full two-stage video quality check, floating cross-screen indicator. All move to Phase 3. | Chat, Phase 1 / Track A, step 6; `exercise-chat.md`, `videosinstruction.md`. |

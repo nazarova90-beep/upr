@@ -1,33 +1,33 @@
 ---
 status: in-progress
-last_updated: 2026-04-18
+last_updated: 2026-04-27
 owner: Кристина
 related: index.md
 ---
 
-# Tech Debt Tracker — учёт технического долга
+# Tech debt tracker
 
-Здесь фиксируем все «костыли», временные решения, отложенные правки и компромиссы. Чтобы не забыть и однажды разгрести.
+Log of shortcuts, temporary solutions, deferred fixes, compromises.
 
-## Формат записи
+## Entry format
 
 ```
-### [YYYY-MM-DD] Короткое название
+### [YYYY-MM-DD] Short title
 
-- **Где:** путь к файлу или область проекта
-- **Что:** что именно сделано неоптимально
-- **Почему так:** причина временного решения
-- **Что надо сделать:** план разгребания
-- **Приоритет:** low / medium / high
-- **Связано с:** ссылки на коммит/PR/документ
+- **Where:** file path or project area
+- **What:** suboptimal action taken
+- **Why:** reason for temporary solution
+- **Plan:** how to resolve
+- **Priority:** low / medium / high
+- **Linked:** commit / PR / doc
 ```
 
-## Текущий список
+## Current
 
-_Пока пусто. На этапе продуктового проектирования техдолга нет._
+_Empty. No tech debt at product-design stage._
 
-## Правила работы
+## Rules
 
-1. Любое **«сделаем потом нормально»** → запись сюда.
-2. Раз в неделю / в начале каждого нового планируемого блока — **просматриваем список**, решаем, что разгребать в эту итерацию.
-3. По мере разгребания — **удаляем записи** (или переносим в архив с пометкой «решено»).
+1. Any "we'll do it properly later" → entry here.
+2. Reviewed weekly / at start of each new planned block.
+3. On resolution → remove entry (or move to archive marked "resolved").

@@ -5,55 +5,62 @@ owner: Кристина
 related: stack.md, ../ARCHITECTURE.md, DATABASE.md, FRONTEND.md
 ---
 
-# Backend — серверная часть
+# Backend
 
-> **Что это.** Короткая «карта-визитка» бэкенда. Полная картина выбранного стека и план масштабирования — в `stack.md`. Реальные детали (структура папок, имена модулей) **рождаются вместе с кодом** в `backend/`; этот документ обновится по факту, а не заранее.
+Server-side overview. Stack rationale: `stack.md`. Folder/module names finalize as code lands in `backend/`.
 
-## Стек на MVP
+## MVP stack
 
-- **Python + FastAPI** — простой, асинхронный, хорошо «дружит» с AI-провайдерами.
-- **SQLModel + SQLAlchemy** — ORM-мост между Python и БД (см. `DATABASE.md`).
-- **SQLite** — на MVP локальный файл, через ту же ORM позже переедем на PostgreSQL.
-- **Google Gemini Free Tier** — AI-провайдер для разбора видео.
-- **MediaPipe Pose** — серверный пред-процессинг видео.
+- **Python + FastAPI** — async, AI-friendly.
+- **SQLModel + SQLAlchemy** — ORM (`DATABASE.md`).
+- **SQLite** — local file (MVP); migration path to PostgreSQL via the same ORM.
+- **Google Gemini Free Tier** — AI provider (vision).
+- **MediaPipe Pose** — server-side preprocessing.
 
-Подробное обоснование «почему именно это» — в `stack.md` → раздел «Почему именно эти варианты».
+## Responsibilities
 
-## Зона ответственности
+- HTTP API for the mobile client.
+- Video intake → MediaPipe preprocessing → AI dispatch → result persistence.
+- Persistence of workouts, exercises, chats, messages.
+- Later (by phase): auth, billing, background jobs, content localization.
 
-- API для мобильного приложения.
-- Приём видео, пред-обработка через MediaPipe, отправка в AI, сохранение результатов разбора.
-- Хранение тренировок, упражнений, чатов, сообщений.
-- (Появится позже) аутентификация, биллинг, фоновые задачи, локализация.
+## Architectural rules
 
-## Архитектурные правила
+1. **Domain-first layout.** `backend/app/<domain>/`: `workout/`, `exercise_chat/`, `video_analysis/`, `ai_coach/`. Cross-cutting adapters: `ai_provider/`, `storage/`, `db/`, `core/`.
+2. **External dependencies behind abstractions.** AI provider and video storage hidden behind `ai_provider/` and `storage/`. Swapping Gemini → GPT-4o or local folder → S3 is a new interface implementation, not product-logic edits.
+3. **All DB queries via ORM.** No concatenated strings with user input.
+4. **Structured logging from day one** (observability stack plugs in at Phase 6 — see `stack.md`).
 
-1. **Слоистость и домены.** Структура по доменам из `../ARCHITECTURE.md`: `workout/`, `exercise_chat/`, `video_analysis/`, `ai_coach/`. Сквозные адаптеры — `ai_provider/`, `storage/`, `db/`, `core/`.
-2. **Замена внешних звеньев без переписывания.** AI-провайдер и хранилище видео скрыты за абстракциями `ai_provider/` и `storage/`. Сменить Gemini на GPT-4o или локальную папку на S3 — это новая реализация интерфейса, не правка продуктовой логики.
-3. **Все запросы в БД — через ORM.** Никаких склеенных строк с user input.
-4. **Структурированные логи** с первого дня (полноценный observability-стек подключаем к Этапу 3, см. `stack.md`).
+## Single-scenario MVP scope
 
-## Что входит в Single-scenario MVP
+- FastAPI app runnable locally.
+- One hardcoded user singleton (no registration table).
+- Video intake endpoint + synchronous (`async`) AI call.
+- Chat and video metadata persisted to SQLite via ORM.
+- Video files in a local folder via `storage/`.
 
-- FastAPI-приложение, запускаемое локально.
-- Один захардкоженный пользователь (без регистрации).
-- Эндпоинт приёма видео + синхронный (`async`) вызов AI.
-- Сохранение чатов и метаданных видео в SQLite через ORM.
-- Видео — в локальной папке через `storage/`.
+Excluded from MVP: registration, queues, billing, push, deploy, admin panel. Full list: `stack.md` → "What we deliberately do NOT take into MVP".
 
-Что **не** входит: регистрация, очереди, биллинг, push, деплой, админка. Полный список — в `stack.md` → «Что мы намеренно НЕ берём в MVP».
+## Expansion plan (triggers in `stack.md`)
 
-## План расширения (триггеры — в `stack.md`)
+| Phase | Adds |
+|---|---|
+| 5 | Sign in with Apple/Google, cloud hosting, S3 via the same `storage/`, SQLAdmin. |
+| 6 | SQLite → PostgreSQL via the same ORM, task queue, paid AI, observability. |
+| 7 | Billing (App Store IAP / Google Play / Stripe), limits service. |
+| 8 | Horizontal scaling, cache, backup AI provider. |
 
-- **Этап 2:** Sign in with Apple/Google, облачный хостинг, S3 через ту же `storage/`, SQLAdmin.
-- **Этап 3:** SQLite → PostgreSQL (через ту же ORM), очередь задач, платный AI, observability.
-- **Этап 4:** биллинг (App Store IAP / Google Play / Stripe), сервис лимитов.
-- **Этап 5:** горизонтальное масштабирование, кэш, резервный AI-провайдер.
+## Project structure (current skeleton)
 
-## Связанные документы
-
-- `stack.md` — стек и план масштабирования (главный технический документ).
-- `../ARCHITECTURE.md` — карта доменов и слоёв.
-- `DATABASE.md` — модели и хранилище.
-- `FRONTEND.md` — клиент.
-- `SECURITY.md` — активные правила безопасности.
+```
+backend/app/
+├── main.py             # FastAPI() — no endpoints yet
+├── core/               # config, logging
+├── workout/            # routes, service, models
+├── exercise_chat/
+├── video_analysis/
+├── ai_coach/
+├── ai_provider/        # base + gemini stub
+├── storage/            # base + local stub
+└── db/                 # session + SQLModel models
+```

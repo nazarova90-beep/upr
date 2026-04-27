@@ -1,205 +1,178 @@
 ---
 status: approved
-last_updated: 2026-04-19
+last_updated: 2026-04-27
 owner: Кристина
 related: ../README.md, ../ARCHITECTURE.md, BACKEND.md, FRONTEND.md, DATABASE.md, SECURITY.md, product.md, references/expo.md
 ---
 
-# UPR — технологический стек
+# UPR — stack
 
-Этот документ — **единая точка истины по выбранному стеку UPR**: что используем сейчас (MVP), почему именно это, и как стек будет расширяться по мере роста продукта. Конкретные библиотеки, версии и куски кода — в соответствующих доменных документах (`BACKEND.md`, `FRONTEND.md`, `DATABASE.md`).
+Single source of truth for the chosen stack: current MVP picks, future expansion triggers, decision log. Domain-specific details: `BACKEND.md`, `FRONTEND.md`, `DATABASE.md`.
 
-## Контекст и ограничения, под которые подобран стек
+## Stack constraints
 
-1. **MVP — для одного пользователя (только владелец продукта).** Никакой публичной нагрузки, регистрация и биллинг не нужны.
-2. **AI на MVP — только бесплатные модели и провайдеры.** На счёт оплаты за инференс на этом этапе не закладываемся.
-3. **Деплой на MVP не делаем.** Всё крутится локально на машине разработчика.
-4. **Брендбук и собственная дизайн-система — впереди.** Мобильное приложение должно уметь полностью кастомный UI без компромиссов.
-5. **Аудитория продукта — 18+.** На стек влияет косвенно (нет «детских» режимов App Store/Google Play), но архитектурно учитываем при регистрации в будущем.
-6. **Стек должен быть «boring» и понятный AI-агентам.** Никаких экзотических технологий ради экзотики.
-7. **Закладка на масштабирование.** То, что сегодня упрощено (нет очередей, нет облака, нет регистрации), не должно мешать вырасти завтра.
+1. MVP — single user (owner). No public load, no registration, no billing.
+2. AI on MVP — only free tiers / free providers.
+3. No deploy on MVP — local execution.
+4. Custom UI required (no third-party UI kit lock-in).
+5. Audience 18+.
+6. Stack must be boring tech — well-represented in training data, agent-friendly.
+7. No present-day shortcut may block future scaling.
 
-## Принципы выбора (как мы вообще решали)
+## Selection principles
 
-| Принцип | Что значит на практике |
+| Principle | Practical effect |
 |---|---|
-| **Простота побеждает мощность** | Если можно решить задачу одной библиотекой вместо трёх — берём одну. |
-| **Замена без переписывания** | Каждое внешнее звено (БД, AI-провайдер, хранилище видео) спрятано за абстракцией, чтобы заменить его «одной строкой конфигурации». |
-| **Бесплатно сейчас — платно по мере дохода** | На MVP — free-уровни. Платные тарифы и облако подключаются, когда есть выручка. |
-| **Готовим почву для админки заранее** | Модели данных через ORM с первого дня, чтобы потом подключить админ-панель за день, а не за месяц. |
-| **i18n-ready с первого коммита** | Никаких русских строк «вшитых» в код — только через слой локализации. |
-| **Документируем, что берём извне** | Перед использованием библиотеки — справка в `docs/references/` через MCP `user-context7`. |
+| Simplicity wins over power | One library beats three. |
+| Replaceable without rewrite | Each external dependency (DB, AI provider, video storage) hidden behind an abstraction. |
+| Free now, paid as revenue grows | MVP: free tiers. Paid + cloud once revenue exists. |
+| Admin-ready models from day one | ORM models from day one — SQLAdmin can plug in later in a day. |
+| i18n-ready from first commit | No inlined Russian strings — only via i18n. |
+| Document external libraries | `docs/references/<lib>.md` via MCP `user-context7` before code. |
 
----
+## MVP stack
 
-## MVP-стек (что используем сейчас)
-
-| Слой | Что выбрали | Кратко зачем |
+| Layer | Choice | Note |
 |---|---|---|
-| **Мобильное приложение** | **React Native + Expo** (TypeScript) | Один код для iOS и Android. Главное преимущество для нашего этапа: режим **Expo Go** позволяет разрабатывать и тестировать приложение прямо на физическом iPhone/Android **без установки Xcode и Android Studio локально** — обновление по Wi-Fi через QR-код. См. справку `references/expo.md`. |
-| **Бэкенд** | **Python + FastAPI** | Простой, асинхронный, отлично «дружит» с любыми AI-провайдерами. |
-| **ORM (мост между Python и БД)** | **SQLAlchemy + SQLModel** | Один словарь моделей — и для БД, и для будущей админки. |
-| **База данных (старт)** | **SQLite** (один файл на диске) | Ноль настроек, локально, идеально для single-user MVP. |
-| **Хранилище видео (старт)** | **Папка на диске** через абстракцию `storage` | Без облака, но в коде уже видно «здесь будет S3». |
-| **AI «измерительный» слой** | **MediaPipe Pose** (Google, бесплатно, локально) | Извлекает скелет/углы из видео. Снижает нагрузку на «умную» модель и улучшает качество разбора. |
-| **AI «умный тренер»** | **Google Gemini API — Free Tier** | Единственная из топовых vision-LLM в 2026, нативно принимающая видео. Бесплатных лимитов с запасом хватит для одного пользователя. |
-| **Очередь задач** | **Не нужна на MVP** — простой `async`/`await` внутри FastAPI | Нет конкурентных пользователей. |
-| **Регистрация / биллинг / push** | **Нет на MVP** | Один пользователь, без подписок. |
-| **Админка** | **Нет на MVP** | Зато заранее заложена возможность подключения SQLAdmin поверх существующих моделей. |
-| **Деплой** | **Нет** | Запускаем локально. |
-| **i18n** | **`expo-localization` + `i18next` + JSON-словари** | UI на русском, но через ключи переводов — мультиязычность готова к включению. |
+| Mobile | React Native + Expo (TypeScript), Expo SDK 54 | Expo Go on physical device — no Xcode/Android Studio. `references/expo.md`. |
+| Backend | Python + FastAPI | Async, AI-friendly. |
+| ORM | SQLAlchemy + SQLModel | Single model dictionary for DB and (future) admin. |
+| DB (start) | SQLite (single file) | |
+| Video storage (start) | Local folder via `storage/` abstraction | |
+| AI measurement layer | MediaPipe Pose (Google, free, local) | Reduces LLM cost, improves analysis quality. |
+| AI coach | Google Gemini API — Free Tier | Only top vision-LLM with native video input + free tier in 2026. |
+| Task queue | None on MVP — `async`/`await` in FastAPI | |
+| Auth / billing / push | None on MVP | |
+| Admin panel | None on MVP | SQLAdmin reserved on top of ORM models. |
+| Deploy | None | Local. |
+| i18n | `expo-localization` + `i18next` + JSON catalogs | |
 
-### Почему именно эти варианты, а не другие (коротко и честно)
+### Choice notes
 
-- **React Native + Expo, а не Flutter.** Изначально (на ~2026-04-19) был выбран Flutter, но при подготовке к Track B Фазы 1 мы пересмотрели решение. Главное соображение — **порог входа на старте**: чтобы запустить Flutter-приложение, разработчику нужно поставить Xcode (~15 ГБ) или Android Studio (~10 ГБ) с симуляторами/эмуляторами. С Expo же достаточно установить Node.js, бесплатное приложение **Expo Go** на свой настоящий iPhone — и проект запускается прямо на устройстве через QR-код, с hot reload по Wi-Fi. Для одинокого владельца продукта (один человек, один Mac) это снимает день-два возни с инфраструктурой и десятки гигабайт диска. Кастомный UI под Lucent на React Native сегодня тоже полностью достижим (через `StyleSheet`/`theme.ts`), потеря кросс-платформенной идентичности рендеринга для нашего MVP некритична. Подробный research-вход для решения — `references/expo.md`. Когда позже понадобятся нативные модули, которых нет в Expo Go (например, **on-device** MediaPipe в Фазе 3), мы один раз перейдём с Expo Go на dev build (тогда же поставим Xcode/Android Studio) — кодовая база остаётся та же.
-- **FastAPI, а не Django.** Django силён там, где много стандартного «офисного» функционала (админка, формы, ORM). В нашем случае центр тяжести — **взаимодействие с AI**: длинные запросы, асинхронность, работа со стримингом. FastAPI здесь объективно сильнее. Знаменитую «бесплатную админку Django» мы получим через **SQLAdmin**, не меняя бэкенд.
-- **SQLite, а не PostgreSQL сразу.** На MVP с одним пользователем PostgreSQL — это ставить грузовик в гараж, чтобы возить пакет молока. SQLite — один файл, ноль настроек. Через ORM переезд на PostgreSQL потом — это **смена строки конфигурации**, не переписывание кода.
-- **Gemini Free Tier, а не GPT-4o / Claude.** Только Gemini нативно принимает **видео** (а не нарезанные кадры) и имеет бесплатный тариф, достаточный для одного пользователя. GPT-4o и Claude рассматриваем как платные альтернативы на этап публичного релиза.
-- **MediaPipe, а не «всё через LLM».** Pose estimation — это инструмент за 0 долларов, который отдаёт **точные числа** про положение тела. Передавая эти числа в Gemini вместе с видео, мы и экономим, и получаем более содержательный разбор.
+- **React Native + Expo, not Flutter.** Onboarding cost: Flutter requires Xcode (~15 GB) or Android Studio (~10 GB) with simulators. Expo Go runs the project on a physical iPhone via QR code without local native infra. Custom UI under Lucent achievable on RN. First need for native build: Phase 3 (on-device MediaPipe, optional).
+- **FastAPI, not Django.** Center of gravity is AI interaction (long requests, async, streaming). Free admin via SQLAdmin without changing backend.
+- **SQLite, not PostgreSQL on day one.** Single user — PostgreSQL is overkill. ORM allows config-line migration later.
+- **Gemini Free Tier, not GPT-4o / Claude.** Native video input + free tier sufficient for one user. GPT-4o / Claude considered as paid alternatives at public release.
+- **MediaPipe, not LLM-only.** Free pose estimation provides exact body angles → fed alongside video → cheaper, more concrete analysis.
 
----
+## Deliberately excluded from MVP
 
-## Что мы намеренно НЕ берём в MVP (и почему)
-
-| Компонент | Почему откладываем |
+| Component | Reason |
 |---|---|
-| Очередь задач (Celery / RQ + Redis) | Один пользователь — нет конкуренции за ресурсы. Появится, когда пользователей станет несколько. |
-| Полноценная регистрация (email/пароль/восстановление) | Только владелец пользуется — достаточно одного «захардкоженного» пользователя. |
-| Биллинг и подписки (Stripe / RuStore Billing / App Store IAP) | На MVP не монетизируем. |
-| Push-уведомления (Firebase / APNs) | На MVP пользователь сам видит результат в приложении. |
-| Облачное хранилище видео (S3 / Yandex Object Storage) | Локальная папка достаточна. |
-| Админ-панель | Будет спроектирована отдельно, после первого использования продукта. |
-| CI/CD и деплой | По договорённости — позже. |
-| Аналитика (Amplitude / PostHog) | Один пользователь = аналитика бессмысленна. |
-| **Reliability / SLO / observability-стек** (метрики, алерты, цели по доступности) | Один локальный пользователь, нет публичного API. Цели по доступности и стек логов/метрик/трейсов (Sentry / OpenTelemetry / Loki / Prometheus) появятся к Этапу 3 (публичный бета-релиз) — тогда же заведём отдельный документ. |
+| Task queue (Celery / RQ + Redis) | Single user — no resource contention. Adds when concurrent users appear. |
+| Full registration (email/password/recovery) | Single user — hardcoded singleton suffices. |
+| Billing (Stripe / RuStore Billing / App Store IAP) | No monetization on MVP. |
+| Push (Firebase / APNs) | User sees result in-app. |
+| Cloud video storage (S3 / Yandex Object Storage) | Local folder suffices. |
+| Admin panel | Designed separately, post-product-use. |
+| CI/CD and deploy | Later. |
+| Analytics (Amplitude / PostHog) | Single user — meaningless. |
+| Reliability / SLO / observability stack | Single local user, no public API. Activates at Phase 6 (public beta). |
 
----
+## Forward-compatibility decisions
 
-## Что мы заранее закладываем под завтра
+These cost no time today and save months later:
 
-Эти решения **не стоят нам времени сегодня**, но **сэкономят месяцы потом**:
+1. **All data via ORM (SQLAlchemy/SQLModel).** Enables: SQLite → PostgreSQL migration, SQLAdmin admin panel, schema auto-generation in `docs/generated/db-schema.md`.
+2. **`ai_provider/` abstraction layer.** Switch Gemini → GPT-4o / Claude / local Qwen-VL = new interface implementation, no product-logic edits.
+3. **`storage/` abstraction layer.** Local folder today, S3 tomorrow.
+4. **All UI strings via `i18next` + JSON catalogs.**
+5. **Domain-first project structure** (`workout/`, `exercise_chat/`, `video_analysis/`, `ai_coach/`).
+6. **Structured logging** from day one.
 
-1. **Все модели данных — через ORM (SQLAlchemy/SQLModel).** Это автоматически делает совместимым:
-   - переезд SQLite → PostgreSQL,
-   - подключение **SQLAdmin** для админ-панели,
-   - автогенерацию схемы БД в `docs/generated/db-schema.md`.
-2. **Слой `ai_provider/` в коде бэкенда** — все вызовы AI идут через единый интерфейс. Сменить Gemini на GPT-4o/Claude/локальную Qwen-VL — это новая реализация интерфейса, без правок продуктовой логики.
-3. **Слой `storage/` в коде бэкенда** — видео и файлы кладём через абстракцию. Сегодня — локальная папка, завтра — S3.
-4. **Все строки UI — через `i18next` + JSON-словари** (i18n с первого дня).
-5. **Структура проекта по доменам** (`workout/`, `exercise_chat/`, `video_analysis/`, `ai_coach/`) — соответствует доменам из `ARCHITECTURE.md`.
-6. **Логирование и обработка ошибок — структурированные**, чтобы при подключении observability-инструментов их не пришлось переделывать.
+## Expansion / scaling phases
 
----
+Phases are triggers, not calendar dates. "When X happens — switch to Y."
 
-## План расширения и масштабирования
+### Phase 1 (current). Single-user MVP.
 
-Этапы — не сроки, а **триггеры**: «когда происходит X — мы переходим на Y».
+Local, free, all of the above.
 
-### Этап 1. MVP — только владелец
-**Сейчас.** Локально, бесплатно, всё описано выше.
+### Phase 5. Closed testing (5–20 users).
 
-### Этап 2. Закрытое тестирование (5–20 человек)
-Триггер: продукт пора показать первым реальным пользователям.
+Trigger: ready to show to first real users.
 
-- Появляется **простая регистрация** (Sign in with Apple / Google — без своих паролей).
-- Бэкенд переезжает на **простой облачный хостинг** (Render / Railway / Fly.io / VPS — выберем отдельно).
-- БД остаётся **SQLite**, но уже с регулярными бэкапами.
-- Видео переезжает в **облачное хранилище** (S3-совместимое).
-- Подключаем **SQLAdmin** как минимальную админку для просмотра пользователей и видео.
-- AI — **остаётся Gemini Free Tier**, пока хватает лимитов; включаем мониторинг расхода.
+- Registration: Sign in with Apple / Google.
+- Backend → simple cloud host (Render / Railway / Fly.io / VPS).
+- DB: SQLite + regular backups.
+- Video → S3-compatible cloud storage.
+- SQLAdmin minimal admin (user / video viewing).
+- AI: Gemini Free Tier while quotas suffice; cost monitoring on.
 
-### Этап 3. Публичный бета-релиз
-Триггер: десятки/сотни пользователей.
+### Phase 6. Public beta.
 
-- Переезд **SQLite → PostgreSQL** (через ту же ORM, без переписывания кода).
-- **Очередь задач** для разбора видео (RQ + Redis или Celery).
-- AI — переход на **платный Gemini** или сравнительный тест с **GPT-4o**, чтобы данные пользователей **не уходили на обучение**.
-- Подключение **observability** (логи + метрики + трейсы — Sentry / OpenTelemetry).
-- Подключение **аналитики продуктовых метрик** (PostHog / Amplitude).
-- Полноценная **админ-панель** (SQLAdmin или spa-sqladmin) с управлением каталогом упражнений и модерацией.
+Trigger: tens/hundreds of users.
 
-### Этап 4. Платная подписка и монетизация
-Триггер: подтверждённый product-market fit.
+- DB: SQLite → PostgreSQL via the same ORM.
+- Task queue (RQ + Redis or Celery) for video analysis.
+- AI: paid Gemini or comparative test with GPT-4o (data not used for training by default).
+- Observability (Sentry / OpenTelemetry).
+- Product analytics (PostHog / Amplitude).
+- Full admin panel.
 
-- **Биллинг**: App Store IAP / Google Play Billing / Stripe для веба (если будет).
-- **Лимиты бесплатного тарифа** на уровне сервиса лимитов (rate limiter).
-- **Платные тарифы**, в т.ч. лестница «AI + живой тренер».
+### Phase 7. Paid subscription / monetization.
 
-### Этап 5. Масштабирование
-Триггер: стабильный рост, нагрузочные пики.
+Trigger: confirmed PMF.
 
-- Горизонтальное масштабирование FastAPI (несколько инстансов за балансировщиком).
-- Кэширование (Redis) на горячих запросах.
-- CDN для видео и изображений.
-- Возможный переход на **выделенный сервис AI-разбора** (отдельный воркер с GPU при использовании open-source моделей вроде Qwen3-VL).
-- Подключение **резервного AI-провайдера** для отказоустойчивости.
+- Billing: App Store IAP / Google Play Billing / Stripe.
+- Free-tier limits via rate limiter service.
+- Paid tiers including AI + live trainer ladder.
 
-### Этап 6. Расширение ЦА и функционала
-- Английская и другие локали (i18n уже готова).
-- Маркетплейс живых тренеров.
-- Web-версия (**React Native for Web** — бонус от выбранного стека: тот же код, что и в мобильном приложении, рендерится в браузере).
+### Phase 8. Scaling.
 
----
+Trigger: stable growth, load spikes.
 
-## Будущая админка (заранее зафиксированное видение)
+- Horizontal FastAPI scaling.
+- Redis cache on hot endpoints.
+- CDN for video and images.
+- Possible dedicated AI worker (open-source Qwen3-VL on GPU).
+- Backup AI provider.
 
-Чтобы потом не переделывать модели, фиксируем **сейчас**, что админка будет уметь:
+### Phase 9. Audience expansion.
 
-- Управление каталогом упражнений (CRUD).
-- Просмотр и модерация чатов и видео (по запросу пользователя или жалобе).
-- Управление пользователями (просмотр, блокировка, мягкое удаление).
-- Просмотр «плохих» AI-ответов для улучшения промптов.
-- Управление тарифами и лимитами (когда появится монетизация).
-- Управление базой живых тренеров (когда появятся).
-- Управление переводами / локалями.
-- Базовые логи и метрики использования.
+- English + other locales (i18n already wired).
+- Live trainer marketplace.
+- Web build via React Native for Web.
 
-**Технически:** **SQLAdmin** (или **spa-sqladmin** для современного React-интерфейса) поверх наших SQLAlchemy-моделей. Авторизация админки — отдельный простой механизм (логин-пароль с 2FA), доступ — только владельцу и доверенным лицам.
+## Future admin (anticipated capabilities)
 
-Подробная спецификация — будет в `product-specs/admin.md` (заведём, когда дойдёт очередь).
+To avoid future model churn, fix what admin will do:
 
----
+- Exercise catalog CRUD.
+- Chat / video moderation (on user request or report).
+- User management (view, block, soft delete).
+- Bad-AI-response review for prompt improvement.
+- Tier and limit management (post-monetization).
+- Live-trainer database management.
+- Translations / locale management.
+- Basic logs and usage metrics.
 
-## AI-стратегия: «бесплатно сейчас → платно по мере роста»
+Tech: SQLAdmin (or spa-sqladmin) on top of SQLAlchemy models. Admin auth: separate login + 2FA.
 
-| Этап | Модель | Тариф | Что важно знать |
+Detailed spec: `product-specs/admin.md` (created when scheduled).
+
+## AI strategy: free now → paid as we grow
+
+| Phase | Model | Tier | Notes |
 |---|---|---|---|
-| MVP | **Google Gemini (Vision)** | Free Tier | Данные **могут** использоваться для обучения моделей Google. Допустимо для собственных тестов; для реальных пользователей — нужен платный тариф. |
-| Бета | Gemini (платный) **или** GPT-4o | Pay-as-you-go | Данные **не** идут на обучение по умолчанию. Сравнить качество разбора и стоимость на упражнение. |
-| Публично | Основной + резервный провайдер | Платно | Отказоустойчивость, prompt-каталог, A/B-тесты тонов общения. |
-| Возможный путь | **Qwen3-VL / open-source vision LLM** | Self-hosted | Полностью свои данные, но нужны GPU и DevOps-усилия. Решение принимается по экономике. |
+| MVP (1) | Google Gemini (Vision) | Free | Data may be used for training. Acceptable for owner-only tests. |
+| Beta (5–6) | Gemini paid or GPT-4o | Pay-as-you-go | Data not used for training by default. Compare quality and per-exercise cost. |
+| Public (6+) | Primary + backup provider | Paid | Failover, prompt catalog, A/B tone tests. |
+| Possible | Qwen3-VL / open-source vision LLM | Self-hosted | Full data control; requires GPU + DevOps. Decided by economics. |
 
-**Дополнительный «бесплатный» инструмент на любом этапе:** **MediaPipe Pose** — снижает счёт за облачный AI и делает разбор точнее.
+Free supplementary tool at any phase: **MediaPipe Pose** — reduces cloud AI bill, improves analysis quality.
 
----
+## Open questions
 
-## Открытые вопросы (решим, когда дойдёт очередь)
+- Specific Gemini version for MVP (Pro / Flash / Flash-Lite).
+- Phase 5 hosting choice (Render / Railway / Fly.io / VPS).
+- Admin stack: classic SQLAdmin or spa-sqladmin.
+- Phase 7 payment provider (region-dependent).
+- On-device MediaPipe inference (Phase 3, requires Dev Build — `references/expo.md`).
 
-- Какую конкретно версию Gemini использовать для MVP (Pro / Flash / Flash-Lite — зависит от качества разбора на наших тестовых видео).
-- Где хостимся на Этапе 2 (Render / Railway / Fly.io / VPS).
-- Стек админки: классический SQLAdmin или spa-sqladmin.
-- Платёжный провайдер на Этапе 4 (зависит от регионов выхода).
-- Использовать ли **on-device** инференс MediaPipe в мобильном приложении (через нативные модули React Native — потребует выхода с Expo Go на development build, см. `references/expo.md`) — для мгновенного предупреждения «видео плохое, переснять» ещё до отправки на бэкенд. Решение принимаем не раньше Фазы 3.
+## Decision log
 
----
-
-## Журнал решений по стеку
-
-| Дата | Решение | Где обсуждалось |
-|---|---|---|
-| 2026-04-19 | Принят первоначальный MVP-стек: **Flutter** + Python/FastAPI + SQLite (через ORM) + Gemini Free Tier + MediaPipe. | `docs/exec-plans/active/mvp-product-spec.md` (журнал), этот документ. |
-| 2026-04-19 | **Frontend-часть стека пересмотрена: Flutter → React Native + Expo (TypeScript).** Причина — порог входа: Flutter требует локально Xcode (~15 ГБ) или Android Studio (~10 ГБ) с симуляторами; Expo через режим **Expo Go** позволяет вести разработку **прямо на физическом iPhone владельца через QR-код**, без тяжёлой нативной инфраструктуры. Все ключевые возможности Single-scenario MVP (системный пикер видео из галереи, проигрывание видео, сетевая загрузка на бэкенд, тёмная тема, шрифты Manrope, i18n) поддерживаются в Expo Go без development build (проверено через MCP `user-context7`, см. `references/expo.md`). Первая жёсткая необходимость в нативной сборке (а значит — в установке Xcode/Android Studio) возникнет не раньше Фазы 3, и только при подключении **on-device** MediaPipe (само по себе **опциональное** решение — серверный MediaPipe от смены стека не зависит). | Чат, обсуждение Track B Фазы 1; справка `references/expo.md`; этот документ; `FRONTEND.md`. |
-
----
-
-## Связанные документы
-
-- `../README.md` — общий вход в проект.
-- `../ARCHITECTURE.md` — карта доменов и слоёв.
-- `BACKEND.md` — детали серверной части (FastAPI, ORM, AI-провайдер).
-- `FRONTEND.md` — детали мобильного приложения (React Native + Expo, TypeScript, i18n).
-- `references/expo.md` — research-справка по Expo: что работает в Expo Go, когда нужен dev build, что нужно установить локально.
-- `DATABASE.md` — модели данных и план перехода SQLite → PostgreSQL.
-- `SECURITY.md` — безопасность, согласия пользователя на отправку видео в AI.
-- `product.md` — продуктовая стратегия (контекст, под который выбран стек).
-- `references/` — справки по конкретным библиотекам и AI-провайдерам (по мере подключения, через MCP `user-context7`).
+| Date | Decision |
+|---|---|
+| 2026-04-19 | Initial MVP stack: Flutter + Python/FastAPI + SQLite (via ORM) + Gemini Free Tier + MediaPipe. |
+| 2026-04-19 | Frontend revised: Flutter → React Native + Expo (TypeScript). Cause: onboarding cost (Flutter needs Xcode ~15 GB or Android Studio ~10 GB; Expo Go runs on physical iPhone via QR code). All Single-scenario MVP capabilities (gallery video picker, video player, network upload, dark theme, Manrope, i18n) supported in Expo Go without Dev Build (verified via MCP `user-context7`, `references/expo.md`). First need for native build: Phase 3 (on-device MediaPipe, optional). |

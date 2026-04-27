@@ -5,51 +5,48 @@ owner: Кристина
 related: ../../AGENTS.md, tech-debt-tracker.md, active/roadmap.md
 ---
 
-# Exec Plans — оглавление
+# Exec plans
 
-Здесь живут **планы работ** как первоклассные документы. Это не «формальность для отчёта», а **рабочие файлы**, которые мы дописываем по ходу обсуждения и проставляем галочки.
+Plans as first-class documents.
 
-## Иерархия планов
+## Hierarchy
 
-У нас два уровня планов:
+1. **Top-level roadmap** — one per project, describes all phases. `active/roadmap.md`.
+2. **Detailed exec-plans** — per phase or per large task, with `[ ]` / `[x]` checklist and decision log. Created at start of the phase, not earlier.
 
-1. **Главный план верхнего уровня (roadmap)** — один на проект. Описывает все фазы целиком. Меняется редко.
-   - Файл: **`active/roadmap.md`** ← начни **отсюда**, если хочешь увидеть весь путь сразу.
-2. **Детальные exec-plan'ы** — много, по числу задач/фаз. Каждый описывает одну фазу или одну крупную задачу с галочками `[ ]` / `[x]` и журналом решений. Создаются **в момент старта** соответствующей фазы, а не заранее.
+Light plans for small tasks are optional. Create an exec-plan only for non-trivial work.
 
-> **Лёгкие планы для маленьких задач — необязательно.** Заводим отдельный exec-plan только для нетривиальной работы. Маленькие правки идут «прямо в коммит».
+## Folder structure
 
-## Структура папок
-
-| Папка / файл | Что внутри |
+| Path | Contents |
 |---|---|
-| `active/roadmap.md` | **Главный план верхнего уровня** — карта всех фаз проекта. |
-| `active/` (остальные файлы) | Детальные планы текущих фаз. |
-| `completed/` | Завершённые планы и архивные транскрипты. |
-| `tech-debt-tracker.md` | Список накопленного техдолга и «костылей». |
+| `active/roadmap.md` | Top-level roadmap. |
+| `active/` (rest) | Detailed plans for current phases. |
+| `completed/` | Closed plans and archived transcripts. |
+| `tech-debt-tracker.md` | Tech-debt log. |
 
-## Активные планы
+## Active
 
-- **`active/roadmap.md`** — главный план верхнего уровня (Roadmap).
-- **`active/mvp-product-spec.md`** — проработка продуктовой спецификации MVP (Track A Фазы 1 закрыт; Track B / Track C отслеживаются здесь же).
+- `active/roadmap.md` — top-level roadmap.
+- `active/mvp-product-spec.md` — MVP product-spec work (Track A of Phase 1 closed; Track B / Track C tracked here).
 
-## Завершённые планы
+## Completed
 
-- `completed/2026-04-27-phase1-track-c-skeleton.md` — структурный скелет проектов `backend/` и `mobile/` (Track C Фазы 1).
-- `completed/2026-04-18-mvp-product-spec-discussion.txt` — транскрипт первого продуктового обсуждения.
+- `completed/2026-04-27-phase1-track-c-skeleton.md` — `backend/` + `mobile/` skeleton (Track C of Phase 1).
+- `completed/2026-04-18-mvp-product-spec-discussion.txt` — first product-discussion transcript.
 
-## Шаблон плана (когда плана не миновать)
+## Plan template
 
-1. **Цель** — что хотим получить.
-2. **Контекст** — почему сейчас, что было до.
-3. **Шаги** — пронумерованный чеклист с галочками `[ ]` / `[x]`.
-4. **Открытые вопросы** — что ещё не решено.
-5. **Журнал решений** — что и когда зафиксировали по ходу.
-6. **Связанные документы** — куда переедут результаты.
+1. **Goal** — desired outcome.
+2. **Context** — why now, prior state.
+3. **Steps** — numbered checklist `[ ]` / `[x]`.
+4. **Open questions**.
+5. **Decision log** — date + decision.
+6. **Related documents** — destination for results.
 
-## Правила
+## Rules
 
-- План **создаётся в `active/`** в начале задачи.
-- По мере работы **обновляется** (галочки, журнал решений).
-- По завершении **переезжает в `completed/`** с датой в имени.
-- Если план мёртвый (отказались) — переезжает в `completed/` со статусом `cancelled`.
+- Plan created in `active/` at task start.
+- Updated as work progresses (check marks, decision log).
+- On completion → moves to `completed/` with date prefix in filename.
+- If cancelled → moves to `completed/` with status `cancelled`.

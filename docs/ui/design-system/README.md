@@ -1,70 +1,52 @@
 ---
 status: draft
-last_updated: 2026-04-19
+last_updated: 2026-04-27
 owner: Кристина
 related: ../index.md, ../../FRONTEND.md, ../../stack.md
 ---
 
-# Lucent — дизайн-система UPR (исходник)
+# Lucent — UPR design system source
 
-Здесь лежит **исходник дизайн-системы** проекта UPR — стайл-гайд **Lucent**. Это «источник правды по визуалу»: цвета, типографика, отступы, скругления, иконки и базовые компоненты, на которые будет опираться мобильное приложение.
+Source-of-truth design system: colors, typography, spacing, radii, icons, base components.
 
-## Что внутри папки
+## Folder contents
 
-| Файл | Что это | Можно открыть как |
-|---|---|---|
-| `index.html` | Живая страница-стайл-гайд: показывает все цвета, шрифты, размеры и компоненты «как они выглядят». | Открыть двойным кликом — откроется в браузере. |
-| `style.css` | Все **дизайн-токены** (цвета, отступы, радиусы, тени, размеры шрифтов) и стили компонентов. | Текстовый файл. |
-| `Lucent.png` | Обложка / превью бренда. | Двойной клик. |
-
-**Аналогия.** Это как **книга образцов тканей и фурнитуры** в ателье. Сама книга — не платье. Но любое будущее платье шьётся **строго по образцам из этой книги**: те же цвета, те же ткани, те же пуговицы. Так же и наше приложение будет «сшито» по этим образцам.
-
-## Как этим пользоваться
-
-### Чтобы посмотреть, как выглядит дизайн
-1. Открой `index.html` двойным кликом — он откроется в браузере.
-2. Прокрути страницу: ты увидишь все цвета палитры с названиями (`Pomegranate`, `Mint`, `Navy`, …), типографику, размеры отступов, иконки и примеры компонентов (кнопки, карточки, поля ввода и т.п.).
-
-### Чтобы взять конкретное значение (для кода или для дизайна)
-- **Цвет** — открой `style.css`, найди блок `--color-...` или `--palette-...`. Это и есть «официальное» значение.
-- **Отступ / радиус / размер шрифта** — там же, в блоках `--space-...`, `--radius-...`, `--font-size-...`.
-
-### Что находится в `style.css` (карта по разделам)
-
-| Раздел | Что описывает |
+| File | Subject |
 |---|---|
-| `Color · Primitives` | Базовая палитра: чёрные, белые, цветные оттенки бренда. |
-| `Color · Semantic (UI roles)` | «Смысловые» цвета: фон, поверхность, текст, акцент, ошибка, успех. **Использовать в первую очередь именно их**, а не «сырые» цвета палитры. |
-| `Radius scale` | Шкала скруглений углов (`xs`, `sm`, `md`, …). |
-| `Spacing scale` | Шкала отступов на базе 4px (`xs`=8, `sm`=12, `md`=16, …). |
-| Дальше | Типографика (шрифт **Manrope**), иконки (шрифт **Material Symbols Rounded**), стили конкретных компонентов. |
+| `index.html` | Live style-guide page (open in browser). |
+| `style.css` | Design tokens (colors, spacing, radii, shadows, font sizes) + component styles. |
+| `Lucent.png` | Brand cover / preview. |
 
-## Важные правила работы с этой папкой
+## Token map (`style.css`)
 
-1. **Не правь файлы вручную «между делом».** Это исходник. Если нужно изменить дизайн-систему — меняем осознанно и сразу обновляем шапку (`last_updated`).
-2. **Эти файлы НЕ запускаются как код приложения.** Само приложение — на **React Native + Expo (TypeScript)** (см. `../../stack.md` и `../../FRONTEND.md`), и оно **не понимает** HTML/CSS напрямую. Когда начнём писать приложение, разработчик/AI-агент возьмёт **значения** отсюда (цвета, размеры) и перенесёт их в TypeScript-файл `theme.ts` как константы для `StyleSheet`.
-3. **Источник правды — этот HTML/CSS, а не код приложения.** Если в приложении цвет вдруг разойдётся со стайл-гайдом — прав стайл-гайд, чинить нужно приложение.
-4. **Иконки берём через шрифт Material Symbols Rounded** (Google Fonts), отдельной папки иконок нет. Это упрощает жизнь: все иконки доступны «по имени» (например, `home`, `settings`).
-5. **Шрифт `Manrope`** (Google Fonts) — основной шрифт всего интерфейса.
+| Section | Contents |
+|---|---|
+| `Color · Primitives` | Base palette: blacks, whites, brand color tints. |
+| `Color · Semantic (UI roles)` | Semantic colors: background, surface, text, accent, error, success. **Use these by default**, not raw palette colors. |
+| `Radius scale` | Corner radii (`xs`, `sm`, `md`, …). |
+| `Spacing scale` | 4px-based spacing (`xs`=8, `sm`=12, `md`=16, …). |
+| Further | Typography (**Manrope** font), icons (**Material Symbols Rounded** font), component styles. |
 
-## Откуда это взялось
+## Usage rules
 
-Дизайн-система получена в виде статичной HTML-страницы и подключённого CSS-файла. Загружено в проект **2026-04-19**. Источник вне проекта — папка `~/Desktop/luc/` на машине владельца.
+1. Don't edit files casually. Change deliberately, bump `last_updated`.
+2. These files are **not** application code. App is React Native + Expo (TypeScript) — see `../../stack.md`, `../../FRONTEND.md`. Does not consume HTML/CSS directly. Code transfer = extract values into `mobile/src/theme/*.ts` constants for `StyleSheet`.
+3. **HTML/CSS here is the source of truth.** App-vs-style-guide divergence — fix app.
+4. Icons: **Material Symbols Rounded** font (Google Fonts). No separate icons folder; icons by name (e.g. `home`, `settings`).
+5. Body font: **Manrope** (Google Fonts).
 
-## Что будет дальше (план, не делается сейчас)
+## Provenance
 
-Когда мы будем готовы начать писать мобильное приложение, появится задача **«перенести дизайн-токены Lucent в Expo-тему»**:
+Static HTML page + CSS. Imported 2026-04-19. External source: `~/Desktop/luc/` on owner's machine.
 
-- из `style.css` достаём значения (цвета, отступы, радиусы, шрифты);
-- складываем их в TypeScript-файл `theme.ts` как константы (`colors`, `spacing`, `radius`, `typography`), которые используются в `StyleSheet.create({...})` компонентов;
-- подключаем шрифт `Manrope` через **`expo-font`**;
-- иконки **Material Symbols Rounded** подключаем через `@expo/vector-icons` или прямой загрузкой шрифта;
-- описываем эту работу отдельным планом в `docs/exec-plans/active/` — **только после согласования**.
+## Forward plan (deferred)
 
-Пока этот шаг **не делаем** — Expo-проекта ещё нет.
+Task "transfer Lucent tokens to Expo theme":
 
-## Связанные документы
+- Extract values from `style.css` (colors, spacing, radii, fonts).
+- Place in `mobile/src/theme/*.ts` as constants (`colors`, `spacing`, `radius`, `typography`) for `StyleSheet.create({...})`.
+- Load **Manrope** via `expo-font`.
+- Load **Material Symbols Rounded** via `@expo/vector-icons` or direct font load.
+- Plan filed under `docs/exec-plans/active/` after approval.
 
-- `../index.md` — оглавление папки UI.
-- `../../FRONTEND.md` — клиентская часть приложения (React Native + Expo, TypeScript, i18n).
-- `../../stack.md` — общий стек проекта.
+Partial transfer already done in Phase 1 / Track C (colors + base spacing); Manrope / Material Symbols are a separate future step.

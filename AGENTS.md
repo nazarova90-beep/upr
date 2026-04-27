@@ -1,80 +1,73 @@
-# UPR — карта для агентов
+# UPR — agent map
 
-Это короткий «вход» в проект для AI-агентов. Здесь только указатели «куда смотреть». Никаких длинных правил — все детали в `docs/`.
+Entry point for AI agents. Table of contents, not a manual. Facts live in `docs/`.
 
-## Что это за проект
+## Project
 
-UPR — мобильное приложение (iOS/Android) с AI-тренером, который разбирает технику силовых упражнений по видео. **Продукт целиком (стратегия + MVP + принципы):** `docs/product.md`.
+UPR — mobile (iOS/Android) AI coach reviewing strength-exercise technique from user-uploaded video. Per-exercise long-lived chat is the core feature. UI/AI replies in MVP — Russian (i18n-ready).
 
-## Если ты только начинаешь работу над задачей
+## Read this first
 
-**Прочитай это в первую очередь — до того, как что-то предлагать или менять:**
-
-1. **Продуктовая задача** (фича, сценарий, изменение поведения) → `docs/product.md`. Если нужны детали по конкретной фиче — `docs/product-specs/`.
-2. **Техническая задача** (код, архитектура, библиотеки, БД) → `docs/stack.md` (выбранный стек) и `ARCHITECTURE.md` (домены и слои).
-3. **Где мы сейчас по фазам / что делать дальше** → `docs/exec-plans/active/roadmap.md`.
-
-**Правила работы:**
-
-- **Не добавляй фичи, которых нет в `docs/product.md`.** Если у тебя есть предложение — озвучь в чате и, после согласования, зафиксируй в `docs/product.md` (или соответствующем `product-specs/<feature>.md`).
-- **Поддерживай документацию в актуальном состоянии.** При значимых изменениях — обновляй `last_updated` в шапках и карту файлов в этом `AGENTS.md`.
-- **Если решение принято в чате, но не в файле — оно не существует.** Перенеси его в нужный `docs/`-документ перед завершением задачи.
-
-## Главные принципы работы (полный список — в `docs/design-docs/core-beliefs.md`)
-
-1. **Документация — система записи.** Не записано в `docs/` → не существует.
-2. **Перед использованием любой сторонней библиотеки** — изучи её через MCP-сервер `user-context7`. Краткую справку положи в `docs/references/<library>.md`.
-3. **AGENTS.md — это карта, а не энциклопедия.** Не раздувай этот файл.
-4. **Объясняй простым языком.** Заказчик — непрограммист. Используй аналогии.
-5. **Не добавляй фичи без явного «да»** от заказчика.
-
-## Карта документации
-
-### Верхнеуровневые файлы
-
-| Файл | О чём |
+| Task type | Start at |
 |---|---|
-| `README.md` | Вход для людей. Концепция продукта в двух словах. |
-| `docs/product.md` | **Продукт целиком** — стратегия, MVP, конкуренты, монетизация, риски, принципы продуктовых решений. |
-| `ARCHITECTURE.md` | Верхнеуровневая карта технической архитектуры (домены и слои). |
-| `docs/stack.md` | **Выбранный технологический стек** (MVP + план масштабирования). |
-| `docs/BACKEND.md` | Бэкенд: Python + FastAPI, ORM, структура (короткая карта). |
-| `docs/FRONTEND.md` | Мобильное приложение: React Native + Expo (TypeScript), библиотеки, i18n. |
-| `docs/DATABASE.md` | База данных: SQLite на MVP → PostgreSQL дальше (короткая карта). |
-| `docs/SECURITY.md` | Активные правила безопасности на текущий этап. Полный чек-лист на будущее — в `design-docs/security-future-reference.md`. |
+| Product / feature | `docs/product.md`; per-feature: `docs/product-specs/<feature>.md` |
+| Code / architecture | `docs/stack.md`, `ARCHITECTURE.md` |
+| Current phase / next step | `docs/exec-plans/active/roadmap.md` |
+| Library before use | `docs/references/<lib>.md` (fetch via MCP `user-context7` first) |
 
-### Папки (где детали по темам)
+## Hard rules (invariants)
 
-| Папка | Что внутри | С чего начать |
+1. **Repository is the system of record.** Decision not in `docs/` ⇒ does not exist. Reflect chat decisions into the right `docs/` file before closing the task.
+2. **No feature without explicit approval.** Do not add product behavior absent from `docs/product.md` or `docs/product-specs/`. Surface, get approval, write it down, then implement.
+3. **Library research before use.** Before introducing any third-party library: fetch current docs via MCP `user-context7`, write `docs/references/<library>.md` (purpose, version, key API, gotchas, source link), then write code.
+4. **Boring tech first.** Stable, well-represented in training data, predictable APIs.
+5. **Layered architecture.** Respect domains and dependency directions in `ARCHITECTURE.md`. Each external dependency (AI provider, video storage, DB) lives behind an abstraction (`ai_provider/`, `storage/`, ORM).
+6. **AGENTS.md is a map, not an encyclopedia.** Same for all top-level docs: short entry points, push details into deeper files.
+7. **Update docs on significant changes.** Bump `last_updated` and update the file map below when structure changes.
+8. **Ask before large structural changes** (rename/move folders, rewrite a top-level doc).
+9. **Documentation files are agent-optimized.** No analogies, no beginner explanations, no narrative for non-programmers — only facts, constraints, schemas, decisions. Analogies live in chat output, not in files.
+
+## File map
+
+### Top-level
+
+| File | Content |
+|---|---|
+| `README.md` | Human-facing intro. |
+| `ARCHITECTURE.md` | Domains, layers, dependency directions. |
+| `docs/product.md` | Product strategy, MVP scope, principles, decisions. |
+| `docs/stack.md` | Stack (MVP) + scaling triggers + decision log. |
+| `docs/BACKEND.md` | Backend (Python + FastAPI) — domains, rules. |
+| `docs/FRONTEND.md` | Mobile (React Native + Expo, TypeScript) — stack, libraries, i18n. |
+| `docs/DATABASE.md` | Data model (SQLite MVP → PostgreSQL Phase 6). |
+| `docs/SECURITY.md` | Active security rules. Future checklist: `docs/design-docs/security-future-reference.md`. |
+
+### Folders
+
+| Folder | Contents | Start at |
 |---|---|---|
-| `docs/product-specs/` | Детальные спецификации по фичам (чат, видео, упражнения, тренировка). | `index.md` |
-| `docs/user-flows/` | Сценарии пользователя пошагово. | `index.md` |
-| `docs/ui/` | Дизайн и визуал: мокапы, дизайн-токены, компоненты. | `index.md` |
-| `docs/design-docs/` | Принципы (`core-beliefs.md`) и обоснования решений. Сюда же — `security-future-reference.md`. | `index.md` |
-| `docs/exec-plans/` | Планы работ как первоклассные документы. Главная точка — `active/roadmap.md`. | `index.md` |
-| `docs/references/` | Справки по используемым библиотекам (через `user-context7`). | `index.md` |
-| `docs/generated/` | Автогенерируемые документы (схема БД и т.п.). Появятся, когда будет код. | — |
+| `docs/product-specs/` | Per-feature specs (chat, video, exercises, workout). | `index.md` |
+| `docs/user-flows/` | User scenarios. | `index.md` |
+| `docs/ui/` | Design tokens, mockups, components. Design system: `ui/design-system/`. | `index.md` |
+| `docs/design-docs/` | Working principles (`core-beliefs.md`) + decision rationale. | `index.md` |
+| `docs/exec-plans/` | Plans as first-class artifacts. Roadmap: `active/roadmap.md`. Tech debt: `tech-debt-tracker.md`. | `index.md` |
+| `docs/references/` | Library research dumps (via `user-context7`). | `index.md` |
+| `docs/generated/` | Auto-generated docs (DB schema etc.). Populated when code exists. | — |
 
-## Как искать информацию
+## Where to write new information
 
-1. Открой нужную папку.
-2. Прочти её `index.md` — там оглавление.
-3. Из `index.md` перейди в нужный конкретный документ.
+| Decision | Target |
+|---|---|
+| Product decision | `docs/product.md` or `docs/product-specs/<feature>.md` |
+| User scenario | `docs/user-flows/<flow>.md` |
+| "Why this way" decision | `docs/design-docs/<decision>.md` |
+| Plan / phase progress | `docs/exec-plans/active/<plan>.md` (move to `completed/` with date when done) |
+| Tech debt / shortcut | line in `docs/exec-plans/tech-debt-tracker.md` |
+| New library | `docs/references/<lib>.md` (after Context7 fetch) |
 
-Не читай всё подряд — это пустая трата контекста.
+## Document headers
 
-## Когда возникает новая важная информация
-
-1. **Продуктовое решение** → правка `docs/product.md` или `docs/product-specs/<feature>.md`.
-2. **Сценарий пользователя** → `docs/user-flows/<flow>.md`.
-3. **Решение «почему именно так»** → `docs/design-docs/<decision>.md`.
-4. **План работ** → `docs/exec-plans/active/<plan>.md`. По завершении переезжает в `completed/` с датой в имени.
-5. **Техдолг / костыль** → строкой в `docs/exec-plans/tech-debt-tracker.md`.
-6. **Документация на стороннюю библиотеку** → `docs/references/<lib>.md`.
-
-## Шапка любого документа (упрощённое правило)
-
-В **верхнеуровневых стратегических** файлах (`AGENTS.md`, `README.md`, `ARCHITECTURE.md`, `docs/product.md`, `docs/stack.md`, `docs/design-docs/core-beliefs.md`) — полная YAML-шапка:
+Top-level strategic files (`AGENTS.md`, `README.md`, `ARCHITECTURE.md`, `docs/product.md`, `docs/stack.md`, `docs/design-docs/core-beliefs.md`) — full YAML header:
 
 ```
 ---
@@ -85,10 +78,8 @@ related: ../path/to/related.md
 ---
 ```
 
-В **остальных** документах достаточно одной строки `_Обновлено: YYYY-MM-DD_` под заголовком. Существующие полные шапки **переписывать ради ритуала не нужно**.
+Other files — single line `_Updated: YYYY-MM-DD_` under the title is enough.
 
-## Стиль коммуникации с заказчиком
+## Owner communication
 
-- Заказчик — **непрограммист**. Технические термины объясняй через простые аналогии.
-- Каждое существенное решение — фиксируй в файле, не только в чате.
-- Перед большими структурными изменениями — спроси разрешение.
+Product owner is a non-programmer. Chat answers must be simple and analogy-friendly. **Documentation files are agent-optimized — no analogies, no beginner explanations.**

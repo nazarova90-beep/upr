@@ -5,52 +5,52 @@ owner: Кристина
 related: index.md, ../product.md, ../SECURITY.md
 ---
 
-# User Flow: Онбординг
+# User flow: onboarding
 
-Сценарий первого входа нового пользователя в приложение: от установки до момента «готов начать первую тренировку».
+First-entry scenario for a new user: install → "ready to start first workout".
 
-## Статус
+## Status
 
-Частично заполнено: зафиксированы **ожидания от первых 5–10 минут** по интервью с ЦА (ниже). Детальный сценарий экранов, тексты и порядок шагов — в следующей итерации. См. план: `../exec-plans/active/mvp-product-spec.md`.
+Partial. Audience-interview takeaways for the first 5–10 minutes are fixed (below). Detailed screen-by-screen flow, texts, step order — next iteration. Plan: `../exec-plans/active/mvp-product-spec.md`.
 
-## Зафиксировано из интервью ЦА (первый вход)
+## First-5-minutes elements (from audience interviews)
 
-Источник: `../product.md` → раздел «Инсайты из интервью с ЦА». Здесь — только то, что напрямую задаёт онбординг.
+Source: `../product.md` § "Audience interview takeaways". Only items directly shaping onboarding.
 
-**Чтобы человек не удалил приложение в первые минуты, важно совместить:**
+To avoid first-minutes uninstall, combine:
 
-| Элемент | Зачем (простыми словами) |
-|--------|---------------------------|
-| **Демо AI на готовом видео** | Попробовать разбор **до** похода в зал — не нужно снимать себя сразу. |
-| **Готовая тренировка для новичка** | Не растеряться: «вот что сделать в зале сегодня». |
-| **Мини-уроки по базовым упражнениям** | Объяснить технику текстом/видео до первой записи своего подхода. |
-| **Короткий тур по интерфейсу** | Показать, где чат, где видео, как устроена тренировка. |
-| **Прозрачность про видео и данные** | Ответить: куда попадает видео, кто видит, как долго хранится — **без мелкого шрифта и без «воды»**. |
-| **Можно потрогать бесплатно** | Не давить оплатой с первых экранов (навязчивый paywall — риск оттока). |
-| **Знакомство с AI-тренером как с персонажем** | Коротко: кто это, как помогает — чтобы было «живое» начало отношений с приложением. |
+| Element | Purpose |
+|---|---|
+| AI demo on prepared video | Try analysis before going to the gym; no immediate self-recording. |
+| Beginner-ready workout | Removes "what do I do today?" |
+| Mini-lessons on base exercises | Technique groundwork before first own video. |
+| Short UI tour | Show chat, video upload, workout structure. |
+| Data transparency block | Where video goes, who sees it, retention — clear, no fine print. |
+| Free-to-touch | No upfront paywall (aggressive paywall correlates with churn). |
+| AI-coach persona introduction | Brief intro: who, how they help. |
 
-**Что не было названо обязательным именно в первые минуты:** длинная анкета и «ваша индивидуальная программа после опроса» — можно отложить после первой ценности (демо + тур + доверие).
+Not required in first 5 minutes: long survey, "your personalized program after a quiz" — defer until after first value.
 
-**Контекст использования (влияет на тексты подсказок позже, не только на онбординг):** интервью подчеркнуло открытие приложения **между подходами** и **после зала** — не как ежедневную ленту. Онбординг не должен обещать «заходи каждый день полистать», если мы не строим такой продукт.
+Usage context note (affects later copy too): users open the app **between sets** and **after the gym** — not as a daily feed. Onboarding must not promise daily browsing.
 
-## Что должно быть здесь
+## To define
 
-- Регистрация: способы (email/пароль, Sign in with Apple, Sign in with Google).
-- Согласия (политика конфиденциальности, обработка персональных данных, особое согласие на обработку видео AI).
-- Сбор стартовых данных юзера: что спрашиваем, что нет.
-  - Возраст (для адаптации советов).
-  - Пол (для адаптации советов).
-  - Опыт в зале.
-  - Цель (масса / сила / здоровье / похудение).
-  - Доступный инвентарь / тип зала.
-- Знакомство с главными фичами (welcome screens / tour).
-- Первая тренировка: либо предлагаем готовую, либо учим собрать самому.
-- Первая загрузка видео (опционально, как «попробуй прямо сейчас»).
+- Registration methods (email/password, Sign in with Apple, Sign in with Google).
+- Consents (privacy policy, personal-data processing, explicit AI-video processing consent).
+- Initial data collected:
+  - Age (advice tuning).
+  - Gender (advice tuning).
+  - Gym experience.
+  - Goal (mass / strength / health / weight loss).
+  - Available equipment / gym type.
+- Welcome screens / UI tour.
+- First workout: pre-built or guided custom-build.
+- Optional first video upload as "try it now".
 
-## Открытые вопросы
+## Open questions
 
-- Регистрация обязательна сразу или можно «попробовать без регистрации» (guest mode)?
-- Какой минимум данных, без которого приложение не работает, vs какие данные опциональны?
-- Готовая первая тренировка — какая именно, чтобы новичок не растерялся?
-- Объясняем ли сразу разницу free / paid? (Интервью: **не давить** оплатой на старте; разницу можно показать мягко, когда человек уже понял ценность.)
-- **Возрастной фильтр на входе:** продукт только для **18+**. Нужно зафиксировать форму подтверждения возраста при регистрации (декларация + дата рождения) и поведение при отказе/несоответствии. Согласие родителей и детские режимы **не предусматриваются** — лица младше 18 лет в ЦА не входят. См. `../SECURITY.md` → «Возрастные ограничения».
+- Registration mandatory immediately or guest mode allowed?
+- Minimum data needed for app to function vs optional.
+- Pre-built first workout: which one for absolute beginner?
+- Explain free / paid difference upfront? (Interviews: do not push payment at start; reveal softly after value lands.)
+- **18+ age gate:** product is 18+ only. Confirmation form required at registration (declaration + DOB) and rejection/mismatch behavior. No parental consent, no kids modes. See `../SECURITY.md` § "Age restrictions".

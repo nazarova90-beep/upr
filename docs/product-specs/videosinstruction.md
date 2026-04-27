@@ -1,163 +1,152 @@
 ---
 status: approved
-last_updated: 2026-04-18
+last_updated: 2026-04-27
 owner: Кристина
-related: exercise-chat.md, product.md, ../SECURITY.md, ../exec-plans/active/roadmap.md
+related: exercise-chat.md, ../product.md, ../SECURITY.md, ../exec-plans/active/roadmap.md
 ---
 
-# Работа с видео в приложении
+# Video handling
 
-> ## Single-scenario MVP: что упрощено
->
-> Этот документ описывает работу с видео **в полной форме (Full MVP)**. Для **Single-scenario MVP** (то, что реализуем первым — Фазы 1-3 [`roadmap.md`](../exec-plans/active/roadmap.md), раздел 3) она работает в **упрощённой версии**. Различия:
->
-> | Аспект | В этом документе (Full MVP) | В Single-scenario MVP |
-> |---|---|---|
-> | **Откуда юзер загружает видео** | с экрана упражнения (внутри активной тренировки), кнопкой «Загрузить видео» | прямо из чата упражнения (аттач-кнопкой). «Экрана упражнения» нет — чат и есть «экран упражнения». |
-> | **Источник видео** | снять прямо в приложении (in-app камера) **или** выбрать из галереи | **только выбор готового файла из галереи устройства** через системный пикер. In-app камеры нет — пользователь снимает видео сторонней камерой телефона до прихода в приложение. Это убирает: интеграцию с камерой, превью записи, разрешения на камеру, обработку прерываний во время записи. Возврат in-app съёмки — не раньше Фазы 4 [`roadmap.md`](../exec-plans/active/roadmap.md). |
-> | **Распознавание упражнения** (проверка соответствия чату) | работает: AI понимает, что на видео, и при несовпадении задаёт вопрос «перепривязать или не разбирать?» | в Single-scenario MVP / Фазе 2 (thin slice) **не реализуется**. AI пытается разобрать любое видео, отправленное в чат. Полная логика распознавания возвращается в **Фазе 3**. |
-> | **Двухэтапная проверка качества видео** (на устройстве + AI) | работает обе ступени | полная двухэтапная проверка переезжает в **Фазу 3** (полировка). В Фазе 2 (thin slice) ошибки качества видео обрабатываются по минимуму — только серверная ошибка вида «не смог разобрать» без подробных подсказок. |
-> | **Поле комментария** к видео и приоритизация комментария AI | работает (комментарий разбирается первым) | в Single-scenario MVP остаётся: чат поддерживает обычные текстовые сообщения наряду с видео, поэтому комментарий = текстовое сообщение в чате. Отдельного «поля комментария к видео» как UI-элемента в первой версии может не быть — решит Track B. |
-> | **Хранение видео** | привязано к тарифу: 2 месяца на free, бессрочно на paid | **храним всё** бессрочно для всех (тарифов и подписки в Single-scenario MVP вообще нет). Политика хранения вернётся вместе с биллингом — Фаза 7 [`roadmap.md`](../exec-plans/active/roadmap.md). |
->
-> Что **остаётся одинаковым** в Full MVP и Single-scenario MVP: один анализ в очереди на пользователя; одно видео в одном сообщении; пока AI разбирает — поле ввода в чате заблокировано; разбор продолжается на сервере, даже если юзер свернул приложение; push-уведомлений нет.
->
-> Где описаны Single-scenario MVP-замены:
-> - **User flow «открыл приложение → загрузил видео → получил ответ AI»** → [`../user-flows/upload-video-and-get-feedback.md`](../user-flows/upload-video-and-get-feedback.md).
-> - **3 упражнения, в которых снимать видео** → [`exercises-base.md`](exercises-base.md). Важно: для упражнения «Вертикальная тяга блока к груди» рекомендуемый ракурс съёмки — **спереди или 3⁄4**, для двух других — **сбоку**. Это надо учесть в подсказках UI и в системном промпте AI.
->
-> ---
->
-> **Дальше идёт исходный approved-документ для Full MVP без изменений.**
+Spec describes the **Full MVP** form. Single-scenario MVP runs a simplified version (Phases 1–3 of `roadmap.md` § 3).
 
-Этот документ описывает всё, что связано с видеозаписями подходов в приложении: загрузку, отправку на разбор AI, обработку ошибок, очередь и состояние ожидания.
+## Single-scenario MVP simplifications
 
-## Контекст
+| Aspect | Full MVP | Single-scenario MVP |
+|---|---|---|
+| Upload entry | Exercise screen (inside active workout), "Загрузить видео" button | Inside chat (attach button). No exercise screen — chat = exercise screen. |
+| Video source | In-app camera + gallery picker | Gallery system picker only. No in-app camera. Removes camera integration, recording preview, camera permissions, recording-interruption handling. In-app capture returns ≥ Phase 4. |
+| Exercise recognition (chat-match check) | Active — AI detects mismatch and asks "rebind / don't analyze here?" | Not in Single-scenario MVP / Phase 2. AI tries to analyze any video sent. Recognition logic returns at Phase 3. |
+| Two-stage video quality check (device + AI) | Both stages active | Phase 3 (polish). Phase 2 — minimal: only server "couldn't analyze" without detailed hints. |
+| Comment field + AI prioritization | Active (comment processed first) | Chat supports plain text alongside video → comment = text message in chat. Dedicated "comment-to-video" UI element optional, decided by Track B. |
+| Video retention | Tier-based: 2 months free / unlimited paid | Indefinite for everyone (no tiers in Single-scenario MVP). Retention returns at Phase 7 with billing. |
 
-Видео — главный «материал», с которым работает AI-тренер. Юзер снимает видео своего подхода в зале, отправляет в чат упражнения, получает разбор техники.
+Invariants kept across both modes: one analysis in queue per user; one video per message; input field locked while AI processes; analysis continues server-side if app backgrounded; no push notifications.
 
-Подробнее про сам чат и его поведение — см. `exercise-chat.md`.
+Single-scenario MVP replacements:
+- User flow → `../user-flows/upload-video-and-get-feedback.md`.
+- 3 exercises (with recommended camera angle) → `exercises-base.md`. **Lat pulldown** — front or 3⁄4. Other two — side. Reflect in UI hints and AI system prompt.
 
-## Откуда юзер загружает видео
+---
 
-Видео загружается **с экрана упражнения** (внутри активной тренировки). На экране есть кнопка **«Загрузить видео»**, которая позволяет:
-- снять видео прямо из приложения;
-- выбрать уже снятое видео из галереи устройства.
+## Context
 
-## Что происходит после выбора видео
+Video is the primary material for the AI coach. User records a set, sends to per-exercise chat, gets technique review.
 
-После того как юзер выбрал/снял видео, он видит:
+Chat behavior: `exercise-chat.md`.
 
-1. **Превью видео** (можно посмотреть его перед отправкой).
-2. **Поле для необязательного комментария** — короткий текст-вопрос или контекст. Например: «проверь глубину», «сегодня болит колено», «новый рабочий вес».
-3. **Кнопку «Отправить на разбор»**.
+## Upload entry (Full MVP)
 
-Видео уходит в работу AI **только по нажатию кнопки**, не автоматически.
+From exercise screen inside active workout. **"Загрузить видео"** button:
+- record in-app, or
+- pick from device gallery.
 
-## Как AI учитывает комментарий
+## Post-pick state
 
-Если поле комментария заполнено:
-1. AI **сначала отвечает именно на этот вопрос** отдельным первым сообщением.
-2. Затем — общий разбор техники и список рекомендаций.
+After picking / recording:
 
-Комментарий пользователя приоритетнее общего разбора. Это помогает юзеру получать ответ именно на то, что его волнует, а не общие фразы.
+1. Video preview (playable before send).
+2. Optional comment field — short text, e.g. "проверь глубину", "сегодня болит колено", "новый рабочий вес".
+3. **"Отправить на разбор"** button.
 
-## Распознавание упражнения
+Video sent to AI only on button tap, not automatically.
 
-AI должен сам понимать, какое упражнение на видео.
+## Comment handling by AI
 
-**Если упражнение на видео не совпадает с упражнением чата** (например, в чат «Приседания» прислано видео жима лёжа):
+If comment is filled:
+1. AI replies to that question first as a separate message.
+2. Then general technique review + recommendations.
 
-1. AI видит несовпадение.
-2. Отвечает в чат сообщением с вопросом: **«Это не похоже на приседания. Перепривязать видео к другому упражнению или не разбирать его здесь?»**
-3. Юзер выбирает один из двух вариантов:
-   - перепривязать → видео переезжает в чат правильного упражнения;
-   - не разбирать → видео остаётся в чате как сообщение, но без анализа.
+Comment > general review. Forces relevance to user's actual concern.
 
-> Это серьёзное техническое требование к модели — учтём при выборе AI-провайдера.
+## Exercise recognition
 
-## Обработка ошибок при загрузке видео
+AI detects which exercise is on video.
 
-Двухэтапная проверка качества видео.
+Mismatch (e.g. bench press video into "Squats" chat):
 
-### Этап 1: до отправки (на устройстве)
+1. AI detects mismatch.
+2. Replies: **"Это не похоже на приседания. Перепривязать видео к другому упражнению или не разбирать его здесь?"**
+3. User chooses:
+   - rebind → video moves to correct exercise chat;
+   - don't analyze → video stays as message, no analysis.
 
-Очевидные технические проблемы ловим **ещё до нажатия «Отправить на разбор»**:
-- слишком длинное видео (превышен лимит в секундах);
-- слишком большой файл (превышен лимит в мегабайтах);
-- неподдерживаемый формат файла.
+Hard requirement on AI provider.
 
-Юзер видит понятное сообщение об ошибке и подсказку: «**Перезапиши видео покороче / в другом формате / меньшего размера**». Видео не уходит на сервер.
+## Video upload error handling
 
-### Этап 2: после отправки (на стороне AI)
+Two-stage check.
 
-Если видео по техническим параметрам прошло, но AI всё равно не может его разобрать:
-- плохое освещение, темно;
-- человека в кадре не видно или он закрыт;
-- плохой ракурс камеры;
-- нерелевантный контент (на видео не упражнение);
-- слишком сильное дрожание камеры.
+### Stage 1: pre-upload (on device)
 
-AI отвечает в чат отдельным сообщением вида:
-**«Не могу разобрать твой подход, потому что [конкретная причина]. Попробуй переснять [конкретный совет: ракурс, освещение и т.д.]».**
+Catch obvious issues before "Отправить на разбор" tap:
+- video too long (seconds limit);
+- file too large (MB limit);
+- unsupported format.
 
-## Очередь анализа
+Clear message + hint: "перезапиши видео покороче / в другом формате / меньшего размера". Not sent to server.
 
-В один момент времени у одного пользователя может быть **только один активный анализ**.
+### Stage 2: post-upload (AI side)
 
-Если юзер уже отправил одно видео и оно ещё анализируется, **второе отправить нельзя**:
-- кнопка «Отправить на разбор» в текущем чате неактивна;
-- если юзер пытается загрузить видео в другой чат — показывается сообщение «дождитесь завершения предыдущего разбора».
+If technically valid but AI can't analyze:
+- bad lighting / dark;
+- person not visible or occluded;
+- bad camera angle;
+- irrelevant content;
+- excessive shake.
 
-Это упрощает архитектуру MVP и помогает контролировать стоимость AI-запросов.
+AI replies in chat: **"Не могу разобрать твой подход, потому что [reason]. Попробуй переснять [advice: angle, lighting, etc.]"**.
 
-## Сколько видео можно отправить за раз
+## Analysis queue
 
-В одном сообщении — **только одно видео**.
+One active analysis per user.
 
-Сравнение нескольких подходов между собой в одном анализе (например, «сравни мой первый и третий подход») в MVP не делаем. Это потенциальная фича для v2.
+Pending analysis ⇒
+- "Отправить на разбор" disabled in current chat;
+- attempt to upload to another chat → "дождитесь завершения предыдущего разбора".
 
-## Состояние «AI думает» (для MVP)
+Simplifies MVP architecture and controls AI cost.
 
-Самый простой вариант для первого релиза:
+## Videos per message
 
-1. Юзер нажал «Отправить на разбор».
-2. В чате появляется **сообщение-плейсхолдер от AI**: «Анализирую твой подход…» с анимацией.
-3. **Поле ввода сообщения заблокировано** до получения ответа.
-4. Юзер может **свернуть приложение** или **выйти из чата** — анализ продолжается на сервере. Когда юзер вернётся, ответ его уже будет ждать в чате.
-5. Push-уведомлений в MVP **нет**.
+One video per message. No multi-video comparison in MVP — potential v2 feature.
 
-### Что отложено в v2
+## "AI is thinking" state (MVP)
 
-Идея с **плавающей кнопкой-индикатором** поверх всех экранов приложения (показывает прогресс анализа, при клике переводит в нужный чат) — отличная, но это отдельная инженерная история. В MVP не делаем, добавим во второй итерации.
+1. Tap "Отправить на разбор".
+2. Placeholder AI message: "Анализирую твой подход…" with animation.
+3. Input field locked until reply.
+4. App can be backgrounded; analysis continues server-side. Reply waits when user returns.
+5. No push in MVP.
 
-## Хранение видео
+### Deferred to v2
 
-Видео, отправленные на разбор, сохраняются как часть истории сообщений в чате. К ним применяются те же правила хранения, что и к сообщениям:
+Floating analysis indicator across screens — separate engineering effort. Not in MVP.
 
-- **Бесплатный тариф:** 2 месяца с момента отправки, потом удаляется фоном.
-- **Платная подписка:** хранится бессрочно.
+## Video retention
 
-Подробнее про хранение истории — см. `exercise-chat.md`.
+Videos saved as part of chat message history; same retention rules:
 
-## Технические требования к AI-модели (для дальнейшего выбора стека)
+- **Free:** 2 months, then background deletion.
+- **Paid:** unlimited.
 
-На основе вышеописанного, модель должна уметь:
+Details: `exercise-chat.md`.
 
-1. **Анализировать видеозапись силового упражнения** и давать содержательный разбор техники (а не общие фразы).
-2. **Распознавать конкретное упражнение** на видео (для проверки соответствия чату).
-3. **Генерировать текстовый ответ в стиле живого тренера** — тёплый, понятный, без сухой структуры.
-4. **Создавать скриншот из видео с разметкой** — обводить проблемный момент и графически подсказывать, что поправить.
-5. **Учитывать контекст всей предыдущей переписки** в чате упражнения (видеть прогресс юзера во времени).
-6. **Приоритизировать комментарий пользователя** при формировании ответа.
+## AI model requirements (for stack selection)
 
-Эти требования будем закладывать при выборе AI-провайдера и архитектуры.
+1. Analyze strength-exercise video and produce substantive technique review (not generic).
+2. Recognize specific exercise on video.
+3. Produce text in trainer-style human tone.
+4. Produce annotated frame: error point circled + correction shown graphically.
+5. Take entire prior chat history into account (per-exercise progress over time).
+6. Prioritize user comment in reply construction.
 
-## Что за пределами MVP
+Inputs into AI provider + architecture selection.
 
-- Сравнение нескольких видео в одном разборе.
-- Параллельная обработка нескольких видео одного юзера.
-- Плавающая кнопка-индикатор анализа поверх всех экранов.
-- Push-уведомления о готовности разбора.
-- Замедленный/покадровый просмотр видео с разметкой прямо в чате.
-- Загрузка видео не из тренировки (например, из «общего» раздела упражнений).
+## Out of MVP
+
+- Multi-video comparison in one analysis.
+- Parallel analyses for one user.
+- Floating analysis indicator across screens.
+- Push on analysis ready.
+- Slow-motion / frame-by-frame playback with annotations in chat.
+- Video upload outside an active workout (e.g. from a global exercises section).

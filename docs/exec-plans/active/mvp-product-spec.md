@@ -5,139 +5,136 @@ owner: Кристина
 related: ../../product.md, ../../product-specs/index.md, roadmap.md, ../../user-flows/upload-video-and-get-feedback.md
 ---
 
-# План: продуктовая спецификация MVP
+# Plan: MVP product specification
 
-> **Место в общем плане:** этот документ — **часть Фазы 1 / Track A** главного roadmap'а проекта (`roadmap.md`). Здесь живёт продуктовая ветка работ. Параллельно в Track B идут UI-мокапы, в Track C — технический скелет (пустые проекты Expo / FastAPI). Все три трека сходятся в точке синхронизации в конце Фазы 1, после чего проект переходит в Фазу 2 (thin slice).
+Place in roadmap: Phase 1 / Track A. Track B = UI mockups. Track C = `mobile/` + `backend/` skeleton. All three converge at end of Phase 1 → Phase 2 (thin slice).
 
-## Цель
+## Goal
 
-Полностью описать продуктовую часть MVP приложения UPR до начала технической реализации. Зафиксировать все решения в `docs/product-specs/`, `docs/user-flows/` и `docs/ui/`.
+Fully describe MVP product surface before technical implementation. Outputs land in `docs/product-specs/`, `docs/user-flows/`, `docs/ui/`.
 
-## Контекст
+## Checklist structure (since 2026-04-19)
 
-Запущено 18 апреля 2026. Идея приложения — AI-тренер по силовым упражнениям с разбором техники по видео. Ресерч рынка проведён, концепция зафиксирована. Теперь нужно детально описать каждую фичу MVP, прежде чем выбирать стек.
+- **Block A — Single-scenario MVP** — Track A of Phase 1 + content for Phases 2–3.
+- **Block B — Post-MVP / Full MVP** — items from `../../product.md` § 9 beyond Single-scenario MVP. Moves to Phase 4.
 
-19 апреля 2026 принят общий **roadmap проекта** (`roadmap.md`) — этот план встроен в него как Track A Фазы 1.
+### Foundation (done)
 
-## Чеклист
-
-> **Структура чек-листа после уточнения 2026-04-19.** Чек-лист разделён по двум блокам, согласованным с roadmap'ом:
->
-> - **Блок A — Single-scenario MVP** — то, что нужно прямо сейчас, чтобы один сценарий («заход без логина → тренировка с тремя упражнениями → загрузка видео → разбор + чат с AI») работал целиком. **Это и есть Track A Фазы 1 + наполнение для Фаз 2–3 roadmap'а.**
-> - **Блок B — Post-MVP / Full MVP** — всё, что описано в `../../product.md` (раздел «Что входит в Full MVP») сверх Single-scenario MVP. Эти пункты **не отменены**, они переезжают в **Фазу 4** roadmap'а («Расширение до Full MVP»).
-
-### Фундамент (готово)
-- [x] Концепция и ЦА (`docs/product.md`)
-- [x] Главная фича: чат с упражнением (`product-specs/exercise-chat.md`)
-- [x] Работа с видео (`product-specs/videosinstruction.md`)
-- [x] Главный пользовательский сценарий (внутри `docs/product.md`)
-- [x] Структура документации в стиле OpenAI Harness
-- [x] Выбор стека backend/frontend/database (`stack.md`)
-- [x] Базовая фиксация архитектуры (`ARCHITECTURE.md`)
-- [x] Главный roadmap проекта (`roadmap.md`)
-- [x] Оптимизация документации под наш масштаб (2026-04-27): объединены `product.md`/`product-specs/product.md`/`PRODUCT_SENSE.md`; убран `RELIABILITY.md`; сжаты `SECURITY.md`, `BACKEND.md`, `DATABASE.md`; полный security-чек-лист сохранён в `design-docs/security-future-reference.md`.
+- [x] Concept and audience (`docs/product.md`)
+- [x] Main feature: per-exercise chat (`product-specs/exercise-chat.md`)
+- [x] Video handling (`product-specs/videosinstruction.md`)
+- [x] Main user scenario (inside `docs/product.md`)
+- [x] Documentation structure per OpenAI Harness Engineering
+- [x] Stack selection (`stack.md`)
+- [x] Architecture baseline (`ARCHITECTURE.md`)
+- [x] Project roadmap (`roadmap.md`)
+- [x] Documentation optimized for project scale (2026-04-27): merged `product.md` / `product-specs/product.md` / `PRODUCT_SENSE.md`; removed `RELIABILITY.md`; trimmed `SECURITY.md` / `BACKEND.md` / `DATABASE.md`; full security checklist preserved in `design-docs/security-future-reference.md`.
+- [x] Documentation refactored to agent-first (2026-04-27): removed beginner narratives and analogies from all `docs/*` files.
 
 ---
 
-### Блок A — Single-scenario MVP (делаем сейчас, Фазы 1–3 roadmap'а)
+### Block A — Single-scenario MVP (Phases 1–3)
 
-#### A.1. Продуктовые спеки (Фаза 1 / Track A) — **закрыто 2026-04-19**
-- [x] **3 стартовых упражнения** для захардкоженной тренировки → раздел в `product-specs/exercises-base.md`
-  - [x] Какие именно три упражнения: румынская тяга, подъём гантелей на бицепс (классический хват), вертикальная тяга блока к груди
-  - [x] Что хранится по каждому: только `id`, `name`, `technique` (3-5 строк). Без типичных ошибок и без картинки — переезжает в Full MVP
-  - [x] Источник описаний техники: пишем сами (черновик от агента → правка владельцем продукта)
-- [x] **Захардкоженная единственная тренировка** из этих трёх упражнений → раздел в `product-specs/workout.md`
-  - [x] Список упражнений в фиксированном порядке: румынская тяга → вертикальная тяга блока → подъём на бицепс
-  - [x] Что показывается на экране тренировки: название «Вайбкодинговая тренировка», дата 19.04.2026, счётчик «3 упражнения», три карточки с порядковым номером, иконкой «информация» (поп-ап с техникой) и стрелкой-навигацией в чат
+#### A.1. Product specs (Phase 1 / Track A) — closed 2026-04-19
 
-#### A.2. User flow Single-scenario MVP (Фаза 1 / Track A) — **закрыто 2026-04-19**
-- [x] **Главный (и единственный) сценарий MVP** — загрузка видео и получение разбора → `user-flows/upload-video-and-get-feedback.md`
-  - [x] От «открыл приложение» до «получил ответ AI и задал уточняющий вопрос»
-  - [x] Тап по упражнению на экране тренировки → **сразу попадание в чат** этого упражнения (без промежуточных экранов)
-  - [x] Загрузка видео из чата (instant send после системного пикера галереи) → **без съёмки в приложении и без промежуточного экрана-превью** → ответ AI приходит в этот же чат
-  - [x] Поведение при «AI ещё разбирает» (плейсхолдер «Анализирую…», кнопка «Загрузить видео» неактивна, один анализ в очереди)
-  - [x] Поведение при ошибке загрузки / плохом видео — минимальное (полная двухэтапная проверка переезжает в Фазу 3); нерелевантное упражнение в Single-scenario MVP не проверяется (Фаза 3)
+- [x] **3 starting exercises** for hardcoded workout → `product-specs/exercises-base.md`
+  - [x] Exercises: Romanian deadlift, dumbbell biceps curl (classic grip), lat pulldown
+  - [x] Per-exercise fields: `id`, `name`, `technique` (3–5 lines). No common-mistakes, no image (deferred to Full MVP)
+  - [x] Source of technique descriptions: written in-house (agent draft → owner edit)
+- [x] **Single hardcoded workout** of these three → `product-specs/workout.md`
+  - [x] Order: Romanian deadlift → lat pulldown → biceps curl
+  - [x] Workout screen anatomy: title "Вайбкодинговая тренировка", date 19.04.2026, "3 упражнения" counter, three cards with sequential number, info icon (technique pop-up), nav arrow to chat
 
-#### A.3. UI под Single-scenario MVP (Фаза 1 / Track B)
-- [ ] Список ключевых UI-компонентов из Lucent под этот сценарий → `ui/components.md` (карточка упражнения в списке тренировки, чат-баббл, кнопка-аттач, индикатор «AI разбирает», размеченный кадр в сообщении)
-- [ ] Принципы текстов в интерфейсе → `ui/voice-and-tone.md`
-- [ ] Мокапы 2 главных экранов MVP + состояния → `ui/mockups/`
-  - [ ] Экран тренировки с тремя упражнениями (карточки, тапаются)
-  - [ ] Экран чата с упражнением: область сообщений + кнопка «загрузить видео» + поле ввода
-  - [ ] Состояние пустого чата (до первого видео) — что подсказывает юзеру, что сделать
-  - [ ] Состояние «AI разбирает видео» внутри чата (индикатор, поле ввода заблокировано)
-  - [ ] Состояние «ответ AI пришёл» — текстовый разбор + размеченный кадр
-  - [ ] Состояние ошибки / нерелевантного видео внутри чата
+#### A.2. User flow Single-scenario MVP (Phase 1 / Track A) — closed 2026-04-19
 
-#### A.4. Технический скелет (Фаза 1 / Track C)
-- [x] Создать **Expo-проект (TypeScript)**, перенести дизайн-токены Lucent в `theme.ts` (константы для `StyleSheet`), i18n через `i18next` <!-- структура готова: mobile/src/theme/* + mobile/src/i18n/*. Manrope/Material Symbols — отдельный шаг. -->
-- [x] Создать FastAPI-проект по доменам из `BACKEND.md` <!-- backend/app/{workout,exercise_chat,video_analysis,ai_coach}/ + ai_provider/ + storage/ + db/ — пустые routers/services/models. -->
-- [x] Базовые ORM-модели для Single-scenario MVP: Exercise, Workout (захардкоженная), ExerciseChat, ChatMessage, VideoAnalysis. **User — захардкоженный синглтон без таблицы.** <!-- Пустые SQLModel-классы созданы в backend/app/db/models/. Поля заполним в Phase 2. -->
-- [ ] Локальный «hello world» (бэк отвечает на `/health`, мобильное приложение его дёргает)
-- [ ] Полная схема БД (`DATABASE.md` + `generated/db-schema.md`) появляется автогенерацией после моделей
+- [x] Main and only MVP scenario — upload video and get analysis → `user-flows/upload-video-and-get-feedback.md`
+  - [x] From "open app" to "got AI reply and asked follow-up"
+  - [x] Tap exercise on workout screen → straight into per-exercise chat (no intermediate screens)
+  - [x] Video upload from inside chat (instant send after system gallery picker) → no in-app capture, no preview screen → AI reply in same chat
+  - [x] "AI is analyzing" state (placeholder, "Загрузить видео" button disabled, single analysis in queue)
+  - [x] Upload error / bad-video behavior — minimal (full two-stage check → Phase 3); irrelevant exercise not checked in Single-scenario MVP (Phase 3)
+
+#### A.3. UI for Single-scenario MVP (Phase 1 / Track B)
+
+- [ ] Key UI components from Lucent for this scenario → `ui/components.md` (workout-list exercise card, chat bubble, attach button, "AI is analyzing" indicator, annotated frame in message)
+- [ ] UI text principles → `ui/voice-and-tone.md`
+- [ ] Mockups for 2 main MVP screens + states → `ui/mockups/`
+  - [ ] Workout screen with three exercises (cards, tappable)
+  - [ ] Per-exercise chat screen: message area + "Загрузить видео" button + input field
+  - [ ] Empty-chat state (before first video) — guidance to user
+  - [ ] "AI is analyzing video" state inside chat (indicator, input field locked)
+  - [ ] "AI reply received" state — text + annotated frame
+  - [ ] Error / irrelevant-video state inside chat
+
+#### A.4. Technical skeleton (Phase 1 / Track C)
+
+- [x] Expo project (TypeScript), Lucent design tokens in `theme.ts` (constants for `StyleSheet`), i18n via `i18next`. Manrope / Material Symbols — separate step.
+- [x] FastAPI project per `BACKEND.md` domains: `backend/app/{workout,exercise_chat,video_analysis,ai_coach}/` + `ai_provider/` + `storage/` + `db/` — empty routers/services/models.
+- [x] Baseline ORM models for Single-scenario MVP: `Exercise`, `Workout` (hardcoded), `ExerciseChat`, `ChatMessage`, `VideoAnalysis`. `User` — hardcoded singleton, no table. Empty SQLModel classes in `backend/app/db/models/`. Fields filled in Phase 2.
+- [ ] Local "hello world": backend serves `/health`, mobile app calls it.
+- [ ] Full DB schema (`DATABASE.md` + `generated/db-schema.md`) — auto-generated after models.
 
 ---
 
-### Блок B — Post-MVP / Full MVP (Фаза 4 roadmap'а)
+### Block B — Post-MVP / Full MVP (Phase 4)
 
-> Эти пункты **не отменены**. Они выполняются после того, как Single-scenario MVP стабильно работает (конец Фазы 3).
+Run after Single-scenario MVP is stable (end of Phase 3).
 
-#### B.1. Расширение базы упражнений и тренировок
-- [ ] База 20 упражнений MVP (полное наполнение `product-specs/exercises-base.md`)
-  - [ ] Финальный список 20 упражнений
-  - [ ] Источники описаний техники
-- [ ] Полноценный workout: пользователь сам собирает тренировку из упражнений базы (`product-specs/workout.md`)
-- [ ] **Дневник подходов** (вес × повторения) на экране упражнения
-- [ ] Программа из нескольких тренировок
-- [ ] Поведение при старте / паузе / завершении тренировки
+#### B.1. Exercise base + workout expansion
 
-#### B.2. User flows Post-MVP
-- [ ] Онбординг (полный, после интервью-инсайтов) — `user-flows/onboarding.md`
-- [ ] Старт тренировки и прохождение — `user-flows/start-workout.md`
+- [ ] Full 20-exercise base (`product-specs/exercises-base.md`)
+  - [ ] Final list of 20.
+  - [ ] Source of technique descriptions.
+- [ ] User-built workouts from base (`product-specs/workout.md`).
+- [ ] Set log (weight × reps) on exercise screen.
+- [ ] Multi-workout program.
+- [ ] Workout start / pause / finish behavior.
 
-#### B.3. Регистрация и аккаунт (приходят вместе в Фазе 5 roadmap'а)
-- [ ] Регистрация / логин — `user-flows/registration.md`, `login.md`
-- [ ] Управление подпиской — `user-flows/manage-subscription.md`
-- [ ] Удаление аккаунта — `user-flows/delete-account.md`
+#### B.2. Post-MVP user flows
 
-#### B.4. Бизнес-модель (Фаза 7 roadmap'а)
-- [ ] Лимиты бесплатного тарифа
-- [ ] Цена и состав платной подписки
-- [ ] Расчёт стоимости AI-запросов
+- [ ] Onboarding (full, after interview insights) — `user-flows/onboarding.md`.
+- [ ] Workout start and run — `user-flows/start-workout.md`.
 
-## Открытые вопросы
+#### B.3. Registration and account (Phase 5)
 
-- Какие именно 20 упражнений войдут в базу MVP?
-- Источники описаний техники: пишем сами / лицензируем / партнёрство с тренером-консультантом?
-- Бизнес-модель: какие конкретно лимиты у free и какие фичи у paid?
-- Регион запуска: только RU / RU+EU / глобально с английским?
-- Минимальные версии iOS и Android?
+- [ ] Registration / login — `user-flows/registration.md`, `login.md`.
+- [ ] Subscription management — `user-flows/manage-subscription.md`.
+- [ ] Account deletion — `user-flows/delete-account.md`.
 
-## Журнал решений
+#### B.4. Business model (Phase 7)
 
-| Дата | Решение | Где зафиксировано |
+- [ ] Free-tier limits.
+- [ ] Paid-tier price + composition.
+- [ ] AI request cost model.
+
+## Open questions
+
+- Final list of 20 exercises for MVP base.
+- Source of technique descriptions: in-house / licensed / consulting trainer partnership.
+- Free-tier limits and paid-tier features (numbers).
+- Launch region: RU only / RU + EU / global with English.
+- Minimum iOS / Android versions.
+
+## Decision log
+
+| Date | Decision | Source |
 |---|---|---|
-| 2026-04-18 | Концепция приложения, ЦА, MVP-скоп | `product-specs/product.md` |
-| 2026-04-18 | Один чат на упражнение навсегда (а не на тренировку) | `product-specs/exercise-chat.md` |
-| 2026-04-18 | Анализ запускается явной кнопкой, комментарий обрабатывается первым | `product-specs/videosinstruction.md` |
-| 2026-04-18 | AI должен распознавать упражнение и проверять соответствие чату | `product-specs/videosinstruction.md` |
-| 2026-04-18 | Один анализ в очереди на пользователя | `product-specs/videosinstruction.md` |
-| 2026-04-18 | Хранение истории: 2 мес. на free, бессрочно на paid | `product-specs/exercise-chat.md` |
-| 2026-04-18 | Двухэтапная проверка качества видео (на устройстве + AI) | `product-specs/videosinstruction.md` |
-| 2026-04-18 | Структура документации по подходу OpenAI Harness | `design-docs/core-beliefs.md`, `AGENTS.md` |
-| 2026-04-18 | Безопасность вынесена в отдельный детальный SECURITY.md | `docs/SECURITY.md` |
-| 2026-04-19 | ЦА сужена до 18+; детские режимы и согласия родителей исключены | `docs/product.md`, `docs/SECURITY.md` |
-| 2026-04-19 | Стек MVP (первоначально): Flutter + Python/FastAPI + SQLite (через ORM) + Gemini Free Tier + MediaPipe; план масштабирования по этапам | `docs/stack.md` |
-| 2026-04-19 | Админка отложена; заранее заложена возможность через SQLAdmin поверх ORM-моделей | `docs/stack.md` (раздел «Будущая админка») |
-| 2026-04-19 | Принят общий **roadmap проекта** (параллельные треки в Фазе 1, триггеры перехода). Этот план встроен в roadmap как Track A Фазы 1. | `roadmap.md` |
-| 2026-04-19 | **Сужение скоупа MVP:** введено разделение на **Single-scenario MVP** (один сценарий: заход без логина → тренировка с 3 захардкоженными упражнениями → загрузка видео → разбор + чат с AI) и **Full MVP** (полный пакет из `product-specs/product.md`). Сначала делаем Single-scenario MVP, Full MVP не отменяется и переезжает в новую Фазу 4 roadmap'а. Чек-лист этого плана пересобран на блоки A (Single-scenario) и B (Post-MVP). **Дневник подходов** перенесён в Блок B. | `roadmap.md`, этот файл |
-| 2026-04-19 | Из списка упражнений на экране тренировки **переход сразу в чат**. Никакого «экрана упражнения» с описанием техники / дневником в Single-scenario MVP — нет. Чат и есть «экран упражнения», кнопка «загрузить видео» — внутри чата. Single-scenario MVP теперь = **2 главных экрана**: тренировка и чат. | `roadmap.md` (раздел 3, журнал решений), этот файл (Блок A) |
-| 2026-04-19 | В Single-scenario MVP **нет съёмки видео внутри приложения**. Только подгрузка готового файла через системный пикер галереи. Из скоупа уходят: in-app камера, превью записи, обработка разрешений на камеру, прерывания записи. | `roadmap.md` (журнал решений), этот файл (Блок A) |
-| 2026-04-19 | **Track A Фазы 1 закрыт.** Зафиксированы: 3 стартовых упражнения (румынская тяга, подъём на бицепс, вертикальная тяга блока) с минимальным набором полей `id`/`name`/`technique`; единственная захардкоженная тренировка «Вайбкодинговая тренировка» от 19.04.2026 с описанной анатомией экрана тренировки и карточки упражнения; единственный user flow в `user-flows/upload-video-and-get-feedback.md`; врезки «Single-scenario MVP: что упрощено» в `exercise-chat.md` и `videosinstruction.md`. Готово к старту Track B (мокапы) — следующий план. | Этот файл (Блок A.1, A.2 → `[x]`); `exercises-base.md`; `workout.md`; `user-flows/upload-video-and-get-feedback.md`; `exercise-chat.md`; `videosinstruction.md` |
-| 2026-04-19 | **Frontend-стек пересмотрен на старте Track B: Flutter → React Native + Expo (TypeScript).** Причина — порог входа: Flutter требует Xcode (~15 ГБ) или Android Studio (~10 ГБ); Expo через Expo Go даёт разработку прямо на iPhone владельца через QR-код, без тяжёлой нативной инфраструктуры. Все возможности Single-scenario MVP (пикер видео, плеер, аплоад, тёмная тема, Manrope, i18n) поддерживаются Expo Go без development build (проверено через MCP `user-context7`). Track C обновлён: вместо «Flutter-проект + ARB + ThemeData» теперь «Expo-проект + i18next + theme.ts». **Следствие для Track B:** мокапы могут быть live-экранами в самом Expo-проекте — это потенциально объединяет Track B и Track C в одну ветку работы (решение принимаем при старте Track B). | `docs/stack.md` (журнал решений), `docs/FRONTEND.md`, `docs/references/expo.md`, `docs/exec-plans/active/roadmap.md` (журнал решений), этот файл (Track C → пункт обновлён). |
-
-## Связанные документы
-
-- `../../product-specs/index.md` — где живут результаты.
-- `../../design-docs/core-beliefs.md` — принципы, которым следуем.
-- `../completed/2026-04-18-mvp-product-spec-discussion.txt` — транскрипт первого обсуждения.
+| 2026-04-18 | Concept, audience, MVP scope | `docs/product.md` |
+| 2026-04-18 | One chat per exercise (not per workout) | `product-specs/exercise-chat.md` |
+| 2026-04-18 | Analysis triggered by explicit button; user comment processed first | `product-specs/videosinstruction.md` |
+| 2026-04-18 | AI must recognize exercise + match against chat | `product-specs/videosinstruction.md` |
+| 2026-04-18 | One analysis in queue per user | `product-specs/videosinstruction.md` |
+| 2026-04-18 | Message retention: 2 months free, unlimited paid | `product-specs/exercise-chat.md` |
+| 2026-04-18 | Two-stage video quality check (device + AI) | `product-specs/videosinstruction.md` |
+| 2026-04-18 | Doc structure per OpenAI Harness | `design-docs/core-beliefs.md`, `AGENTS.md` |
+| 2026-04-18 | Security in dedicated `SECURITY.md` | `docs/SECURITY.md` |
+| 2026-04-19 | Audience narrowed to 18+; kids modes / parental consent excluded | `docs/product.md`, `docs/SECURITY.md` |
+| 2026-04-19 | MVP stack initial: Flutter + Python/FastAPI + SQLite (ORM) + Gemini Free Tier + MediaPipe; phased scaling plan | `docs/stack.md` |
+| 2026-04-19 | Admin deferred; SQLAdmin reserved on top of ORM | `docs/stack.md` |
+| 2026-04-19 | Project roadmap accepted (parallel tracks in Phase 1, exit triggers). This plan = Track A of Phase 1. | `roadmap.md` |
+| 2026-04-19 | MVP narrowed: split into Single-scenario MVP and Full MVP. Set log moved to Block B. | `roadmap.md`, this file |
+| 2026-04-19 | Workout-list tap → straight into chat; no exercise screen with technique / set log in Single-scenario MVP. Single-scenario MVP = 2 screens (workout + chat). | `roadmap.md`, this file (Block A) |
+| 2026-04-19 | No in-app capture in Single-scenario MVP. Gallery system picker only. Out: in-app camera, recording preview, camera permissions, recording interruptions. | `roadmap.md`, this file (Block A) |
+| 2026-04-19 | Track A of Phase 1 closed. Fixed: 3 starting exercises (Romanian deadlift, biceps curl, lat pulldown) with minimal `id` / `name` / `technique`; single hardcoded workout "Вайбкодинговая тренировка" 19.04.2026; workout-screen and exercise-card anatomy; single user flow (`user-flows/upload-video-and-get-feedback.md`); "Single-scenario MVP simplifications" notes in `exercise-chat.md` and `videosinstruction.md`. | this file (A.1, A.2 → `[x]`); `exercises-base.md`; `workout.md`; `user-flows/upload-video-and-get-feedback.md`; `exercise-chat.md`; `videosinstruction.md` |
+| 2026-04-19 | Frontend stack revised at start of Track B: Flutter → React Native + Expo (TypeScript). Reason: onboarding cost (Flutter requires Xcode ~15 GB or Android Studio ~10 GB; Expo Go runs on owner's iPhone via QR code without native infra). All Single-scenario MVP features supported in Expo Go without Dev Build (verified via MCP `user-context7`). Track C updated: instead of "Flutter project + ARB + ThemeData" → "Expo project + i18next + theme.ts". Possible Track B + C merger. | `docs/stack.md`, `docs/FRONTEND.md`, `docs/references/expo.md`, `docs/exec-plans/active/roadmap.md`, this file (Track C) |
+| 2026-04-27 | Documentation refactored to agent-first: removed beginner narratives and analogies from all `docs/*` files. | `roadmap.md` decision log |

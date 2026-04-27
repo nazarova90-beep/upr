@@ -5,147 +5,138 @@ owner: Кристина
 related: ../index.md, mvp-product-spec.md, ../../product.md, ../../stack.md, ../../FRONTEND.md, ../../../ARCHITECTURE.md
 ---
 
-# UPR — Roadmap (главный план верхнего уровня)
+# UPR — roadmap
 
-Это **карта страны** для всего проекта: какие фазы по порядку и когда переходим дальше. **Не** детальный чек-лист «какой винт куда крутить» — детальные планы каждой фазы появляются в `docs/exec-plans/active/` **в момент старта** этой фазы, не сейчас.
+Top-level plan: phases in order, exit triggers per phase. Detailed exec-plans appear in `docs/exec-plans/active/` at the start of each phase, not earlier.
 
-> **Аналогия.** Roadmap — план стройки на год, висящий у прораба: «сначала фундамент, потом стены, потом крыша». Каждый «чертёж комнаты» (детальный exec-plan) рисуется перед тем, как браться именно за неё.
+## 1. Current state (committed)
 
-## 1. Где мы сейчас
+- Strategy + MVP — `docs/product.md`.
+- Product specs (partial): `product-specs/exercise-chat.md`, `videosinstruction.md`, `exercises-base.md` (3 starting exercises), `workout.md` (hardcoded workout).
+- Stack — `docs/stack.md`: React Native + Expo (TypeScript) + Python/FastAPI + SQLite (via ORM) + Gemini Free Tier + MediaPipe.
+- Architecture — `ARCHITECTURE.md`.
+- Operating principles — `docs/design-docs/core-beliefs.md`.
+- Lucent design system — `docs/ui/design-system/`.
+- `mobile/` + `backend/` skeletons — closed 2026-04-27 (`docs/exec-plans/completed/2026-04-27-phase1-track-c-skeleton.md`).
 
-**Уже зафиксировано в репозитории:**
+## 2. Two MVP levels
 
-- **Стратегия и MVP** — `docs/product.md` (единый документ продукта).
-- **Главные продуктовые фичи (частично):** `product-specs/exercise-chat.md`, `product-specs/videosinstruction.md`, `product-specs/exercises-base.md` (3 стартовых упражнения), `product-specs/workout.md` (захардкоженная тренировка).
-- **Технологический стек** — `docs/stack.md`: React Native + Expo (TypeScript) + Python/FastAPI + SQLite (через ORM) + Gemini Free Tier + MediaPipe.
-- **Архитектура** — `ARCHITECTURE.md`.
-- **Принципы работы** — `docs/design-docs/core-beliefs.md`.
-- **Дизайн-система Lucent** — `docs/ui/design-system/`.
-- **Технический скелет проектов `mobile/` и `backend/`** — закрыт 2026-04-27 (см. `docs/exec-plans/completed/2026-04-27-phase1-track-c-skeleton.md`).
-
-## 2. Two MVP уровня (важное уточнение)
-
-Чтобы не путать «**что мы реально доводим до запуска первым**» и «**полный пакет MVP, описанный в стратегии**»:
-
-| Термин | Что означает | Где описан |
+| Term | Meaning | Source |
 |---|---|---|
-| **Single-scenario MVP** | Самый узкий рабочий продукт: один пользовательский сценарий целиком, без всего остального. **Это то, что мы реализуем первым.** | Раздел 3 этого файла. |
-| **Full MVP** | Полный MVP-пакет, как описан в стратегии. | `docs/product.md` → раздел 9 «Что входит в Full MVP». |
+| **Single-scenario MVP** | Narrowest working product: one user scenario end-to-end. Built first. | Section 3 of this file. |
+| **Full MVP** | Full MVP package per strategy. | `docs/product.md` → section 9 "Full MVP scope". |
 
-> **Важно:** мы **ничего не убираем** из стратегии. Full MVP остаётся целью. Просто между «сейчас» и «Full MVP» добавляется промежуточная остановка — Single-scenario MVP, на которой можно проверить главную ценность («снял видео → AI разобрал → продолжаем диалог») без обвеса.
+Full MVP is not removed from strategy. Single-scenario MVP is an intermediate stop.
 
-## 3. Что входит в Single-scenario MVP
+## 3. Single-scenario MVP scope
 
-**Единственный сценарий**, который доводим до рабочего состояния первым:
+Single user scenario taken to working state first:
 
-1. Пользователь открывает приложение — **никакого логина / регистрации / онбординг-анкеты**.
-2. Сразу попадает на **экран тренировки**, где **уже есть три захардкоженных упражнения**.
-3. Тыкает на упражнение → **сразу проваливается в чат с этим упражнением**. Никакого промежуточного экрана упражнения с описанием техники / дневником подходов **нет** — чат и есть «экран упражнения». Внутри: область сообщений + кнопка «загрузить видео» + поле ввода.
-4. Жмёт «загрузить видео» → выбирает **уже готовый файл из галереи** (системный пикер). **Съёмки видео внутри приложения нет.** Бэкенд принимает → Gemini → разбор появляется в этом же чате.
-5. Можно **продолжить диалог**: уточнить вопрос, отправить следующее видео.
+1. Open app — no login / registration / onboarding form.
+2. Land on workout screen with three hardcoded exercises.
+3. Tap exercise → directly into per-exercise chat. No intermediate exercise screen with technique / set log. Chat = exercise screen. Contains: message area + "Загрузить видео" button + input field.
+4. Pick an existing file from gallery via system picker (no in-app camera). Backend → Gemini → analysis appears in same chat.
+5. Continue dialogue: follow-up questions, more videos.
 
-**Что НЕ входит в Single-scenario MVP** (всё это сохраняется в roadmap и реализуется позже):
+### Excluded (deferred)
 
-| Что | Куда переезжает |
+| Item | Phase |
 |---|---|
-| Съёмка видео внутри приложения (in-app камера, разрешения) | Не раньше Фазы 4 |
-| Регистрация / логин / профиль | Фаза 5 |
-| Workout builder (юзер сам собирает тренировку) | Фаза 4 |
-| База упражнений с 3 → 20 | Фаза 4 |
-| Дневник подходов (вес × повторения) | Фаза 4 |
-| Политика хранения сообщений 2 мес / бессрочно | Фаза 7 |
-| Двухэтапная проверка качества видео | Фаза 3 |
-| Распознавание упражнения и проверка соответствия чату | Фаза 3 |
-| Подписки, лимиты free vs paid, оплата | Фаза 7 |
-| Push-уведомления, плавающий индикатор | Фаза 6+ |
+| In-app camera (capture, permissions) | ≥4 |
+| Registration / login / profile | 5 |
+| Workout builder | 4 |
+| Exercise base 3 → 20 | 4 |
+| Set log (weight × reps) | 4 |
+| Message retention 2 months / unlimited | 7 |
+| Two-stage video quality check | 3 |
+| Exercise recognition + chat-match check | 3 |
+| Subscription, free/paid limits, billing | 7 |
+| Push, floating indicator | 6+ |
 
-> **Аналогия.** Single-scenario MVP — это **первый прототип лифта в новом доме**: одна шахта, одна кабина, едет с этажа 1 на этаж 3. Без выбора этажа кнопками, без музыки. Главное — что лифт **в принципе работает**.
+## 4. Plan principles
 
-## 4. Принципы плана
+1. **Thin slice first, width later.** One end-to-end scenario must work, even ugly with hardcoded data.
+2. **Triggers, not calendar dates.** Each phase has an exit trigger.
+3. **Each phase produces docs → commit → next phase.**
+4. **No feature in strategy → no feature in code** (`core-beliefs.md`).
 
-1. **Сначала thin slice, потом ширина.** Сначала один сквозной сценарий должен работать целиком — пусть криво, на захардкоженных данных. Только потом наращиваем функции вширь.
-2. **Триггеры перехода важнее календарных дат.** В каждой фазе зафиксирован **триггер выхода**, а не «к 1 июня».
-3. **Каждая фаза рождает документы → коммит → только потом следующая фаза.** Никаких «решений только в чате».
-4. **Нет фичи в стратегии — нет фичи в коде** (см. `core-beliefs.md`).
+## 5. Phases
 
-## 5. Фазы по порядку
+### Phase 0 — Roadmap fixed ✅
 
-### Фаза 0 — Зафиксировать roadmap ✅
-Закрыта.
+### Phase 1 — Parallel tracks (specs + UI + skeleton)
 
-### Фаза 1 — Параллельные треки (продукт + UI + технический скелет)
-
-| Track | Что | Статус |
+| Track | Subject | Status |
 |---|---|---|
-| **A** — Продуктовые спеки под Single-scenario MVP | 3 упражнения + захардкоженная тренировка + единственный user flow | ✅ Закрыт 2026-04-19 |
-| **B** — UI-мокапы под Single-scenario MVP | 2 главных экрана + состояния, `ui/components.md`, `ui/voice-and-tone.md` | 🔄 В работе |
-| **C** — Технический скелет `mobile/` + `backend/` | Структура папок по архитектуре, без логики | ✅ Закрыт 2026-04-27 (`completed/2026-04-27-phase1-track-c-skeleton.md`) |
+| **A** — Product specs for Single-scenario MVP | 3 exercises + hardcoded workout + single user flow | ✅ Closed 2026-04-19 |
+| **B** — UI mockups for Single-scenario MVP | 2 main screens + states, `ui/components.md`, `ui/voice-and-tone.md` | 🔄 In progress |
+| **C** — `mobile/` + `backend/` skeletons | Folder structure per architecture, no logic | ✅ Closed 2026-04-27 (`completed/2026-04-27-phase1-track-c-skeleton.md`) |
 
-**Триггер выхода Фазы 1:** мокапы 2–3 ключевых экранов готовы, спеки закрыты, скелет запускается локально.
+**Exit trigger:** mockups for 2–3 key screens ready, specs closed, skeleton runs locally.
 
-### Фаза 2 — Thin slice (первый рабочий Single-scenario MVP)
+### Phase 2 — Thin slice (first working Single-scenario MVP)
 
-**Цель:** Single-scenario MVP **в принципе работает** на машине Кристины: фронт → бэк → AI → обратно.
+Goal: Single-scenario MVP runs end-to-end on owner's machine: front → back → AI → back.
 
-- Одна захардкоженная тренировка, три захардкоженных упражнения.
-- Минимальный UI чата, минимальный бэк-эндпоинт, реальный вызов Gemini.
-- Появляются справки `references/gemini.md`, `references/mediapipe.md`.
+- One hardcoded workout, three hardcoded exercises.
+- Minimal chat UI, minimal backend endpoint, real Gemini call.
+- New refs: `references/gemini.md`, `references/mediapipe.md`.
 
-**Триггер выхода:** на iPhone Кристины через Expo Go отправляется тестовое видео и приходит **реальный** разбор от Gemini, можно задать уточняющий вопрос и получить ответ.
+**Exit trigger:** test video sent from iPhone via Expo Go yields real Gemini analysis; follow-up question answered.
 
-### Фаза 3 — Полировка Single-scenario MVP
+### Phase 3 — Polish Single-scenario MVP
 
-Single-scenario MVP уже работает, но «по краям» сырой. Шлифуем именно его, **не расширяя скоуп**.
+Polishing only. No scope expansion.
 
-- Полноценный чат с сохранением истории.
-- Двухэтапная проверка качества видео.
-- Распознавание упражнения и проверка соответствия чату.
-- Полный UI 2–3 экранов по мокапам Фазы 1, тёмная тема по Lucent.
-- Все системные тексты — через ключи перевода (i18next).
+- Full chat with persistent history.
+- Two-stage video quality check.
+- Exercise recognition + chat-match check.
+- Full UI for 2–3 screens per Phase 1 mockups, dark theme via Lucent.
+- All system strings via i18next keys.
 
-**Триггер выхода:** Single-scenario MVP стабильно работает.
+**Exit trigger:** Single-scenario MVP stable.
 
-### Фаза 4 — Расширение до Full MVP
+### Phase 4 — Extend to Full MVP
 
-Наращиваем продукт до того, что описано в `docs/product.md` → раздел 9.
+Grow product to `docs/product.md` → section 9.
 
-- База упражнений 3 → **20**.
-- **Workout builder** (юзер сам собирает тренировку).
-- **Дневник подходов** (вес × повторения).
-- Полноценный экран каталога упражнений.
-- Доработка онбординга / первого опыта.
+- Exercise base 3 → 20.
+- Workout builder.
+- Set log (weight × reps).
+- Full exercise catalog screen.
+- Onboarding / first-experience improvements.
 
-**Триггер выхода:** все пункты раздела «Что входит в Full MVP» из `docs/product.md` реализованы. Теперь у нас есть **Full MVP**.
+**Exit trigger:** all "Full MVP scope" items implemented.
 
-### Фаза 5 — Подготовка к закрытому тестированию (= Этап 2 из `stack.md`)
+### Phase 5 — Closed-beta prep (= stack.md Phase 5)
 
-- Простая регистрация (Sign in with Apple / Google).
-- Возрастной фильтр **18+** на регистрации.
-- Удаление аккаунта и экспорт данных.
-- Деплой бэка (Render / Railway / Fly.io / VPS).
-- Видео в S3-совместимое хранилище.
-- SQLAdmin как минимальная админка.
-- Подключение чек-листа `design-docs/security-future-reference.md` (HTTPS, безопасное хранилище токенов, перевод видео на тариф AI с DPA).
+- Sign in with Apple / Google.
+- 18+ filter at registration.
+- Account deletion + data export.
+- Backend deploy (Render / Railway / Fly.io / VPS).
+- Video → S3-compatible storage.
+- SQLAdmin minimal admin.
+- Activate `design-docs/security-future-reference.md` (HTTPS, secure token storage, AI tier with DPA).
 
-**Триггер выхода:** 5–20 пользователей могут пользоваться продуктом снаружи.
+**Exit trigger:** 5–20 external users can use the product.
 
-### Фаза 6 — Публичный бета-релиз (= Этап 3 из `stack.md`)
+### Phase 6 — Public beta (= stack.md Phase 6)
 
-SQLite → PostgreSQL, очередь задач (RQ / Celery + Redis), платный AI, observability (Sentry / OpenTelemetry), аналитика, полноценная админ-панель. На этой фазе появляется **отдельный документ Reliability/SLO** и активируется весь `security-future-reference.md`.
+SQLite → PostgreSQL, task queue (RQ / Celery + Redis), paid AI, observability (Sentry / OpenTelemetry), analytics, full admin panel. Reliability/SLO doc appears. Full `security-future-reference.md` activates.
 
-### Фаза 7 — Монетизация (= Этап 4 из `stack.md`)
+### Phase 7 — Monetization (= stack.md Phase 7)
 
-Биллинг (App Store IAP / Google Play / Stripe), сервис лимитов, платные тарифы, политика хранения сообщений 2 мес / бессрочно, лестница «AI + живой тренер» (см. `product.md` → раздел 14).
+Billing (App Store IAP / Google Play / Stripe), limits service, paid tiers, retention policy 2 months / unlimited, AI + live-trainer ladder (`product.md` → section 14).
 
-### Фаза 8 — Масштабирование (= Этап 5 из `stack.md`)
+### Phase 8 — Scaling (= stack.md Phase 8)
 
-Горизонтальное масштабирование, кэш (Redis), CDN, возможный переход на выделенный AI-воркер с GPU, резервный AI-провайдер.
+Horizontal scaling, Redis cache, CDN, possible dedicated AI worker with GPU, backup AI provider.
 
-### Фаза 9 — Расширение ЦА (= Этап 6 из `stack.md`)
+### Phase 9 — Audience expansion (= stack.md Phase 9)
 
-Английская и другие локали, маркетплейс живых тренеров, web-версия (React Native for Web).
+English + other locales, live-trainer marketplace, web build via React Native for Web.
 
-## 6. Карта зависимостей
+## 6. Dependency map
 
 ```mermaid
 flowchart TD
@@ -160,36 +151,24 @@ flowchart TD
     Phase8 --> Phase9[Phase 9: Audience expansion]
 ```
 
-## 7. Что мы НЕ планируем сейчас
+## 7. Not planned now
 
-- **Маркетплейс живых тренеров** — не раньше Фазы 9. Лестница «AI + живой тренер» (первая ступень) — Фаза 7.
-- **Web-версия** — не раньше Фазы 9.
-- **Конкретные цены подписки** — не раньше Фазы 5; тарифы включаются в Фазе 7.
-- **Push-уведомления, плавающий индикатор** — Фаза 6+.
-- **Расширенные метрики тренировки** (RPE, темп, отдых) — Фаза 6+.
-- **Соцфичи и сравнение нескольких видео** — TBD, не раньше Фазы 7.
-- **Любые AI-провайдеры кроме Gemini** — только с Фазы 6.
+- Live-trainer marketplace — ≥ Phase 9. Ladder first step — Phase 7.
+- Web build — ≥ Phase 9.
+- Concrete subscription prices — ≥ Phase 5; tiers active at Phase 7.
+- Push, floating indicator — Phase 6+.
+- Extended workout metrics (RPE, tempo, rest) — Phase 6+.
+- Social features, multi-video comparison — TBD, ≥ Phase 7.
+- AI providers other than Gemini — ≥ Phase 6.
 
-## 8. Журнал ключевых решений
+## 8. Decision log
 
-| Дата | Решение |
+| Date | Decision |
 |---|---|
-| 2026-04-19 | Введено разделение **Single-scenario MVP** и **Full MVP**. Single-scenario MVP реализуем первым; Full MVP не отменяется, переезжает в Фазу 4. |
-| 2026-04-19 | Из списка упражнений **переход сразу в чат**. Никакого промежуточного «экрана упражнения» в Single-scenario MVP. Чат и есть экран упражнения. |
-| 2026-04-19 | В Single-scenario MVP **нет съёмки видео внутри приложения** — только подгрузка из галереи через системный пикер. |
-| 2026-04-19 | **Frontend-стек: Flutter → React Native + Expo (TypeScript).** Причина — порог входа: Expo Go даёт разработку на iPhone владельца через QR-код, без Xcode/Android Studio. |
-| 2026-04-27 | **Track C Фазы 1 закрыт** — структурный скелет `mobile/` + `backend/` коммит-нут. |
-| 2026-04-27 | **Документация оптимизирована** под принципы статьи OpenAI Harness Engineering: убраны преждевременные `RELIABILITY.md`, `PRODUCT_SENSE.md`, `product-specs/product.md` (объединено в `docs/product.md`); сильно сокращены `SECURITY.md`, `BACKEND.md`, `DATABASE.md`; полный security-чек-лист сохранён в `design-docs/security-future-reference.md`. |
-
-## 9. Связанные документы
-
-| Нужно понять… | Куда смотреть |
-|---|---|
-| Продукт целиком (стратегия + MVP + принципы) | `docs/product.md` |
-| Технологический стек и план масштабирования | `docs/stack.md` |
-| Карта доменов и архитектурные слои | `../../../ARCHITECTURE.md` |
-| Бэкенд / фронтенд / БД / безопасность | `docs/BACKEND.md`, `docs/FRONTEND.md`, `docs/DATABASE.md`, `docs/SECURITY.md` |
-| Дизайн-система Lucent | `docs/ui/design-system/README.md` |
-| Принципы работы (Harness Engineering) | `docs/design-docs/core-beliefs.md` |
-| Текущий план продуктовой проработки | `mvp-product-spec.md` |
-| Оглавление всех планов | `../index.md` |
+| 2026-04-19 | Split **Single-scenario MVP** vs **Full MVP**. Single-scenario MVP first; Full MVP retained, moved to Phase 4. |
+| 2026-04-19 | Exercise list → straight into chat. No intermediate exercise screen in Single-scenario MVP. Chat = exercise screen. |
+| 2026-04-19 | No in-app camera in Single-scenario MVP — only gallery via system picker. |
+| 2026-04-19 | Frontend stack: Flutter → React Native + Expo (TypeScript). Reason: onboarding cost; Expo Go runs on owner's iPhone via QR code, no Xcode/Android Studio. |
+| 2026-04-27 | Phase 1 Track C closed — `mobile/` + `backend/` skeletons committed. |
+| 2026-04-27 | Documentation refactored to OpenAI Harness Engineering principles: removed premature `RELIABILITY.md`, `PRODUCT_SENSE.md`, `product-specs/product.md` (merged into `docs/product.md`); heavily trimmed `SECURITY.md`, `BACKEND.md`, `DATABASE.md`; full security checklist preserved in `design-docs/security-future-reference.md`. |
+| 2026-04-27 | Documentation pass: stripped beginner-oriented narrative and analogies from all `docs/*` files; documentation files are agent-optimized — analogies live in chat output, not in files. |

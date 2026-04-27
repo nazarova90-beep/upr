@@ -5,30 +5,28 @@ owner: Кристина
 related: ../FRONTEND.md, ../stack.md, expo.md, i18next.md, react-i18next.md, index.md
 ---
 
-# expo-localization — research-справка
+# expo-localization — research note
 
-> **Источник.** Собрано через MCP `user-context7`, library ID `/expo/expo` (Source Reputation: High; Benchmark Score: 81.41; ветка `sdk-54`). Дата сбора: 2026-04-27.
+Source: MCP `user-context7`, library ID `/expo/expo` (Source Reputation: High; Benchmark Score: 81.41; branch `sdk-54`). Fetched: 2026-04-27.
 
-## Зачем нужна в нашем проекте
+## Purpose in project
 
-`expo-localization` — официальный пакет Expo для **чтения языковых и региональных настроек устройства**: какой язык выбран в системе, какой формат чисел/дат, какая валюта, какие единицы измерения. На MVP UPR используем его строго ради одной задачи: **подать в `i18next` правильный язык на старте приложения**. В будущем (вес в кг/lb, формат даты) — пригодится тот же модуль.
+Read device language and locale settings. MVP scope: feed correct language to `i18next` on app start. Future: kg/lb, date formats.
 
-> **Аналогия.** Это «паспортный стол» приложения: спрашиваем у iPhone «как тебя настроили», получаем ответ — и приложение начинает разговаривать с пользователем на его языке.
+## Version
 
-## Версия
+- Bundled with Expo SDK 54. Versioned with SDK.
+- Install: `npx expo install expo-localization` (matches current SDK).
 
-- Идёт в комплекте с **Expo SDK 54** (актуальная стабильная ветка). Версионируется вместе с SDK.
-- Установка стандартная: `npx expo install expo-localization` — установит правильную версию для текущего SDK.
+## Key API
 
-## Ключевое API
-
-### 1. `getLocales()` — список предпочтительных языков
+### 1. `getLocales()` — preferred locales
 
 ```ts
 import { getLocales } from "expo-localization";
 
 const locales = getLocales();
-// Пример возвращаемого значения:
+// Sample return:
 // [
 //   {
 //     languageTag: "ru-RU",
@@ -47,12 +45,12 @@ const locales = getLocales();
 const deviceLanguage = locales[0]?.languageCode ?? "ru";
 ```
 
-- Возвращает массив, **минимум один элемент** (гарантировано).
-- Первый элемент — наиболее предпочтительный язык пользователя.
-- `languageCode` — короткий код вроде `"ru"`, `"en"`, `"zh"`. Подходит для подачи в `i18next.init({ lng })`.
-- `languageTag` — полный тэг IETF BCP 47 (`"ru-RU"`, `"en-US"`).
+- Returns array, ≥ 1 element guaranteed.
+- First element = most preferred locale.
+- `languageCode` — short code (`"ru"`, `"en"`, `"zh"`). Use for `i18next.init({ lng })`.
+- `languageTag` — IETF BCP 47 tag (`"ru-RU"`, `"en-US"`).
 
-### 2. `getCalendars()` — настройки календаря (на будущее)
+### 2. `getCalendars()` — calendar settings (future)
 
 ```ts
 import { getCalendars } from "expo-localization";
@@ -61,11 +59,9 @@ const [calendar] = getCalendars();
 console.log(calendar.timeZone); // "Europe/Moscow"
 ```
 
-На MVP не используем.
+Not used in MVP.
 
-### 3. Интеграция с `i18next`
-
-Стандартный паттерн (взят за основу из официальной документации Expo, адаптирован под `i18next` вместо `i18n-js`):
+### 3. `i18next` integration
 
 ```ts
 // src/i18n/index.ts
@@ -76,7 +72,7 @@ import ru from "./locales/ru.json";
 
 const deviceLanguage = getLocales()[0]?.languageCode ?? "ru";
 
-const SUPPORTED = ["ru"]; // на MVP — только русский
+const SUPPORTED = ["ru"]; // MVP: ru only
 const lng = SUPPORTED.includes(deviceLanguage) ? deviceLanguage : "ru";
 
 i18n
@@ -94,9 +90,9 @@ i18n
 export default i18n;
 ```
 
-На MVP всегда получится `lng = "ru"`. Когда добавим английский — расширим массив `SUPPORTED`, остальной код не меняется.
+MVP always resolves `lng = "ru"`. Adding English: extend `SUPPORTED` array, no other changes.
 
-### 4. Конфигурация в `app.json` (опционально)
+### 4. `app.json` plugin (optional)
 
 ```json
 {
@@ -106,27 +102,25 @@ export default i18n;
 }
 ```
 
-Плагин нужен для нативных настроек (RTL и т.п.). На MVP без RTL — можно не подключать. Добавим, если решим поддерживать арабский/иврит.
+Required for native settings (RTL etc.). MVP: not needed (no RTL). Add when supporting Arabic/Hebrew.
 
-## Подводные камни
+## Gotchas
 
-| Камень | Что делать |
+| Issue | Mitigation |
 |---|---|
-| На Android язык можно поменять, не перезапуская приложение. `getLocales()` тогда нужно вызывать заново. | Слушать `AppState` и переинициализировать i18n при возврате в foreground. На MVP — игнорируем (один пользователь, ситуация маловероятна). |
-| `Localization.locale` — устаревший (deprecated) API. Использовать только `getLocales()`. | Используем только `getLocales()`. |
-| Массив всегда содержит ≥ 1 элемент, но `languageCode` может быть `null` для редких локалей. | Всегда писать `?? "ru"` как фолбэк. |
-| Эмулятор/симулятор может вернуть язык операционной системы хоста, а не «продакшн»-устройства. | На реальном iPhone проверять отдельно (так и так делаем — у нас Expo Go на физическом устройстве). |
+| Android allows changing language without app restart. `getLocales()` must be re-called. | Listen `AppState`, re-init i18n on foreground. MVP: ignore (single-user, low risk). |
+| `Localization.locale` is deprecated. | Use `getLocales()` only. |
+| Array ≥ 1 element, but `languageCode` may be `null` for rare locales. | Always `?? "ru"` fallback. |
+| Emulator may return host OS language. | Verify on physical iPhone (Expo Go). |
 
-## Что нам важно из этой библиотеки прямо сейчас
+## Skeleton scope
 
-Для **структурного скелета**:
+- `mobile/src/i18n/index.ts` uses `getLocales()[0]?.languageCode ?? "ru"`.
+- `SUPPORTED = ["ru"]` → effectively `ru` only.
+- No `getCalendars` / currency / RTL config yet.
 
-- В `mobile/src/i18n/index.ts` использовать `getLocales()[0]?.languageCode ?? "ru"` для определения языка.
-- На MVP массив `SUPPORTED = ["ru"]`, поэтому фактически язык всегда `ru`.
-- Никаких настроек `getCalendars` / валюты / RTL пока не добавляем.
+## Links
 
-## Ссылки
-
-- Гид Expo по локализации: <https://docs.expo.dev/guides/localization/>
-- API expo-localization: <https://docs.expo.dev/versions/latest/sdk/localization/>
-- IETF BCP 47 (стандарт языковых тегов): <https://www.rfc-editor.org/info/bcp47>
+- Expo localization guide: <https://docs.expo.dev/guides/localization/>
+- API: <https://docs.expo.dev/versions/latest/sdk/localization/>
+- IETF BCP 47: <https://www.rfc-editor.org/info/bcp47>

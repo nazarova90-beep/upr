@@ -5,36 +5,31 @@ owner: Кристина
 related: ../../AGENTS.md, ../product.md
 ---
 
-# Design Docs — оглавление
+# Design docs
 
-Здесь хранятся **принципы работы** и **обоснования решений** «почему мы делаем именно так, а не иначе».
+Working principles and decision rationale ("why this way").
 
-## Документы
+## Documents
 
-| Файл | О чём | Статус |
+| File | Subject | Status |
 |---|---|---|
-| `core-beliefs.md` | Фундаментальные принципы работы над проектом (7 ключевых правил). | approved |
-| `security-future-reference.md` | Полный чек-лист безопасности на будущее (Фаза 5+). На текущем этапе **не активен** — активные правила в `../SECURITY.md`. | deferred |
+| `core-beliefs.md` | Operating principles for project (7 rules). | approved |
+| `security-future-reference.md` | Full security checklist (Phase 5+). Not active now — active rules in `../SECURITY.md`. | deferred |
 
-### Будущие документы (TBD)
+### Planned
 
-- `chat-scope-decision.md` — почему один чат на упражнение, а не на тренировку.
-- `tech-stack-decision.md` — детальный разбор выбора стека.
-- `ai-provider-decision.md` — выбор AI-провайдера для разбора видео.
-- `monetization-model-decision.md` — выбор модели монетизации.
+- `chat-scope-decision.md` — one chat per exercise, not per workout.
+- `tech-stack-decision.md` — detailed stack selection.
+- `ai-provider-decision.md` — AI provider selection for video analysis.
+- `monetization-model-decision.md` — monetization model selection.
 
-## Шаблон документа решения (Architecture Decision Record, ADR)
+## ADR template (Architecture Decision Record)
 
-Каждый design-doc должен содержать:
+Each design-doc contains:
 
-1. **Контекст** — какую проблему решаем, какие были варианты.
-2. **Рассмотренные варианты** — список всех вариантов с плюсами и минусами.
-3. **Принятое решение** — что выбрали.
-4. **Обоснование** — почему именно так.
-5. **Последствия** — что это нам даёт и от чего отрезает.
-6. **Связанные решения** — на какие другие решения опирается.
-
-## Связанные документы
-
-- `../product.md` — продукт целиком (включая принципы продуктовых решений).
-- `../../AGENTS.md` — карта проекта.
+1. **Context** — problem, available options.
+2. **Options considered** — pros / cons.
+3. **Decision**.
+4. **Rationale**.
+5. **Consequences** — gains and trade-offs.
+6. **Related decisions**.

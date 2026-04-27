@@ -5,146 +5,135 @@ owner: Кристина
 related: ../active/roadmap.md, ../active/mvp-product-spec.md, ../../BACKEND.md, ../../FRONTEND.md, ../../../ARCHITECTURE.md, ../../references/index.md
 ---
 
-# План: Phase 1 / Track C — структурный скелет (ЗАВЕРШЁН 2026-04-27)
+# Plan: Phase 1 / Track C — structural skeleton (CLOSED 2026-04-27)
 
-> **Место в общем плане.** Этот документ — детальный exec-plan для **Track C Фазы 1** из главного roadmap'а ([roadmap.md](../active/roadmap.md), раздел 5 → «Фаза 1 / Track C — Технический скелет»). Параллельно шли Track A (продуктовые спеки — закрыт 2026-04-19) и Track B (мокапы — отдельный план).
->
-> **Завершён 2026-04-27:** все три коммита (справки по библиотекам, `backend/` скелет, `mobile/` скелет) выполнены.
+Detailed exec-plan for Track C of Phase 1 (`../active/roadmap.md` § 5). Track A (product specs) closed 2026-04-19; Track B (mockups) — separate plan.
 
-## Цель
+Closed 2026-04-27 — three commits done (library refs, `backend/` skeleton, `mobile/` skeleton).
 
-Создать **структурный** скелет двух кодовых проектов — `backend/` (FastAPI) и `mobile/` (Expo + TypeScript) — такой, чтобы:
+## Goal
 
-- архитектура из [ARCHITECTURE.md](../../../ARCHITECTURE.md) и [BACKEND.md](../../BACKEND.md) / [FRONTEND.md](../../FRONTEND.md) была буквально видна в дереве папок;
-- любой следующий шаг (hello-world, thin slice, реальные модели) мог встать в готовое место без переноса файлов;
-- всё это можно было закоммитить в репозиторий и работать дальше «от готового скелета», а не с нуля.
+Structural skeleton of two code projects — `backend/` (FastAPI) and `mobile/` (Expo + TypeScript) — such that:
 
-**Что мы НЕ делаем в этом плане** (важное ограничение скоупа):
+- architecture from `ARCHITECTURE.md`, `BACKEND.md`, `FRONTEND.md` is visible in folder tree;
+- next step (hello-world, thin slice, real models) lands in prepared place without file moves;
+- everything committable as "fixed skeleton" baseline.
 
-- Не делаем рабочий hello-world (`/health` на бэке + дёргание из мобильного на iPhone). Это **следующий** план.
-- Не заполняем поля моделей БД — это Phase 2 (thin slice).
-- Не подключаем Manrope / Material Symbols. Шрифты — отдельный шаг.
-- Не запускаем приложение на iPhone через Expo Go — это часть hello-world.
+### Out of scope
 
-## Контекст
+- Working hello-world (`/health` on backend + call from mobile on iPhone) — next plan.
+- DB model fields — Phase 2 (thin slice).
+- Manrope / Material Symbols — separate step.
+- Running app on iPhone via Expo Go — part of hello-world.
 
-- Документация под Track C уже зрелая: [docs/stack.md](../../stack.md), [docs/BACKEND.md](../../BACKEND.md), [docs/FRONTEND.md](../../FRONTEND.md), [ARCHITECTURE.md](../../../ARCHITECTURE.md), [docs/references/expo.md](../../references/expo.md).
-- Папок `mobile/` и `backend/` ещё нет — это видно по чек-листу A.4 в [mvp-product-spec.md](mvp-product-spec.md), все пункты пустые.
-- Локально установлены: Node.js v22, Python 3.13, pip. Дополнительно ставить ничего не нужно.
-- Выбранный стек: React Native + Expo (TypeScript) + Python/FastAPI + SQLModel/SQLAlchemy + SQLite (см. [stack.md](../../stack.md), журнал решений за 2026-04-19).
+## Context
 
-## Принципы выполнения
+- Track C documentation ready: `docs/stack.md`, `docs/BACKEND.md`, `docs/FRONTEND.md`, `ARCHITECTURE.md`, `docs/references/expo.md`.
+- `mobile/` and `backend/` did not exist (per A.4 in `mvp-product-spec.md`).
+- Local: Node.js v22, Python 3.13, pip.
+- Stack: React Native + Expo (TypeScript) + Python/FastAPI + SQLModel/SQLAlchemy + SQLite (`stack.md`, decision log 2026-04-19).
 
-Соответствуют [core-beliefs.md](../../design-docs/core-beliefs.md):
+## Execution principles
 
-1. **Документация — система записи** (пункт 1). Сам этот план — артефакт. Все решения по ходу — сюда в «Журнал решений».
-2. **Перед использованием библиотеки — Context7** (пункт 5). Справки по библиотекам кладутся в `docs/references/` **до** того, как появится код, который их использует. Поэтому первый коммит — справки.
-3. **Boring tech first** (пункт 4). Никаких экзотических менеджеров пакетов, никаких альфа-версий.
-4. **Архитектура важнее свободы** (пункт 9). Структура папок строго по [ARCHITECTURE.md](../../../ARCHITECTURE.md) / [BACKEND.md](../../BACKEND.md).
-5. **Перед большими изменениями — спрашиваем** (пункт 11). План обсуждён и утверждён владельцем продукта 2026-04-27.
+Per `core-beliefs.md`:
 
-## Поток работы (три коммита)
+1. Repository = system of record. This plan is the artefact; in-flight decisions go to "Decision log".
+2. Library research via `user-context7` before code → first commit = library refs.
+3. Boring tech first.
+4. Folder structure strictly per `ARCHITECTURE.md` / `BACKEND.md`.
+5. Owner approval before structural change — granted 2026-04-27.
+
+## Workflow (3 commits)
 
 ```mermaid
 flowchart LR
-    Refs["Commit 1<br/>docs/references/<br/>+ pre-step exec-plan"]
-    Backend["Commit 2<br/>backend/<br/>FastAPI structure"]
-    Mobile["Commit 3<br/>mobile/<br/>Expo TS structure<br/>+ checklist update"]
-
+    Refs["Commit 1\ndocs/references/\n+ pre-step exec-plan"]
+    Backend["Commit 2\nbackend/\nFastAPI structure"]
+    Mobile["Commit 3\nmobile/\nExpo TS structure\n+ checklist update"]
     Refs --> Backend --> Mobile
 ```
 
-## Чек-лист
+## Checklist
 
-### Pre-step (попадает в Commit 1)
-- [x] Создать этот файл `phase1-track-c-skeleton.md`
-- [x] Обновить `exec-plans/index.md` — добавить ссылку на этот план
+### Pre-step (Commit 1)
+- [x] Create `phase1-track-c-skeleton.md`
+- [x] Update `exec-plans/index.md` — link to this plan
 
-### Commit 1 — справки по библиотекам через MCP `user-context7`
+### Commit 1 — library refs via MCP `user-context7`
 
-Каждая справка ~60-100 строк по шаблону: **зачем нужна в проекте → версия → ключевое API → подводные камни → ссылка на полную доку**.
+Each ref ~60–100 lines: purpose in project → version → key API → gotchas → source link.
 
-**Бэкенд (4 справки):**
+**Backend (4):**
 - [x] `docs/references/fastapi.md`
 - [x] `docs/references/sqlmodel.md`
 - [x] `docs/references/pydantic-settings.md`
 - [x] `docs/references/uvicorn.md`
 
-**Мобильное (4 справки):**
+**Mobile (4):**
 - [x] `docs/references/expo-router.md`
 - [x] `docs/references/i18next.md`
 - [x] `docs/references/react-i18next.md`
 - [x] `docs/references/expo-localization.md`
 
-- [x] Обновить таблицу в `docs/references/index.md` (8 новых строк)
-- [x] Закоммитить **Commit 1**
+- [x] Update `docs/references/index.md` table (8 rows)
+- [x] Commit 1
 
-### Commit 2 — `backend/` (структура без логики)
+### Commit 2 — `backend/` (structure, no logic)
 
-Структура соответствует [BACKEND.md](../../BACKEND.md), раздел «Структура проекта». Менеджер пакетов — **pip + venv** (boring default).
+Per `BACKEND.md` "Project structure". Package manager: pip + venv.
 
-- [x] `backend/pyproject.toml` — декларация зависимостей, Python 3.13
+- [x] `backend/pyproject.toml` — declared deps, Python 3.13
 - [x] `backend/.python-version` — 3.13
-- [x] `backend/.env.example` — шаблон без секретов
-- [x] `backend/README.md` — короткая заглушка «как поднять»
+- [x] `backend/.env.example` — template, no secrets
+- [x] `backend/README.md`
 - [x] `backend/app/__init__.py`
-- [x] `backend/app/main.py` — `app = FastAPI()` без эндпоинтов
-- [x] `backend/app/core/{__init__,config,logging}.py` — заглушки
-- [x] `backend/app/workout/{__init__,routes,service,models}.py` — заглушки
-- [x] `backend/app/exercise_chat/{__init__,routes,service,models}.py` — заглушки
-- [x] `backend/app/video_analysis/{__init__,routes,service,models}.py` — заглушки
-- [x] `backend/app/ai_coach/{__init__,routes,service,models}.py` — заглушки
-- [x] `backend/app/ai_provider/{__init__,base,gemini}.py` — абстракция + заглушка-реализация
-- [x] `backend/app/storage/{__init__,base,local}.py` — абстракция + заглушка-реализация
-- [x] `backend/app/db/__init__.py`, `backend/app/db/session.py` — заглушка `create_engine(...)`
-- [x] `backend/app/db/models/{__init__,exercise,workout,exercise_chat,chat_message,video_analysis}.py` — пустые SQLModel-классы
-- [x] `backend/tests/{__init__.py,conftest.py}` — пусто
-- [x] Закоммитить **Commit 2**
+- [x] `backend/app/main.py` — `app = FastAPI()`, no endpoints
+- [x] `backend/app/core/{__init__,config,logging}.py` — stubs
+- [x] `backend/app/workout/{__init__,routes,service,models}.py` — stubs
+- [x] `backend/app/exercise_chat/{__init__,routes,service,models}.py` — stubs
+- [x] `backend/app/video_analysis/{__init__,routes,service,models}.py` — stubs
+- [x] `backend/app/ai_coach/{__init__,routes,service,models}.py` — stubs
+- [x] `backend/app/ai_provider/{__init__,base,gemini}.py` — abstraction + stub impl
+- [x] `backend/app/storage/{__init__,base,local}.py` — abstraction + stub impl
+- [x] `backend/app/db/__init__.py`, `backend/app/db/session.py` — `create_engine(...)` stub
+- [x] `backend/app/db/models/{__init__,exercise,workout,exercise_chat,chat_message,video_analysis}.py` — empty SQLModel classes
+- [x] `backend/tests/{__init__.py,conftest.py}` — empty
+- [x] Commit 2
 
-### Commit 3 — `mobile/` (структура без логики)
+### Commit 3 — `mobile/` (structure, no logic)
 
-Генерируем стандартным шаблоном Expo SDK 54 (TypeScript + expo-router):
+Generated via Expo SDK 54 default template (TypeScript + expo-router):
 
 ```bash
 npx create-expo-app@latest mobile --template default
 ```
 
-После генерации — кастомизируем:
+Customizations:
 
-- [x] `mobile/src/theme/{colors,spacing,radius,typography,index}.ts` — Lucent-токены (цвета и базовые отступы; **без загрузки Manrope**)
+- [x] `mobile/src/theme/{colors,spacing,radius,typography,index}.ts` — Lucent tokens (colors + basic spacing; no Manrope load)
 - [x] `mobile/src/i18n/index.ts` — `i18next.init` + `expo-localization`
-- [x] `mobile/src/i18n/locales/ru.json` — пустой словарь (один уровень `common: {}`)
+- [x] `mobile/src/i18n/locales/ru.json` — empty dict (`common: {}`)
 - [x] `mobile/src/components/.gitkeep`
 - [x] `mobile/src/api/.gitkeep`
-- [x] `mobile/src/domain/{exercise,workout,chat}.ts` — TS-типы (зеркалят backend-модели; пустые заглушки)
-- [x] `mobile/app/_layout.tsx` — корневой layout, инициализирует i18n
-- [x] `mobile/app/index.tsx` — экран тренировки (заглушка: `View` с заголовком)
-- [x] `mobile/app/chat/[exerciseId].tsx` — экран чата (заглушка)
-- [x] `mobile/.env.example` + `mobile/README.md` (заглушки)
-- [x] Обновить чек-лист A.4 в [mvp-product-spec.md](mvp-product-spec.md): структура — `[x]`, hello-world и автогенерация схемы БД — оставить `[ ]`
-- [x] Закоммитить **Commit 3**
+- [x] `mobile/src/domain/{exercise,workout,chat}.ts` — TS types mirroring backend models (empty stubs)
+- [x] `mobile/app/_layout.tsx` — root layout, i18n init
+- [x] `mobile/app/index.tsx` — workout screen stub (`View` + title)
+- [x] `mobile/app/chat/[exerciseId].tsx` — chat screen stub
+- [x] `mobile/.env.example` + `mobile/README.md` (stubs)
+- [x] Update `mvp-product-spec.md` A.4: structure → `[x]`; hello-world + DB schema autogen → `[ ]`
+- [x] Commit 3
 
-## Открытые вопросы
+## Open questions
 
-- Точные версии библиотек MVP (фиксируем в Commit 1 по последним справкам Context7).
-- Стиль написания TypeScript-моделей: `interface` или `type`. Решим на месте при создании `mobile/src/domain/`.
+- Exact MVP library versions (pinned in Commit 1 per latest Context7).
+- TypeScript model style: `interface` vs `type` — decided when creating `mobile/src/domain/`.
 
-## Журнал решений
+## Decision log
 
-| Дата | Решение | Где зафиксировано |
+| Date | Decision | Source |
 |---|---|---|
-| 2026-04-27 | Track C разделён на «структурный скелет» (этот план) и «hello-world» (следующий план). Причина: гигиенический коммит «зафиксировали архитектуру» без возни с физическим запуском на iPhone. | Этот файл, раздел «Цель» / «Что мы НЕ делаем». |
-| 2026-04-27 | Три коммита, а не один: справки по либам → бэкенд → мобильное. По core-beliefs пункт 5 — справки идут **до** использования библиотек. | Этот файл, «Поток работы». |
-| 2026-04-27 | Менеджер Python-пакетов: **pip + venv** как boring default. `uv` оставляем как возможный безболезненный апгрейд позже. | Этот файл, чек-лист Commit 2. |
-| 2026-04-27 | Шаблон Expo: `default` (TypeScript + expo-router) — по рекомендации [docs/references/expo.md](../../references/expo.md). | Этот файл, чек-лист Commit 3. |
-| 2026-04-27 | Lucent-токены сейчас переносим только частично: цвета и базовые отступы. Manrope/Material Symbols — отдельный будущий шаг (не блокирует архитектуру). | Этот файл, «Что мы НЕ делаем». |
-
-## Связанные документы
-
-- [roadmap.md](../active/roadmap.md) — главный план верхнего уровня (этот exec-plan — детализация Track C Фазы 1).
-- [mvp-product-spec.md](../active/mvp-product-spec.md) — раздел A.4 (продуктовый чек-лист скелета).
-- [BACKEND.md](../../BACKEND.md) — структура бэкенда по доменам.
-- [FRONTEND.md](../../FRONTEND.md) — стек и библиотеки мобильного.
-- [DATABASE.md](../../DATABASE.md) — список сущностей.
-- [ARCHITECTURE.md](../../../ARCHITECTURE.md) — слои и домены.
-- [references/expo.md](../../references/expo.md) — research-справка по Expo (была первой в `references/`).
+| 2026-04-27 | Track C split into "structural skeleton" (this plan) and "hello-world" (next plan). Reason: clean "architecture fixed" commit without iPhone-launch friction. | "Goal" / "Out of scope" sections. |
+| 2026-04-27 | Three commits not one: refs → backend → mobile. Per core-beliefs §4 — refs precede library use. | "Workflow". |
+| 2026-04-27 | Python package manager: pip + venv (boring default). `uv` reserved as future upgrade. | Commit 2 checklist. |
+| 2026-04-27 | Expo template: `default` (TypeScript + expo-router) per `docs/references/expo.md`. | Commit 3 checklist. |
+| 2026-04-27 | Lucent tokens partial transfer: colors + base spacing only. Manrope / Material Symbols — separate step. | "Out of scope". |

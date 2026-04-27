@@ -1,121 +1,119 @@
 ---
 status: approved
-last_updated: 2026-04-19
+last_updated: 2026-04-27
 owner: Кристина
 related: stack.md, ../ARCHITECTURE.md, BACKEND.md, ui/index.md, SECURITY.md, references/expo.md
 ---
 
-# Frontend — мобильное приложение
+# Frontend — mobile app
 
-Верхнеуровневый обзор клиентской части UPR. Полная картина выбранного стека и плана масштабирования — в `stack.md`. Research-справка по Expo (что работает в Expo Go, ограничения, что ставить локально) — в `references/expo.md`.
+## Stack
 
-## Статус
+- **React Native + Expo (TypeScript)**, Expo SDK 54.
+- Single codebase, iOS and Android.
+- Dev mode: **Expo Go** on a physical device (no Xcode/Android Studio required until Phase 3).
+- Rationale and Flutter→Expo migration: `stack.md` → "Decision log".
+- Expo capabilities, Expo Go vs Dev Build: `references/expo.md`.
 
-**Стек выбран:** **React Native + Expo (TypeScript)**. Один код для iOS и Android. Главное преимущество для нашего этапа — режим **Expo Go**: разработка идёт прямо на физическом iPhone владельца, без локальной установки Xcode и Android Studio. Подробное обоснование (почему мы ушли с Flutter) — в `stack.md` → раздел «Почему именно эти варианты» и «Журнал решений по стеку».
+## Platforms
 
-> **Аналогия.** Expo — это «всё включено» поверх React Native: готовая сборка, готовые компоненты для камеры/галереи/видео, и приложение **Expo Go** на телефоне, в котором сразу запускается твой проект. Flutter — это «свой движок рендера»; Expo — «использует нативные кирпичи iOS/Android, но даёт удобный конструктор сверху».
+- iOS (Expo SDK 54 requires iOS 15+).
+- Android (Expo SDK 54 requires Android 7+).
 
-## Платформы
+## Responsibilities
 
-- **iOS** (минимум поддерживаемой версии — TBD; Expo SDK 54 требует iOS 15+).
-- **Android** (минимум поддерживаемой версии — TBD; Expo SDK 54 требует Android 7+).
+- Entire UI.
+- Local state (current workout, chat cache).
+- Video selection from device gallery via system picker. **No in-app camera in Single-scenario MVP** (`docs/user-flows/upload-video-and-get-feedback.md`).
+- Video upload to backend.
+- UI updates on analysis ready (polling for MVP; websocket / push later).
+- Auth token in secure storage (`expo-secure-store`, Keychain on iOS / Keystore on Android) — appears with registration (Phase 5).
+- Optional biometric app lock — not in MVP.
 
-## Зона ответственности клиента
+## Localization (i18n)
 
-- Весь UI приложения.
-- Локальное состояние (текущая тренировка, кэш чатов).
-- Выбор готового видео из галереи устройства через системный пикер. (**Внутриаппной съёмки видео в Single-scenario MVP нет** — см. `docs/user-flows/upload-video-and-get-feedback.md`.)
-- Загрузка видео на бэкенд.
-- Обновление UI при готовности разбора (через polling — на MVP; websocket / push — позже).
-- Хранение токена авторизации в безопасном хранилище (`expo-secure-store` — Keychain на iOS, Keystore на Android). Появится с регистрацией (Фаза 5).
-- Биометрический lock приложения (опционально, не на MVP).
+- **MVP UI:** Russian only. Other languages not required for first public release.
+- **Engineering rule:** multi-language support enabled from day one.
 
-## Язык интерфейса и локализация (i18n)
-
-**Продуктовое правило (MVP):** все экраны и системные сообщения клиента — **на русском**. Другие языки в первой публичной версии **не обязательны**.
-
-**Инженерное правило:** закладываем **мультиязычность с первого дня кода**, чтобы не переписывать приложение целиком при добавлении локали.
-
-| Что делаем | Зачем |
+| Rule | Reason |
 |---|---|
-| Строки UI вынесены в **JSON-словари переводов** (ключ → текст), а не разбросаны литералами по компонентам | Новый язык = новый JSON-файл, без охоты по коду |
-| Единый **источник истины для форматов** дат, чисел, единиц веса (кг/lb позже через настройки) | Локали по-разному показывают числа и даты |
-| Код и комментарии разработчиков — как удобно команде; **продуктовый текст пользователя** — только через слой локализации | Чёткое разделение |
-| Стандартный механизм i18n для нашего стека: **`expo-localization`** (определение языка устройства) + **`i18next`** + **`react-i18next`** (управление словарями и переводами в компонентах) | Это «boring tech» в экосистеме React Native, AI-агенты с этим работают давно. |
+| UI strings in JSON dictionaries (key → text), never inlined | New language = new JSON, no code hunting. |
+| Single source of truth for date / number / weight unit (kg, later lb) formats | Locale-specific rendering. |
+| User-facing strings only via i18n layer; code/comments unrestricted | Clear separation. |
+| Stack: `expo-localization` + `i18next` + `react-i18next` | Boring tech, well-supported. |
 
-**Будущее (после MVP):** язык приложения из настроек или системный язык ОС; синхронизация предпочтения с бэкендом (см. `DATABASE.md`, `BACKEND.md`) для локализованных серверных ошибок и push (когда появятся).
+Future (post-MVP): app language from settings or OS; sync preference with backend for localized server errors and push.
 
-Связанный продуктовый контекст: `product.md` → раздел «Что входит в Full MVP» / «Язык интерфейса».
+References: `references/i18next.md`, `references/react-i18next.md`, `references/expo-localization.md`.
 
-## Дизайн-токены и тема
+## Design tokens and theme
 
-Единственный «исходник правды по визуалу» — **Lucent** (HTML/CSS), `docs/ui/design-system/`. Перенос в код:
+- Source of truth: **Lucent** (HTML/CSS) at `docs/ui/design-system/`.
+- Code transfer: values from `style.css` → `mobile/src/theme/*.ts` constants (`colors`, `spacing`, `radius`, `typography`).
+- Used inside `StyleSheet.create({...})`.
+- Font **Manrope** via `expo-font`.
+- Icons **Material Symbols Rounded** via `@expo/vector-icons`.
+- Source-of-truth rule: if app diverges from Lucent, fix the app.
 
-- Берём значения из `style.css` (цвета, отступы, радиусы, размеры шрифтов).
-- Складываем в TypeScript-файл `theme.ts` как константы (`colors`, `spacing`, `radius`, `typography`).
-- Используем эти константы внутри `StyleSheet.create({...})` в компонентах (или, если решим — через библиотеку типа `nativewind` для Tailwind-подобного синтаксиса).
-- Шрифт **Manrope** подключаем через `expo-font` (загружается на старте приложения).
-- Иконки — шрифт **Material Symbols Rounded** через `@expo/vector-icons` или прямой подключение шрифта.
+Details: `docs/ui/design-system/README.md`.
 
-> **Принцип.** Дизайн-система Lucent — общий «словарь визуала» для проекта. Если в коде цвет/отступ разошёлся с Lucent — прав Lucent, чинить нужно код. См. `docs/ui/design-system/README.md`.
+## Libraries (MVP set — each must have a `references/<lib>.md` before use)
 
-## Библиотеки (предварительный список — каждая пройдёт через `user-context7` перед использованием)
-
-| Зачем | Кандидат |
+| Purpose | Library |
 |---|---|
-| Framework | **`expo`** (SDK 54) |
-| Язык | **TypeScript** |
-| Навигация между экранами | **`expo-router`** (file-based routing, аналог Next.js для мобильных) |
-| Выбор видео из галереи | **`expo-image-picker`** |
-| Доступ к медиатеке (метаданные, asset URI) | **`expo-media-library`** (по необходимости) |
-| Проигрывание видео в чате | **`expo-video`** |
-| Загрузка файла на бэкенд (HTTP) | стандартный `fetch` или **`expo-file-system`** для крупных файлов |
-| Сетевой клиент к бэкенду / state-кэш запросов | **`@tanstack/react-query`** (кэш ответов AI, state серверных данных) |
-| Управление локальным state | **`zustand`** (минимальный, простой) или встроенный `useState/useReducer` |
-| Шрифты | **`expo-font`** |
-| i18n | **`expo-localization`** + **`i18next`** + **`react-i18next`** |
-| Безопасное хранилище токенов (Фаза 5) | **`expo-secure-store`** |
-| Pose estimation на устройстве (опционально, Фаза 3) | нативный модуль MediaPipe — потребует выхода с Expo Go на development build, см. `references/expo.md` |
-| SVG | **`react-native-svg`** (Expo-совместимый) |
+| Framework | `expo` (SDK 54) |
+| Language | TypeScript |
+| Navigation | `expo-router` (file-based) |
+| Video picker | `expo-image-picker` |
+| Media library access | `expo-media-library` |
+| Video playback | `expo-video` |
+| HTTP upload | `fetch` / `expo-file-system` for large files |
+| Server cache / queries | `@tanstack/react-query` |
+| Local state | `zustand` or `useState`/`useReducer` |
+| Fonts | `expo-font` |
+| i18n | `expo-localization` + `i18next` + `react-i18next` |
+| Secure token storage (Phase 5) | `expo-secure-store` |
+| On-device pose estimation (optional, Phase 3) | Native MediaPipe — requires Dev Build (`references/expo.md`) |
+| SVG | `react-native-svg` |
 
-> **Принцип `boring tech`.** Список выше — стандартный набор современного Expo-проекта 2026 года. Никакой экзотики. Каждая библиотека перед использованием получает справку через MCP `user-context7` в `docs/references/<library>.md`.
+## Single-scenario MVP scope
 
-## Что входит в MVP-реализацию (Single-scenario MVP)
+- One hardcoded user (no auth).
+- **Workout screen** with three hardcoded exercises (`docs/product-specs/workout.md`).
+- **Exercise chat screen**, two visual states: empty (button "Загрузить видео" + placeholder) / active (message feed + input + attach).
+- **Technique pop-up** (tap on info icon in exercise card).
+- Video from gallery via system picker → upload → AI review in chat.
+- Dark theme, Russian via i18next.
 
-- Один захардкоженный «пользователь» (без экрана регистрации/логина).
-- **Экран тренировки** с тремя захардкоженными упражнениями (см. `docs/product-specs/workout.md`).
-- **Экран чата упражнения** с двумя визуальными состояниями: пустой чат (только кнопка «Загрузить видео» + placeholder) и активный чат (лента сообщений + поле ввода + прикрепление файла).
-- **Поп-ап с описанием техники** упражнения (тап по иконке «информация» в карточке).
-- Выбор видео из галереи через системный пикер → загрузка на бэкенд → отображение разбора AI в чате.
-- Тёмная тема, тексты на русском через i18next.
+Full scenario: `docs/user-flows/upload-video-and-get-feedback.md`.
 
-Полный сценарий — `docs/user-flows/upload-video-and-get-feedback.md`.
+## Expansion plan (matches `docs/exec-plans/active/roadmap.md`)
 
-## План расширения (соответствует фазам в `docs/exec-plans/active/roadmap.md` и этапам в `stack.md`)
+| Phase | Frontend additions |
+|---|---|
+| 3 (polish) | Two-stage video quality check; possible Expo Go → Dev Build migration for on-device MediaPipe. First need for Xcode / Android Studio. |
+| 4 (Full MVP) | Workout builder, set log, exercise catalog (20). |
+| 5 (closed beta) | Sign in with Apple / Google (`expo-auth-session`), profile screen. |
+| 6 (public beta) | Push via `expo-notifications`, floating analysis indicator. |
+| 7 (monetization) | App Store IAP / Google Play Billing (`react-native-iap` or Expo wrapper, requires Dev Build). |
+| 9 (audience expansion) | Second locale (i18n already wired); web build via React Native for Web. |
 
-- **Фаза 3 (полировка):** двухэтапная проверка качества видео; **возможно** — переход с Expo Go на development build для подключения on-device MediaPipe (если решим, что мгновенный фидбек о качестве видео того стоит). Тогда же впервые понадобится Xcode (на Mac) или Android Studio.
-- **Фаза 4 (Full MVP):** workout builder, дневник подходов, экран каталога 20 упражнений.
-- **Фаза 5 (закрытое тестирование):** Sign in with Apple / Google (через `expo-auth-session`), экран профиля.
-- **Фаза 6 (публичная бета):** push-уведомления через `expo-notifications`, плавающая кнопка-индикатор анализа.
-- **Фаза 7 (монетизация):** оплата через App Store IAP / Google Play Billing (через `react-native-iap` или Expo-обёртку, требует dev build).
-- **Фаза 9 (расширение ЦА):** включение второго языка (i18n уже готова); web-версия через **React Native for Web** (бонус от выбранного стека).
+## Project structure (current skeleton)
 
-## Что нужно установить локально для старта (минимум)
+```
+mobile/
+├── app/                       # expo-router screens
+│   ├── _layout.tsx            # root layout, i18n init
+│   ├── index.tsx              # workout screen (stub)
+│   └── chat/[exerciseId].tsx  # chat screen (stub)
+├── src/
+│   ├── theme/                 # Lucent tokens
+│   ├── i18n/                  # i18next init + locales/ru.json
+│   ├── domain/                # TS types (mirror backend models)
+│   ├── components/            # reusable UI
+│   └── api/                   # HTTP client to backend
+├── assets/
+└── package.json
+```
 
-1. **Node.js** LTS — `nodejs.org`, ~80 МБ.
-2. **Expo Go** на iPhone (или Android) — бесплатное приложение из App Store / Google Play.
-3. **Редактор кода** — Cursor (уже стоит).
-
-**Что НЕ нужно сейчас:** Xcode, Android Studio, симуляторы, эмуляторы. Эти штуки понадобятся не раньше Фазы 3 (и только если выберем on-device MediaPipe).
-
-Точная пошаговая инструкция по первому запуску проекта — будет в exec-plan'е Track C Фазы 1, когда дойдёт до запуска кода.
-
-## Связанные документы
-
-- `stack.md` — выбранный стек целиком и план масштабирования.
-- `references/expo.md` — research-справка по Expo: ограничения Expo Go, dev build, что ставить.
-- `../ARCHITECTURE.md` — общая архитектура.
-- `BACKEND.md` — серверная часть.
-- `ui/index.md` — UI-гайдлайны и дизайн.
-- `ui/design-system/README.md` — Lucent (исходник дизайн-системы).
-- `SECURITY.md` — особенно раздел «Безопасность мобильного приложения».
+Path alias: `~/foo` → `src/foo` (`tsconfig.json`).

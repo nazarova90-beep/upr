@@ -1,150 +1,138 @@
 ---
 status: approved
-last_updated: 2026-04-18
+last_updated: 2026-04-27
 owner: Кристина
-related: product.md, videosinstruction.md, exercises-base.md, workout.md, ../exec-plans/active/roadmap.md
+related: ../product.md, videosinstruction.md, exercises-base.md, workout.md, ../exec-plans/active/roadmap.md
 ---
 
-# Чат с упражнением
+# Per-exercise chat
 
-> ## Single-scenario MVP: что упрощено
->
-> Этот документ описывает фичу «чат с упражнением» **в полной форме (Full MVP)**. Для **Single-scenario MVP** (то, что реализуем первым — Фазы 1-3 [`roadmap.md`](../exec-plans/active/roadmap.md), раздел 3) она работает в **упрощённой версии**. Различия:
->
-> | Аспект | В этом документе (Full MVP) | В Single-scenario MVP |
-> |---|---|---|
-> | **Заход в чат** | через «Начать тренировку» → список упражнений → тап на упражнение → **экран упражнения** (с дневником, описанием техники, кнопкой «Загрузить видео») → оттуда открывается чат | сразу с экрана тренировки — **тап на карточку упражнения = открытие чата**. Никакого «экрана упражнения» нет. |
-> | **Источник видео** | снять прямо в приложении (in-app камера) **или** выбрать из галереи | **только выбор готового файла из галереи устройства** через системный пикер. In-app камеры нет. |
-> | **Дневник подходов** (вес × повторения) | есть на «экране упражнения» | отсутствует совсем (нет ни экрана, ни дневника). |
-> | **Регистрация / логин** | юзер уже зарегистрирован | юзер — захардкоженный синглтон, экранов логина и онбординга-анкеты нет. |
-> | **Хранение истории** | бесплатный тариф 2 месяца, платная подписка — бессрочно | **храним всё** бессрочно для всех (тарифов и подписки в Single-scenario MVP вообще нет). Политика 2 мес / бессрочно вернётся вместе с биллингом — Фаза 7 [`roadmap.md`](../exec-plans/active/roadmap.md). |
-> | **Распознавание упражнения и проверка соответствия чату** | работает (см. раздел «Распознавание упражнения» ниже) | переезжает в **Фазу 3** (полировка) — в Single-scenario MVP / Фазе 2 (thin slice) не реализуется. |
-> | **Двухэтапная проверка качества видео** (на устройстве + AI) | работает (см. раздел «Обработка ошибок» ниже) | полная проверка переезжает в **Фазу 3**. В Фазе 2 ошибки видео обрабатываются по минимуму. |
->
-> Что **остаётся одинаковым** в Full MVP и Single-scenario MVP: один чат на упражнение навсегда; чат — это лента сообщений «снизу вверх» с полем ввода внизу; видео и текст идут в один и тот же поток сообщений; AI отвечает в этот же чат; в один момент времени — один анализ на пользователя.
->
-> **Важно для Track C (модели БД).** В Single-scenario MVP чат имеет **два визуальных состояния** (пустой / активный — см. [`../user-flows/upload-video-and-get-feedback.md`](../user-flows/upload-video-and-get-feedback.md), шаги 3 и 7). Это **не требует отдельного поля статуса** в таблице чата — состояние «активный» выводится из факта «в чате есть хотя бы одно сообщение от AI». Хранить отдельный enum-статус не нужно.
->
-> Где описаны Single-scenario MVP-замены:
-> - **3 упражнения** и формат данных по ним → [`exercises-base.md`](exercises-base.md), раздел «MVP: 3 стартовых упражнения».
-> - **Захардкоженная тренировка** и анатомия экрана тренировки → [`workout.md`](workout.md), раздел «MVP: единственная захардкоженная тренировка».
-> - **User flow** (заход в приложение → загрузка видео → ответ AI) → [`../user-flows/upload-video-and-get-feedback.md`](../user-flows/upload-video-and-get-feedback.md).
->
-> ---
->
-> **Дальше идёт исходный approved-документ для Full MVP без изменений.**
+Spec describes the **Full MVP** form. Single-scenario MVP runs a simplified version (Phases 1–3 of `roadmap.md` § 3).
 
-Главная функция приложения. Чат — это «живая переписка» пользователя с AI-тренером по конкретному упражнению. В чате юзер загружает видео своих подходов, получает разбор техники и задаёт уточняющие вопросы.
+## Single-scenario MVP simplifications
 
-## Ключевая концепция
+| Aspect | Full MVP | Single-scenario MVP |
+|---|---|---|
+| Chat entry | Workout list → tap exercise → exercise screen (set log, technique, "Загрузить видео") → chat | Tap exercise card on workout screen = open chat. No exercise screen. |
+| Video source | In-app camera + gallery picker | Gallery system picker only. No in-app camera. |
+| Set log (weight × reps) | Present on exercise screen | Absent (no exercise screen, no log). |
+| Registration / login | User registered | Hardcoded singleton; no login / onboarding form. |
+| Message retention | Free 2 months / paid unlimited | Everything kept indefinitely (no tiers, no billing). Retention policy returns at Phase 7 with billing (`roadmap.md`). |
+| Exercise recognition + chat-match check | Active (see "Exercise recognition" below) | Phase 3 (polish); not in Phase 2 (thin slice). |
+| Two-stage video quality check (device + AI) | Active (see "Error handling" below) | Phase 3. Phase 2 handles errors minimally. |
 
-**Один чат = одно упражнение, навсегда.**
+Invariants kept across both modes: one chat per exercise forever; chat is a bottom-up message feed with input field; video and text share one stream; AI replies into same chat; one analysis in queue per user.
 
-Чат привязан к упражнению из базы, а не к тренировке и не к подходу. Все видео по «Приседаниям» из любых тренировок попадают в один общий чат «Приседания». AI видит весь прогресс пользователя по этому упражнению во времени.
+**DB modeling note (for Track C):** Single-scenario MVP chat has two visual states (empty / active — `../user-flows/upload-video-and-get-feedback.md` steps 3 and 7). No status field needed in chat table — "active" derived from existence of any AI message. No enum status to store.
 
-> Аналогия: упражнение — это как друг, с которым у юзера одна общая переписка в Telegram. Сколько бы тренировок ни прошло — все сообщения копятся в одной ленте.
+Single-scenario MVP replacements:
+- 3 exercises and per-exercise data → `exercises-base.md` § "MVP: 3 starting exercises".
+- Hardcoded workout + workout-screen anatomy → `workout.md` § "MVP: single hardcoded workout".
+- User flow → `../user-flows/upload-video-and-get-feedback.md`.
 
-Это одно из главных отличий от конкурентов: у большинства разбор видео — разовая операция, а у нас — «личное досье техники» по каждому упражнению.
+---
 
-## Сценарий использования (User Flow)
+## Core concept
 
-Юзер уже зарегистрирован, прошёл онбординг и составил себе тренировку.
+**One chat = one exercise, forever.**
 
-1. Открывает приложение → выбирает свою тренировку → нажимает **«Начать тренировку»**.
-2. Видит список упражнений в этой тренировке.
-3. Тыкает на упражнение → попадает на **экран упражнения**:
-   - Название и краткое описание техники.
-   - Дневник подходов: поля **вес** и **повторения** (только это в MVP).
-   - Можно добавлять/удалять подходы и менять их количество.
-   - Кнопка **«Загрузить видео»**.
-4. Юзер снимает видео подхода (или выбирает из галереи) и загружает.
-5. Рядом с превью видео появляется:
-   - Поле для **необязательного комментария** (например: «проверь глубину»).
-   - Кнопка **«Отправить на разбор»**.
-6. По нажатию кнопки видео уходит в работу. Открывается чат (или раскрывается поверх экрана упражнения).
-7. AI отвечает в чате.
-8. Юзер может задавать уточняющие вопросы текстом и продолжать переписку в рамках этого упражнения.
-9. В любой момент может загрузить ещё одно видео — оно тоже попадёт в этот же чат, AI учтёт всю предыдущую историю.
+Chat is bound to an exercise from the catalog, not a workout, not a set. All "Squats" videos from any workout fall into one shared "Squats" chat. AI sees the user's progress on that exercise across time.
 
-## Формат ответа AI
+Differentiator vs competitors: most do one-shot video analysis; UPR keeps a per-exercise technique history.
 
-Ответ приходит в чат как сообщение от живого тренера — тёплый человеческий тон, понятные слова, без сухой структуры.
+## User flow (Full MVP)
 
-К текстовому ответу прикладывается **скрин из видео с разметкой**: обведён момент с ошибкой и графически показано, что нужно поправить.
+User registered, onboarded, has built a workout.
 
-Если в исходном сообщении юзера был **комментарий** (например, «проверь глубину»):
-1. AI **сначала отвечает именно на этот вопрос** отдельным первым сообщением.
-2. Затем — общий разбор техники и список рекомендаций.
+1. App → pick workout → tap **"Начать тренировку"**.
+2. See exercise list of the workout.
+3. Tap exercise → exercise screen:
+   - Name + short technique description.
+   - Set log: weight + reps (MVP-only fields).
+   - Add / remove / change set count.
+   - **"Загрузить видео"** button.
+4. Capture or pick from gallery → upload.
+5. Next to video preview:
+   - Optional comment field (e.g. "проверь глубину").
+   - **"Отправить на разбор"** button.
+6. Tap → video processed. Chat opens (or expands over exercise screen).
+7. AI replies in chat.
+8. User asks follow-ups in same chat.
+9. Another video any time → same chat, AI takes prior history into account.
 
-Комментарий пользователя — приоритетный, разбирается первым.
+## AI reply format
 
-## Распознавание упражнения
+Trainer-style human tone, plain language, no rigid structure.
 
-AI должен сам понимать, что за упражнение на видео. Если юзер по ошибке прислал в чат «Приседания» видео жима лёжа:
+Attached: annotated frame from video — error point circled, correction shown graphically.
 
-1. AI замечает несовпадение.
-2. Отвечает в чат сообщением с вопросом: **«Это не похоже на приседания. Перепривязать видео к другому упражнению или не разбирать его здесь?»**
-3. Юзер выбирает один из двух вариантов.
+If user comment was attached:
+1. AI replies to that question first as a separate message.
+2. Then general technique review + recommendations.
 
-> Это серьёзное техническое требование к AI-модели — учтём при выборе технологий.
+User comment is priority — addressed first.
 
-## Обработка ошибок при загрузке видео
+## Exercise recognition
 
-Двухэтапная проверка:
+AI must determine which exercise is on video. Mismatch handling:
 
-**До отправки (на устройстве):** ловим очевидные технические проблемы — слишком длинное видео, слишком большой файл, неподдерживаемый формат. Юзер видит понятное сообщение «перезаписать видео» ещё до того, как нажмёт «Отправить на разбор».
+1. AI detects mismatch.
+2. Replies in chat: **"Это не похоже на приседания. Перепривязать видео к другому упражнению или не разбирать его здесь?"**
+3. User chooses one of two options.
 
-**После отправки (на стороне AI):** если видео по техническим параметрам прошло, но AI не может его разобрать (плохое качество, темно, не видно человека, нерелевантный контент) — AI отвечает в чате отдельным сообщением вида: **«Не могу разобрать, потому что… Попробуй переснять с такого ракурса».**
+Hard requirement on the AI model — factor into provider selection.
 
-## Очередь анализа
+## Video upload error handling
 
-В один момент времени может быть **только один анализ** на пользователя.
+Two-stage check.
 
-Если юзер уже отправил одно видео и оно ещё анализируется, второе отправить нельзя — кнопка «Отправить на разбор» неактивна, или показывается сообщение «дождитесь завершения предыдущего разбора».
+**On device (pre-upload):** length, file size, format. Clear "перезаписать видео" message before "Отправить на разбор" tap.
 
-## Сколько видео можно отправить за раз
+**On AI side (post-upload):** if technically valid but AI cannot analyze (poor quality, dark, no person, irrelevant content) — separate chat message: **"Не могу разобрать, потому что… Попробуй переснять с такого ракурса"**.
 
-В одном сообщении — **только одно видео**. Сравнение нескольких подходов между собой в одном анализе в MVP не делаем.
+## Analysis queue
 
-## Состояние «AI думает» (для MVP)
+One analysis per user at a time. Pending analysis ⇒ "Отправить на разбор" disabled or "дождитесь завершения предыдущего разбора" message.
 
-Самый простой вариант:
+## Videos per message
 
-- Юзер нажал «Отправить на разбор» → в чате появляется сообщение-плейсхолдер от AI: «Анализирую твой подход…» с анимацией.
-- Поле ввода **заблокировано** до получения ответа.
-- Юзер может свернуть приложение или выйти из чата — анализ продолжается на сервере. Когда юзер вернётся, ответ его уже будет ждать.
-- Push-уведомлений в MVP нет.
+One video per message. No multi-video comparison in MVP.
 
-> Идея с плавающей кнопкой-индикатором поверх всех экранов (которая меняет состояние по готовности и переводит в чат при клике) — отличная, но это отдельная инженерная история. **Откладываем в v2**, чтобы быстрее выпустить MVP.
+## "AI is thinking" state (MVP)
 
-## Хранение истории сообщений
+- "Отправить на разбор" → placeholder AI message: "Анализирую твой подход…" with animation.
+- Input field locked until reply arrives.
+- App can be backgrounded; analysis continues on server. Reply waits when user returns.
+- No push notifications in MVP.
 
-**Бесплатный тариф:**
-- Каждому сообщению — ровно **2 месяца жизни** с момента отправки (скользящее окно).
-- Каждый день фоновая задача удаляет сообщения старше 2 месяцев.
-- Юзера об удалении не уведомляем.
-- Юзер видит только живые сообщения. При скролле вверх до самого старого живого сообщения история заканчивается.
+Floating indicator across screens — deferred to v2.
 
-**Платная подписка:**
-- Сообщения **не удаляются**, история живёт вечно.
+## Message retention
 
-## UI чата
+**Free tier:**
+- Each message: 2-month TTL (sliding window).
+- Daily background job deletes messages older than 2 months.
+- No deletion notifications.
+- User sees only live messages; history ends at oldest live message.
 
-Стандартный паттерн мессенджера: лента сообщений снизу вверх, поле ввода внизу, прокрутка вверх для просмотра истории.
+**Paid:**
+- No deletion, indefinite history.
 
-Точное визуальное решение (отдельный экран vs шторка поверх экрана упражнения, формат «входа» в чат с экрана упражнения) — определим на этапе дизайна.
+## Chat UI
 
-## Связь с другими частями приложения
+Standard messenger pattern: bottom-up feed, input at bottom, scroll up for history. Exact visual treatment (separate screen vs sheet over exercise screen) — design phase.
 
-- **Экран упражнения** — отсюда юзер открывает чат и загружает видео.
-- **База упражнений** — определяет, по каким упражнениям вообще существуют чаты. См. `exercises-base.md`.
-- **Тренировка** — список упражнений, через который юзер заходит в каждое упражнение. См. `workout.md`.
+## Connections
 
-## Что за пределами MVP
+- Exercise screen — entry point for chat + video upload.
+- Exercise base — defines which chats exist (`exercises-base.md`).
+- Workout — exercise list to enter each exercise (`workout.md`).
 
-- Метрики кроме веса и повторений.
-- Сравнение нескольких видео в одном анализе.
-- Плавающая кнопка-индикатор анализа поверх всех экранов.
-- Push-уведомления о готовности разбора.
-- Подключение живого тренера-человека в чат (платная фича для v2).
-- Постоянное хранение истории на бесплатном тарифе.
+## Out of MVP
+
+- Metrics beyond weight + reps.
+- Multi-video comparison in one analysis.
+- Floating analysis indicator across screens.
+- Push on analysis ready.
+- Live trainer in chat (paid v2 feature).
+- Indefinite retention on free tier.

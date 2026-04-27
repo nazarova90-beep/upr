@@ -1,55 +1,51 @@
 ---
-status: draft
-last_updated: 2026-04-19
+status: approved
+last_updated: 2026-04-27
 owner: Кристина
 related: docs/stack.md, docs/BACKEND.md, docs/FRONTEND.md, docs/DATABASE.md
 ---
 
-# UPR — архитектура
+# UPR — architecture
 
-Верхнеуровневая карта технической архитектуры проекта.
+Top-level map of domains and dependency directions. Concrete tools and libraries: `docs/stack.md`. Module-level details: `docs/BACKEND.md`, `docs/FRONTEND.md`, `docs/DATABASE.md`.
 
-## Статус
+## Stack summary
 
-**Технологический стек зафиксирован** — см. `docs/stack.md` (MVP-стек + план расширения и масштабирования). Здесь, в `ARCHITECTURE.md`, остаётся **карта доменов и слоёв**: что от чего зависит. Конкретные инструменты — в `stack.md`, конкретные модули — в `docs/BACKEND.md`, `docs/FRONTEND.md`, `docs/DATABASE.md`.
+| Layer | Choice |
+|---|---|
+| Mobile | React Native + Expo (TypeScript). Expo Go in dev; Dev Build only when a native module is required (Phase 3+). |
+| Backend | Python + FastAPI. |
+| ORM / DB | SQLModel + SQLAlchemy on SQLite (MVP) → PostgreSQL (Phase 6). |
+| Video storage | Local folder via `storage/` abstraction (MVP) → S3-compatible (Phase 5). |
+| AI | Google Gemini Free Tier (vision) + MediaPipe Pose (server-side preprocessing). |
+| Not in MVP, accommodated | Queues, auth, billing, push, deploy, admin panel, observability. |
 
-## Краткое резюме стека (детали в `docs/stack.md`)
+Full rationale: `docs/stack.md`.
 
-- **Mobile:** React Native + Expo (TypeScript). Разработка через Expo Go без локальной установки Xcode/Android Studio. Решение принято 2026-04-19, см. журнал в `docs/stack.md` и справку `docs/references/expo.md`.
-- **Backend:** Python + FastAPI.
-- **ORM / DB:** SQLAlchemy + SQLModel поверх SQLite (на MVP) с готовностью к PostgreSQL.
-- **Storage видео:** локальная папка через абстракцию `storage/` (на MVP), готовность к S3.
-- **AI:** Gemini Free Tier + MediaPipe Pose (бесплатный «измерительный» слой).
-- **Очереди, регистрация, биллинг, push, деплой, админка:** не на MVP, но архитектурно заложены.
+## Architecture invariants (must be enforced in code)
 
-## Принцип «agent-legible architecture»
+1. **Layered, domain-first.** Each backend domain is a folder under `backend/app/<domain>/` (`workout/`, `exercise_chat/`, `video_analysis/`, `ai_coach/`). Cross-cutting adapters: `ai_provider/`, `storage/`, `db/`, `core/`.
+2. **External dependencies hidden behind abstractions.**
+   - All AI provider calls go through `ai_provider/` (base interface + concrete impl, e.g. `gemini.py`). Switching to GPT-4o / local Qwen-VL = new implementation only.
+   - All file/video persistence goes through `storage/` (base interface + concrete impl, e.g. `local.py`). Switching to S3 = new implementation only.
+   - All DB access goes through ORM (SQLModel/SQLAlchemy). No raw concatenated SQL with user input.
+3. **i18n by default.** Mobile UI strings come from JSON catalogs via `i18next` + `react-i18next`. Hardcoded user-facing strings in components are forbidden.
+4. **Structured logging from day one.**
+5. **Boring tech.** Each new library: research dump in `docs/references/<lib>.md` first.
 
-Архитектура UPR:
+## Domains
 
-1. **Слоистой** — с фиксированными правилами, что от чего может зависеть. Это критично для агентов: чёткие границы → меньше ошибок.
-2. **Boring tech first** — выбираем проверенные технологии, которые хорошо «понимает» AI и которые стабильны во времени.
-3. **С автоматической проверкой инвариантов** — линтеры и тесты не дают агенту нарушить архитектурные правила.
+| Domain | Backend folder | Responsibility |
+|---|---|---|
+| Auth | TBD (Phase 5) | Sign-in (Apple/Google), 18+ age gate, account deletion. |
+| Workout | `backend/app/workout/` | Workouts, exercises, set log (Phase 4). |
+| ExerciseChat | `backend/app/exercise_chat/` | Per-exercise chat, message history. |
+| VideoAnalysis | `backend/app/video_analysis/` | Video intake, validation, dispatch to AI, analysis result. |
+| AICoach | `backend/app/ai_coach/` | Prompt construction, AI provider invocation. |
+| Subscription | TBD (Phase 7) | Paid tiers, limits, billing. |
+| Notifications | TBD (Phase 6) | Push. |
 
-## Сквозные требования (будут уточняться со стеком)
+## Cross-cutting
 
-- **Локализация (i18n):** в MVP интерфейс только на русском, но клиент и контентные строки проектируются так, чтобы позже добавить языки без переписывания UI. См. `docs/FRONTEND.md`, `docs/product.md` → раздел «Что входит в Full MVP».
-
-## Высокоуровневые домены (предварительный список)
-
-Будут уточнены при проектировании.
-
-- **Auth** — регистрация, логин, сессии.
-- **Workout** — тренировки, упражнения, подходы (дневник).
-- **ExerciseChat** — чаты по упражнениям, история сообщений.
-- **VideoAnalysis** — приём, валидация, отправка видео в AI, разбор.
-- **AICoach** — взаимодействие с AI-моделью, prompt engineering.
-- **Subscription** — платная подписка, лимиты, биллинг.
-- **Notifications** (v2) — push-уведомления.
-
-## Связанные документы
-
-- `docs/stack.md` — выбранный технологический стек и план масштабирования.
-- `docs/BACKEND.md` — бэкенд.
-- `docs/FRONTEND.md` — мобильное приложение.
-- `docs/DATABASE.md` — база данных.
-- `docs/SECURITY.md` — активные правила безопасности (полный чек-лист на будущее — `docs/design-docs/security-future-reference.md`).
+- **Localization (i18n):** MVP UI Russian only; client and content strings authored as keys, never inlined (`docs/FRONTEND.md`).
+- **Security:** active rules in `docs/SECURITY.md`; deferred full checklist in `docs/design-docs/security-future-reference.md`.

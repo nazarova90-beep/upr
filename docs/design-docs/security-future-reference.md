@@ -5,204 +5,163 @@ owner: Кристина
 related: ../SECURITY.md, ../exec-plans/active/roadmap.md
 ---
 
-# Security — справочник на будущее
+# Security — future reference
 
-> **Статус: deferred.** Этот документ — **не активные требования**, а **чек-лист на будущее**, который пригодится перед выходом продукта к реальным пользователям (Фаза 5+ из `exec-plans/active/roadmap.md`).
->
-> На текущем этапе (single-user MVP, локальный запуск, без деплоя, без регистрации) работают только короткие правила из `docs/SECURITY.md`. Полный список из этого файла подключаем по мере появления реальной поверхности атаки.
+**Status: deferred.** Future checklist, not active rules. Active rules at current phase: `docs/SECURITY.md`. Activate items below as they become relevant per phase trigger.
 
-## Когда использовать этот документ
+## Activation phases
 
-Открывай этот файл при подходе к Фазе 5 (закрытое тестирование, появляются настоящие пользователи и облако), Фазе 6 (публичный бета-релиз) и Фазе 7 (биллинг). К этому моменту бо́льшая часть пунктов ниже становится обязательной.
-
----
-
-## Принципы безопасности (полный список)
-
-### Принцип 1. Минимум данных (data minimization)
-
-Собираем **только то, что реально нужно** для работы фичи. Не собираем «на всякий случай».
-
-Пример:
-- Нужно для тренировки → возраст, опыт, цель. Собираем.
-- Нужно для разбора видео → само видео. Собираем.
-- Не нужно → точная геолокация в зале, контакты телефона, фото галереи целиком. **Не запрашиваем**.
-
-### Принцип 2. Шифрование «в пути» и «в покое» (encryption in transit & at rest)
-
-- Все запросы между мобильным приложением и сервером — только по **HTTPS/TLS 1.2+**. HTTP не используется никогда.
-- Все данные на сервере (база данных, хранилище видео, бэкапы) — шифруются **в покое** (encryption at rest).
-- Видео в облачном хранилище — приватные ссылки с истечением срока действия.
-
-### Принцип 3. Никаких секретов в коде
-
-- API-ключи (OpenAI, Apple, Google, платёжные провайдеры) — **только** в защищённом хранилище секретов (env-переменные на сервере, секреты CI/CD). Никогда в коде, никогда в репозитории.
-- Перед коммитом — автоматический сканер на утечку секретов в CI.
-- Если секрет утёк — **немедленная ротация ключа** + аудит, что сделано с этим ключом.
-
-### Принцип 4. Принцип наименьших привилегий (least privilege)
-
-Каждый компонент / сервис / пользователь имеет **минимально необходимые** права.
-
-- Бэкенд-сервис не должен иметь root-доступ к БД.
-- Один пользователь не должен видеть данные другого пользователя — никогда, ни через какие баги.
-- Внутренние системные роли (админ, поддержка, аналитика) — отдельные учётки с разными правами.
-
-### Принцип 5. Аудит всех чувствительных действий
-
-Все «опасные» операции логируются с указанием: кто, когда, что сделал, с каким результатом.
-
-Примеры:
-- Изменение пароля.
-- Удаление аккаунта.
-- Доступ сотрудника поддержки к данным пользователя.
-- Любые операции с биллингом.
-
-Логи аудита — **отдельные** от обычных логов, защищены строже, не удаляются по обычным правилам.
-
-### Принцип 6. Безопасность по умолчанию (secure by default)
-
-Все новые фичи разрабатываются так, что **безопасный сценарий — это сценарий «по умолчанию»**, а не опция, которую надо включать.
-
-Пример: видео нового пользователя — приватное по умолчанию.
-
-### Принцип 7. Защита от наиболее частых атак (OWASP Top 10)
-
-Минимум, который должен быть всегда:
-
-- **Injection** (SQL/NoSQL) — параметризованные запросы, ORM, никаких склеенных строк с user input.
-- **Broken Auth** — стандартные библиотеки авторизации, никакой самописной криптографии.
-- **Sensitive Data Exposure** — шифрование, не логируем чувствительные поля.
-- **XXE / SSRF** — безопасные парсеры, чёрный/белый список URL.
-- **Broken Access Control** — проверка прав на каждом запросе на сервере (не на клиенте!).
-- **Security Misconfig** — никаких дефолтных паролей, security-headers (CSP, HSTS, X-Frame-Options).
-- **XSS** — экранирование вывода, CSP-заголовки.
-- **Insecure Deserialization** — безопасные форматы (не pickle, не Java serialization).
-- **Известные уязвимые компоненты** — автоматический сканер зависимостей в CI (Dependabot/Snyk).
-- **Недостаточный логгинг и мониторинг** — алерты на подозрительную активность.
+- Phase 5 (closed testing, real users + cloud): Authorization, Video storage and deletion, Video transfer to AI, Age 18+ enforcement, secrets in secure store, HTTPS.
+- Phase 6 (public beta): full OWASP Top 10, dependency scanner in CI, certificate pinning, incident response, GDPR.
+- Phase 7 (billing): payment data — never stored locally; provider transaction ID only.
 
 ---
 
-## Чувствительные данные UPR
+## Security principles (full list)
 
-| Тип данных | Уровень чувствительности | Как защищаем |
+### 1. Data minimization
+
+Collect only what features and lawful tracking require. No "just in case" collection.
+
+### 2. Encryption in transit and at rest
+
+- Mobile↔server: HTTPS / TLS 1.2+ only.
+- Server-side data (DB, video storage, backups): encrypted at rest.
+- Cloud video: private storage with short-lived signed URLs (5–15 min).
+
+### 3. No secrets in code
+
+- API keys (OpenAI, Apple, Google, payment providers) — secret store only (env vars on server, CI/CD secrets). Never in code or repo.
+- Pre-commit secret scanner in CI.
+- Leaked secret → immediate key rotation + audit of usage.
+
+### 4. Least privilege
+
+- Backend service has no root DB access.
+- One user never sees another user's data.
+- Distinct internal roles (admin, support, analytics) with separate accounts.
+
+### 5. Audit log for sensitive actions
+
+Logged: who, when, what, result. Examples: password change, account deletion, support staff data access, billing operations. Audit logs separate from regular logs, stricter protection, longer retention.
+
+### 6. Secure by default
+
+New user's video — private by default; security path is the default path.
+
+### 7. OWASP Top 10 minimum baseline
+
+- **Injection** — parameterized queries, ORM, no string concatenation with user input.
+- **Broken auth** — standard auth libraries, no homemade crypto.
+- **Sensitive data exposure** — encryption, no logging of sensitive fields.
+- **XXE / SSRF** — safe parsers, URL allow/deny lists.
+- **Broken access control** — server-side permission check on every request.
+- **Security misconfig** — no default passwords, security headers (CSP, HSTS, X-Frame-Options).
+- **XSS** — output escaping, CSP.
+- **Insecure deserialization** — no `pickle` / Java serialization on untrusted input.
+- **Known vulnerable components** — automated dependency scanner in CI.
+- **Insufficient logging / monitoring** — alerts on suspicious activity.
+
+---
+
+## UPR sensitive data
+
+| Type | Sensitivity | Protection |
 |---|---|---|
-| Email пользователя | средняя | шифрование в покое, не показываем другим юзерам |
-| Пароль | высокая | хранится только в виде хеша (bcrypt/Argon2), никогда не в открытом виде |
-| Видео тренировок | **высокая** | приватное хранилище, доступ только владельцу, шифрование в покое |
-| История чата с AI | средняя | привязана к юзеру, не показывается другим |
-| Тренировочные данные | средняя | привязаны к юзеру |
-| Платёжные данные | **критическая** | **никогда** не храним сами. Делегируем платёжному провайдеру (Stripe, RevenueCat, Apple Pay, Google Pay). Храним только ID транзакции/подписки. |
-| API-ключи (OpenAI и др.) | **критическая** | хранилище секретов, не в коде |
-| Логи доступа / аудит | средняя | защищены отдельно, не удаляются по обычным правилам |
+| User email | medium | encryption at rest, not exposed to other users |
+| Password | high | hash only (bcrypt / Argon2), never plaintext |
+| Workout videos | high | private storage, owner-only access, encryption at rest |
+| AI chat history | medium | per-user, no cross-user exposure |
+| Workout data | medium | per-user |
+| Payment data | critical | **never stored locally**; delegated to payment provider (Stripe / RevenueCat / Apple Pay / Google Pay). Store only transaction / subscription ID. |
+| API keys (OpenAI etc.) | critical | secret store, not in code |
+| Audit logs | medium | protected separately, longer retention |
 
 ---
 
-## Авторизация и аутентификация
+## Authorization (Phase 5+)
 
-Базовые требования (для Фазы 5+):
-
-- Стандартный механизм (например, JWT-токены с коротким сроком жизни + refresh-токен), либо session-based.
-- Двухфакторная аутентификация (2FA) — минимум возможность, в идеале для платных подписчиков по умолчанию.
-- Биометрия (Face ID / Touch ID / Android Biometric) — для входа в приложение.
-- Sign in with Apple — обязательно для iOS (требование App Store).
-- Sign in with Google — желательно.
-- Возможность **полного удаления аккаунта** через приложение (требование Apple App Store + GDPR).
+- Standard mechanism: short-lived JWT + refresh token, or session-based.
+- 2FA — at minimum optional; default for paid tier.
+- Biometrics (Face ID / Touch ID / Android Biometric) — app entry option.
+- Sign in with Apple — required by App Store on iOS.
+- Sign in with Google — recommended.
+- Account deletion from inside the app — required (App Store + GDPR).
 
 ---
 
-## Хранение и удаление видео
+## Video storage and deletion
 
-Видео — наиболее чувствительный тип данных. Отдельные правила:
-
-1. **Загрузка** — только аутентифицированный юзер, только в свой аккаунт.
-2. **Хранение** — приватное облачное хранилище (S3 / GCS), bucket без публичного доступа.
-3. **Доступ** — только через подписанные URL с коротким сроком жизни (например, 5–15 минут).
-4. **Удаление** — по правилам хранения сообщений (см. `../product-specs/exercise-chat.md`):
-   - бесплатный тариф: 2 месяца;
-   - платная подписка: бессрочно.
-5. **Право пользователя на удаление** — юзер может удалить любое своё видео в любой момент. Удаление — необратимое, физическое (не «soft delete»).
-6. **При удалении аккаунта** — все видео физически удаляются в течение 30 дней.
+1. Upload — authenticated user, own account only.
+2. Storage — private cloud bucket (S3 / GCS), no public access.
+3. Access — short-lived signed URLs (5–15 min).
+4. Retention — per `../product-specs/exercise-chat.md`: free 2 months, paid unlimited.
+5. User-initiated deletion — irreversible, physical (no soft delete).
+6. Account deletion — all videos physically removed within 30 days.
 
 ---
 
-## Передача видео в AI
+## Video transfer to AI
 
-Это **критический** пункт, потому что мы отправляем приватное видео внешнему AI-провайдеру (OpenAI / Anthropic / Google).
+Critical path: private video sent to external AI provider.
 
-Требования:
-
-1. Используем **только провайдеров с подписанным DPA** (Data Processing Agreement) и публичными гарантиями non-training (видео не используется для обучения моделей).
-2. Передаём минимум: само видео + контекст упражнения. Никаких личных данных юзера (имя, email).
-3. В UI пользователь **явно информирован**, что видео обрабатывается AI (в политике конфиденциальности и при первом разборе).
-4. По возможности — режим, при котором обработка идёт через наш бэкенд, а не напрямую с клиента к AI-провайдеру (для контроля).
+1. Only providers with signed DPA and non-training guarantees.
+2. Transmit minimum: video + exercise context. No personal data (name, email).
+3. Explicit user notice in UI (privacy policy + first-analysis prompt).
+4. Prefer backend-mediated transmission over direct client→provider for control.
 
 ---
 
-## Безопасность мобильного приложения
+## Mobile app security
 
-- **Сертификат-пиннинг (certificate pinning)** — защита от MITM-атак на публичных Wi-Fi (для Фазы 6+).
-- **Защита от reverse-engineering** — обфускация кода, проверка целостности.
-- **Безопасное хранилище токенов** — Keychain (iOS), EncryptedSharedPreferences/Keystore (Android). Не в plain SharedPreferences/UserDefaults.
-- **Биометрический lock** приложения — опция в настройках.
-- **Защита экрана от скриншотов** — для критичных экранов (платежи, личный кабинет) — `FLAG_SECURE` на Android, blur при свертывании на iOS.
+- Certificate pinning (Phase 6+).
+- Reverse-engineering hardening: code obfuscation, integrity checks.
+- Secure token storage: Keychain (iOS), EncryptedSharedPreferences / Keystore (Android). Never plain SharedPreferences / UserDefaults.
+- Biometric app lock — settings option.
+- Screenshot protection on sensitive screens (payments, profile): `FLAG_SECURE` on Android, blur on iOS app switcher.
 
 ---
 
-## Соответствие законам и платформам
+## Compliance
 
 ### App Store / Google Play
-- Политика конфиденциальности (Privacy Policy) — обязательна.
-- App Privacy Manifest (iOS) — заполняется честно.
-- Возможность удаления аккаунта прямо из приложения.
+- Privacy Policy required.
+- App Privacy Manifest (iOS) filled honestly.
+- In-app account deletion.
 
-### GDPR (если работаем с EU)
-- Право на доступ к своим данным.
-- Право на исправление данных.
-- Право на удаление («право быть забытым»).
-- Право на портабельность данных (экспорт).
-- Согласие на обработку — явное (галочка не предзаполнена).
+### GDPR (EU users)
+- Access, rectification, erasure ("right to be forgotten"), portability (export).
+- Explicit consent (no pre-checked boxes).
 
-### Российские законы (если работаем с РФ)
-- 152-ФЗ «О персональных данных» — хранение персональных данных РФ-граждан на серверах в РФ.
-- Решается отдельным региональным деплоем при необходимости.
+### Russian law (RU users)
+- 152-ФЗ — Russian-citizen personal data on Russian servers. Solved via separate regional deploy if needed.
 
-### Возрастные ограничения
+### Age restrictions
 
-**Продукт — строго для совершеннолетних (18+).** Сознательное продуктовое и юридическое решение, исключающее работу с данными несовершеннолетних.
+Strictly 18+. Deliberate product and legal decision excluding minor data handling.
 
-Требования:
-- При регистрации — подтверждение возраста 18+ (дата рождения + явная декларация).
-- Возрастные категории в App Store / Google Play — выставить соответствующие.
-- В пользовательском соглашении и политике конфиденциальности явно указать: сервис не для лиц младше 18; при выявлении такого аккаунта — блокировка и удаление данных.
-- Не реализуем механизмы согласия родителей, «детских» режимов и т.п.
+- Registration: 18+ confirmation (date of birth + explicit declaration).
+- App Store / Google Play age categories set accordingly.
+- ToS and Privacy Policy: service not for under-18; underage account → block + data deletion.
+- No parental-consent mechanisms or "kids mode".
 
-**Дата фиксации:** 2026-04-19.
+Decision date: 2026-04-19.
 
 ---
 
-## Реакция на инциденты (incident response)
+## Incident response
 
-Базовый план на случай утечки или взлома:
-
-1. **Обнаружение** — мониторинг + алерты, плюс канал связи для bug bounty / external reports.
-2. **Изоляция** — отключить уязвимый компонент, отозвать скомпрометированные ключи.
-3. **Анализ** — что именно утекло, на сколько пользователей повлияло.
-4. **Уведомление** — пользователей и регуляторов в установленные сроки (GDPR — 72 часа).
-5. **Постмортем** — что пошло не так, что меняем в процессе. Сохраняем в `../exec-plans/completed/`.
+1. Detection — monitoring + alerts + bug-bounty / external-report channel.
+2. Containment — disable affected component, revoke compromised keys.
+3. Analysis — what leaked, who is affected.
+4. Notification — users and regulators within statutory deadlines (GDPR: 72h).
+5. Postmortem — saved under `../exec-plans/completed/`.
 
 ---
 
-## Регулярные проверки безопасности
+## Regular security checks
 
-- **Сканер зависимостей** — Dependabot/Snyk в CI на каждый PR.
-- **SAST** (статический анализ кода на уязвимости) — в CI.
-- **Pen-test** (внешнее тестирование) — раз в год минимум перед публичным релизом.
-- **Bug bounty / responsible disclosure** — на этапе публичного запуска.
-
----
-
-## Связанные документы
-
-- `../SECURITY.md` — короткий **активный** документ безопасности на текущий этап.
-- `../exec-plans/active/roadmap.md` — фазы проекта; этот справочник станет активным к Фазе 5+.
+- Dependency scanner — Dependabot / Snyk in CI on every PR.
+- SAST in CI.
+- Pen-test — minimum yearly, mandatory before public release.
+- Bug bounty / responsible disclosure — at public launch.

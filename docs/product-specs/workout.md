@@ -1,126 +1,124 @@
 ---
 status: in-progress
-last_updated: 2026-04-19
+last_updated: 2026-04-27
 owner: Кристина
-related: product.md, exercise-chat.md, exercises-base.md, ../exec-plans/active/roadmap.md, ../exec-plans/active/mvp-product-spec.md
+related: ../product.md, exercise-chat.md, exercises-base.md, ../exec-plans/active/roadmap.md, ../exec-plans/active/mvp-product-spec.md
 ---
 
-# Тренировка и тренировочный дневник
+# Workout
 
-«Тренировка» в приложении — это **именованный список упражнений в фиксированном порядке**, который юзер проходит за один заход в зал.
+A workout = a named, ordered list of exercises taken in one gym session.
 
-Документ построен в два этапа, как и [`exercises-base.md`](exercises-base.md):
+Two passes (mirroring `exercises-base.md`):
 
-1. **Single-scenario MVP** (Фаза 1 [`roadmap.md`](../exec-plans/active/roadmap.md)) — в приложении **одна-единственная захардкоженная тренировка**. Создавать/редактировать/удалять тренировки нельзя. Дневник подходов отсутствует.
-2. **Full MVP** (Фаза 4 [`roadmap.md`](../exec-plans/active/roadmap.md)) — пользователь сам собирает тренировки из базы упражнений, появляется дневник подходов (вес × повторения), история, программа из нескольких тренировок.
+1. **Single-scenario MVP** (`roadmap.md` Phase 1) — one hardcoded workout. No create / edit / delete. No set log.
+2. **Full MVP** (`roadmap.md` Phase 4) — user-built workouts from base, set log (weight × reps), history, multi-workout program.
 
 ---
 
-## MVP: единственная захардкоженная тренировка (Single-scenario MVP)
+## MVP: single hardcoded workout (Single-scenario MVP)
 
-### Что это
+### Definition
 
-Ровно одна тренировка, прошитая в код / сидовый скрипт БД. Юзер не может её ни переименовать, ни перетасовать, ни удалить. Это **главный (и единственный) экран** приложения сразу после открытия — никакого экрана выбора тренировки, никакого онбординга.
+Exactly one workout, hardcoded in code / DB seed. User cannot rename, reorder, or delete. Main and only screen on app open — no workout-selection screen, no onboarding.
 
-### Параметры тренировки
+### Workout fields
 
-| Поле | Значение в MVP | Поведение |
+| Field | MVP value | Behavior |
 |---|---|---|
-| Название | **«Вайбкодинговая тренировка»** | Захардкожено. Внутренняя мета-шутка: тренировка «которую построил тот, кто сейчас её и тестирует». |
-| Дата | **19.04.2026** | Захардкожена. В Single-scenario MVP не пересчитывается, не следует за «сегодня», не редактируется. В Full MVP станет реальной датой создания/проведения тренировки. |
-| Количество упражнений | **«3 упражнения»** (текстом под названием) | Захардкожено как строка. Логически это счётчик: в Full MVP он будет пересчитываться автоматически при добавлении/удалении упражнений. |
-| Список упражнений | три ссылки на записи из [`exercises-base.md`](exercises-base.md) | В фиксированном порядке (см. ниже). |
+| Name | **"Вайбкодинговая тренировка"** | Hardcoded. |
+| Date | **19.04.2026** | Hardcoded. Not "today", not editable. Becomes real creation/run date in Full MVP. |
+| Exercise count | **"3 упражнения"** (string under name) | Hardcoded string. Auto-counted in Full MVP. |
+| Exercise list | three references to records in `exercises-base.md` | Fixed order (below). |
 
-### Порядок упражнений
+### Exercise order
 
-| № | id | name |
+| # | id | name |
 |---|---|---|
 | 1 | `romanian_deadlift` | Румынская тяга со штангой |
 | 2 | `lat_pulldown_to_chest` | Вертикальная тяга блока к груди |
 | 3 | `dumbbell_biceps_curl` | Подъём гантелей на бицепс |
 
-### Что юзер видит на экране тренировки
+### Workout screen anatomy
 
-Экран сверху вниз:
+Top-down:
 
-1. **Шапка экрана:**
-   - Название тренировки: «Вайбкодинговая тренировка»
-   - Под названием — дата: «19.04.2026»
-   - Под датой — счётчик: «3 упражнения»
-2. **Список из трёх карточек упражнений** друг под другом, в порядке выше.
+1. Header:
+   - Workout name: "Вайбкодинговая тренировка".
+   - Date below name: "19.04.2026".
+   - Counter below date: "3 упражнения".
+2. Three exercise cards in order.
 
-#### Анатомия одной карточки упражнения
+#### Exercise card anatomy
 
-Каждая карточка содержит:
+- Sequential number: "1", "2", "3".
+- Exercise name (`name` field from `exercises-base.md`).
+- Small "info" icon (i-in-circle or similar) — tap → pop-up over screen with full technique description (`technique` field). Closed via close button/link. Pop-up does not navigate user away from workout screen.
+- Right-side arrow on card — tap on card or arrow → navigate to per-exercise chat.
 
-- **Порядковый номер** упражнения в тренировке: «1», «2», «3».
-- **Название упражнения** (поле `name` из [`exercises-base.md`](exercises-base.md)).
-- **Маленькая иконка «информация»** (i-в-кружочке или похожая) — при тапе **поверх экрана раскрывается поп-ап** с полным описанием техники упражнения (поле `technique` из `exercises-base.md`). Поп-ап закрывается по close-кнопке/линку. Поп-ап **не уводит юзера с экрана тренировки** — после закрытия он остаётся на том же месте.
-- **Стрелка справа по центру карточки** — при тапе по карточке (или по самой стрелке) юзер **переходит на экран чата** этого упражнения.
+Tap-card → straight to chat (no separate exercise screen with technique / set log) is the key Single-scenario MVP decision (`roadmap.md` § 3). Technique description lives in the info-icon pop-up.
 
-> Поведение «тап по упражнению → сразу попадание в чат», без отдельного «экрана упражнения» с описанием техники, дневником подходов и т.д., — это **ключевое решение Single-scenario MVP** из [`roadmap.md`](../exec-plans/active/roadmap.md), раздел 3. Описание техники не уходит — оно живёт в поп-апе по иконке «информация».
+#### Absent on workout screen in Single-scenario MVP
 
-#### Чего на экране тренировки **нет** в Single-scenario MVP
+- "Начать тренировку" / "Завершить тренировку" buttons.
+- Workout timer.
+- Progress indicator ("1 of 3 done").
+- Drag-reorder, delete, add-new-exercise.
+- Set log on this screen (Full MVP — on exercise screen, which doesn't exist in Single-scenario MVP).
+- "Сменить тренировку" / "Создать новую" buttons.
 
-- Кнопки «Начать тренировку» / «Завершить тренировку».
-- Таймера тренировки.
-- Прогресса прохождения («1 из 3 сделано»).
-- Возможности перетащить упражнения, поменять местами, удалить, добавить новое.
-- Дневника подходов на этом экране (он переезжает в Full MVP, причём не на экран тренировки, а на экран упражнения, которого в Single-scenario MVP вообще нет).
-- Кнопки «Сменить тренировку» / «Создать новую».
+### Visual decisions
 
-### Точное визуальное решение
+Exact visuals (paddings, typography, card style, info-icon style, pop-up form: modal vs bottom sheet) — Track B (Phase 1 mockups). This doc fixes meaning, not pixels.
 
-Точный визуал (отступы, типографика, цвета карточки, стиль иконки «информация», поведение поп-апа — модальное окно или шторка снизу) — **отдельно решается в Track B** Фазы 1 (мокапы). Этот документ задаёт **смысловое наполнение** экрана, не его пиксели.
+Chat-screen visuals (target of arrow tap) — separate Track B task, not described here.
 
-Визуал экрана **чата** упражнения (то, что открывается по стрелке) — **отдельная задача Track B**, в этом документе не описывается.
+### Connections
 
-### Связь с другими частями MVP
-
-- **База упражнений:** [`exercises-base.md`](exercises-base.md) — источник трёх записей, на которые ссылается тренировка.
-- **Чат с упражнением:** [`exercise-chat.md`](exercise-chat.md) — то, куда переходит юзер по стрелке. (Approved-документ описан под Full MVP; упрощения для Single-scenario MVP — во врезке в начале этого файла, см. шаг 5 плана Track A.)
-- **User flow:** [`../user-flows/upload-video-and-get-feedback.md`](../user-flows/upload-video-and-get-feedback.md) — сценарий, в котором экран тренировки является стартовой точкой. (Создаётся в шаге 6 плана Track A.)
+- Exercise base: `exercises-base.md` — source of three records.
+- Per-exercise chat: `exercise-chat.md` — destination of arrow tap.
+- User flow: `../user-flows/upload-video-and-get-feedback.md` — scenario starting on this screen.
 
 ---
 
-## Full MVP: расширение тренировок (Фаза 4 [`roadmap.md`](../exec-plans/active/roadmap.md))
+## Full MVP: workout expansion (Phase 4)
 
-Здесь живёт описание того, во что тренировки превратятся **после** Single-scenario MVP. Сейчас — короткая заглушка с указателями.
+Stub.
 
-### Что должно появиться
+### To define
 
-- **Экран упражнения** как отдельная сущность: дневник подходов (вес × повторения), история, кнопка загрузки видео уже не из чата, а с этого экрана (или дублируется).
-- **Создание новой тренировки** пользователем: выбор упражнений из базы 20 штук, задание порядка, название.
-- **Редактирование** существующей тренировки: переименование, изменение порядка, добавление/удаление упражнений.
-- **Старт / пауза / завершение** тренировки: понятие «активной тренировки», таймер, поведение при возврате к незавершённой.
-- **История тренировок** и **прогресс** по подходам.
-- **Тренировочная программа** — набор тренировок без расписания (или с расписанием — отдельный вопрос Фазы 4).
-- **Шаблоны тренировок** (если решим, что нужны).
+- Exercise screen as separate entity: set log (weight × reps), history, video upload from this screen (or duplicated).
+- User-created workout: pick from 20-exercise base, set order, name.
+- Edit existing workout: rename, reorder, add/remove exercises.
+- Start / pause / finish workout: "active workout" concept, timer, resume behavior.
+- Workout history + per-set progress.
+- Training program — set of workouts (with or without schedule — open).
+- Workout templates (if needed).
 
-### Что уже зафиксировано стратегически (в [`product.md`](product.md))
+### Strategy items already fixed (`product.md`)
 
-- Юзер собирает тренировку из упражнений базы.
-- В тренировке — список упражнений в нужном порядке.
-- На экране упражнения юзер фиксирует **вес и повторения** по подходам (только это в Full MVP).
-- Можно добавлять/удалять подходы и менять их количество.
-- Из нескольких тренировок формируется тренировочная программа.
+- User builds workouts from the base.
+- Workout = ordered exercise list.
+- Exercise screen records weight + reps per set (Full MVP only fields).
+- Add / remove sets, change set count.
+- Multiple workouts form a training program.
 
-### Открытые вопросы Full MVP
+### Open questions
 
-- Тренировочная программа — это набор тренировок без даты или есть расписание (понедельник/среда/пятница)?
-- Можно ли проходить тренировку «не по плану» — пропустить упражнение, поменять порядок?
-- Как сохраняется последний рабочий вес — автоматически подставляется в следующий раз?
-- Нужны ли таймеры отдыха между подходами?
-- Что происходит при возвращении к незавершённой тренировке?
+- Training program: dateless set vs scheduled (Mon/Wed/Fri)?
+- Off-plan execution allowed (skip, reorder)?
+- Last working weight — auto-suggested next session?
+- Rest timers between sets?
+- Behavior on returning to unfinished workout?
 
-> Эти вопросы **специально не решаем сейчас** — они станут актуальны на Фазе 4, когда будет рабочий Single-scenario MVP.
+Decisions deferred to Phase 4.
 
 ---
 
-## Журнал решений
+## Decision log
 
-| Дата | Решение | Где обсуждалось |
+| Date | Decision | Source |
 |---|---|---|
-| 2026-04-19 | В Single-scenario MVP — **одна-единственная захардкоженная тренировка** «Вайбкодинговая тренировка» с захардкоженной датой 19.04.2026 и счётчиком «3 упражнения». Создание/редактирование/удаление тренировок отсутствуют. | Чат, Track A Фазы 1, шаг 4. |
-| 2026-04-19 | Порядок упражнений в тренировке: 1) Румынская тяга, 2) Вертикальная тяга блока к груди, 3) Подъём гантелей на бицепс. | Чат, Track A Фазы 1, шаг 4. |
-| 2026-04-19 | Анатомия карточки упражнения на экране тренировки: порядковый номер + название + иконка «информация» (раскрывает поп-ап с описанием техники поверх экрана) + стрелка-навигация в чат. Никакого отдельного «экрана упражнения», никакой кнопки «Начать тренировку», никакого дневника подходов. | Чат, Track A Фазы 1, шаг 4. |
+| 2026-04-19 | Single-scenario MVP — one hardcoded workout "Вайбкодинговая тренировка", hardcoded date 19.04.2026, "3 упражнения" counter. No create / edit / delete. | Chat, Phase 1 / Track A, step 4. |
+| 2026-04-19 | Exercise order: 1) Romanian deadlift, 2) lat pulldown, 3) biceps curl. | Chat, Phase 1 / Track A, step 4. |
+| 2026-04-19 | Exercise card anatomy: sequence number + name + info icon (technique pop-up over screen) + arrow to chat. No separate exercise screen, no "Начать тренировку" button, no set log. | Chat, Phase 1 / Track A, step 4. |

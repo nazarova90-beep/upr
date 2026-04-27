@@ -5,58 +5,52 @@ owner: Кристина
 related: design-docs/security-future-reference.md, stack.md, exec-plans/active/roadmap.md
 ---
 
-# Безопасность UPR — текущий этап
+# Security — current phase
 
-> **Что это.** Короткий список **актуальных** правил безопасности на текущей фазе проекта (single-user MVP, локальный запуск, без деплоя, без регистрации).
->
-> **Большой чек-лист на будущее** (GDPR, OWASP Top 10, certificate pinning, incident response, аудит, 2FA, биометрия, политика хранения видео в облаке) лежит в `design-docs/security-future-reference.md` со статусом `deferred`. Подключим его к **Фазе 5** (закрытое тестирование), когда появятся реальные внешние пользователи.
+Active security rules for current phase (single-user MVP, local-only, no deploy, no registration).
 
-## Контекст: что мы реально защищаем сейчас
+Future checklist (GDPR, OWASP Top 10, certificate pinning, incident response, audit, 2FA, biometrics, cloud video retention) lives in `design-docs/security-future-reference.md` with status `deferred`. Activates at Phase 5 (closed testing).
 
-- **Один пользователь** — владелец продукта.
-- **Локальный запуск** — бэкенд и БД крутятся на машине Кристины.
-- **Нет публичного API** — снаружи нашего ноутбука к приложению ничего не достучится.
-- **Видео хранится локально** — в папке через абстракцию `storage/`.
-- **Один внешний канал «куда уходят данные»** — Google Gemini Free Tier.
+## Current threat surface
 
-Поверхность атаки на этом этапе сводится к двум вещам: **утечка секретов в репозиторий** и **передача видео внешнему AI**.
+- Single user — product owner.
+- Local execution — backend and DB on owner's machine.
+- No public API — nothing reachable from outside the laptop.
+- Video stored locally via `storage/`.
+- One outbound channel for data — Google Gemini Free Tier.
 
-## Активные правила (только то, что важно сейчас)
+Effective surface: **secret leakage in repo** + **video transmission to external AI**.
 
-### 1. Секреты — только в `.env`, никогда в коммите
+## Active rules
 
-- API-ключи (Gemini и т.д.) живут только в локальном `.env` (на машине Кристины).
-- Файлы `.env`, `secrets.json`, `*.key` — в `.gitignore`. Шаблоны без значений — в `*.env.example`.
-- Если ключ случайно попал в коммит — **немедленно отзываем ключ у провайдера и заводим новый**, не пытаемся «затереть историю».
+### 1. Secrets — only in `.env`, never in commits
 
-### 2. Видео и AI-провайдер — осознанный компромисс
+- API keys (Gemini etc.) in local `.env` only.
+- `.env`, `secrets.json`, `*.key` — in `.gitignore`. Templates without values — in `*.env.example`.
+- Leaked key → revoke at provider, issue new one. Do not rewrite git history.
 
-- На MVP видео уходит в **Google Gemini Free Tier**. По их условиям бесплатного тарифа данные **могут** использоваться для обучения моделей.
-- Это допустимо, **пока пользователь — только Кристина** и снимаемые видео — собственные.
-- Перед первым внешним пользователем (Фаза 5) **переключаемся на платный тариф Gemini или альтернативу с DPA** (см. `stack.md` → раздел «AI-стратегия» и `design-docs/security-future-reference.md`).
+### 2. Video and AI provider — informed compromise
 
-### 3. Возрастная граница 18+ (продуктовое решение)
+- MVP: video sent to **Google Gemini Free Tier**. Free tier ToS allow training on user data.
+- Acceptable while user = owner only, videos are owner's own.
+- Before first external user (Phase 5): switch to **paid Gemini tier or alternative with DPA** (`stack.md` → "AI strategy"; `design-docs/security-future-reference.md`).
 
-Продукт — для совершеннолетних. Это пока **продуктовая, не техническая** граница: реализация (форма подтверждения, блокировка регистрации) появится в Фазе 5 вместе с регистрацией. Здесь фиксируем как обязательное требование на тот момент.
+### 3. Age 18+ (product decision)
 
-### 4. Минимум данных
+Product is for adults 18+. Currently a product, not technical, boundary. Implementation (confirmation form, registration block) lands in Phase 5 with registration.
 
-Не запрашиваем у пользователя то, что не нужно для разбора видео и тренировки. Никаких контактов, точной геолокации, доступа к галерее целиком — только системный пикер на конкретный файл.
+### 4. Data minimization
 
-### 5. ORM для всех запросов в БД
+No data collected beyond what's needed for video analysis and training tracking. No contacts, no precise geolocation, no full gallery access — only system picker on a specific file.
 
-Все запросы к SQLite идут через **SQLModel/SQLAlchemy**. Никаких склеенных строк с user input — это автоматически закрывает SQL-injection.
+### 5. ORM for all DB queries
 
-## Что появится дальше (триггеры)
+All SQLite queries via SQLModel/SQLAlchemy. No concatenated strings with user input — closes SQL injection by construction.
 
-| Когда | Что подключаем | Откуда брать чек-лист |
+## Phase triggers
+
+| Phase | Adds | Source |
 |---|---|---|
-| Фаза 5 (закрытое тестирование, появляется регистрация и облако) | HTTPS, безопасное хранилище токенов, удаление аккаунта, перевод видео в платный тариф AI с DPA, S3-bucket без публичного доступа, реализация возрастной отсечки 18+ | `design-docs/security-future-reference.md` → разделы «Авторизация», «Хранение и удаление видео», «Передача видео в AI», «Возрастные ограничения» |
-| Фаза 6 (публичный бета-релиз) | Полный OWASP Top 10, сканер зависимостей в CI, certificate pinning, incident response, GDPR-обязательства | весь `security-future-reference.md` становится активным |
-| Фаза 7 (биллинг) | Платёжные данные **никогда не храним сами** — только ID транзакции у провайдера (Stripe / Apple / Google) | `security-future-reference.md` → раздел «Чувствительные данные UPR» |
-
-## Связанные документы
-
-- `design-docs/security-future-reference.md` — полный чек-лист на будущее (deferred).
-- `stack.md` — стек и план масштабирования (раздел «AI-стратегия»).
-- `exec-plans/active/roadmap.md` — фазы проекта.
+| 5 (closed testing, registration + cloud) | HTTPS, secure token storage, account deletion, paid AI tier with DPA, S3 bucket without public access, 18+ enforcement | `design-docs/security-future-reference.md` → "Authorization", "Video storage and deletion", "Video transfer to AI", "Age restrictions" |
+| 6 (public beta) | Full OWASP Top 10, dependency scanner in CI, certificate pinning, incident response, GDPR compliance | Entire `security-future-reference.md` becomes active |
+| 7 (billing) | Payment data never stored locally — only provider transaction ID (Stripe / Apple / Google) | `security-future-reference.md` → "UPR sensitive data" |

@@ -5,25 +5,23 @@ owner: Кристина
 related: ../BACKEND.md, ../DATABASE.md, ../stack.md, fastapi.md, index.md
 ---
 
-# SQLModel — research-справка
+# SQLModel — research note
 
-> **Источник.** Собрано через MCP `user-context7`, library ID `/fastapi/sqlmodel` (Source Reputation: Medium; Benchmark Score: 72.2; 463 сниппета). Дата сбора: 2026-04-27.
+Source: MCP `user-context7`, library ID `/fastapi/sqlmodel` (Source Reputation: Medium; Benchmark Score: 72.2; 463 snippets). Fetched: 2026-04-27.
 
-## Зачем нужна в нашем проекте
+## Purpose in project
 
-SQLModel — это «один словарь моделей» для двух задач сразу: описание таблиц в БД (роль ORM, как у SQLAlchemy) **и** описание схем входа/выхода API (роль валидатора, как у Pydantic). Автор у SQLModel и FastAPI один — Себастьян Рамирез, библиотеки спроектированы работать вместе. Выбрана в [stack.md](../stack.md) как «один словарь моделей и для БД, и для будущей админки».
+Single model dictionary serving both ORM (DB tables) and API schemas (Pydantic). Same author as FastAPI; designed to be used together. Selected in `stack.md` as the unified model layer for DB + future admin.
 
-> **Аналогия.** Обычно в проектах нужно две схожих описания одной сущности: одна — «как это лежит в базе» (ORM), другая — «как это летает по сети в JSON» (API-схема). SQLModel делает их одной — как один паспорт, который и в самолёте годится, и в магазине.
+## Version
 
-## Версия
+- Pre-1.0 at fetch (`0_0_24`).
+- Pin pattern: `sqlmodel>=0.0.24,<0.1.0`.
+- Python 3.13 supported (requires 3.7+; tracks SQLAlchemy 2.0+).
 
-- На момент справки в `resolve-library-id` указана версия `0_0_24` — то есть SQLModel ещё в pre-1.0. Это нормально для библиотеки такого зрелого автора.
-- Для нашего MVP пиннуем как `sqlmodel>=0.0.24,<0.1.0`.
-- Совместимость с Python 3.13 — да (требует Python 3.7+, новые версии ходят за свежим SQLAlchemy 2.0+).
+## Key API
 
-## Ключевое API
-
-### 1. Описание таблицы
+### 1. Table definition
 
 ```python
 from sqlmodel import Field, SQLModel
@@ -36,11 +34,11 @@ class Hero(SQLModel, table=True):
     age: int | None = None
 ```
 
-- Класс наследует `SQLModel`.
-- `table=True` — это **именно таблица в БД** (без него — просто схема для API).
-- `id: int | None = Field(default=None, primary_key=True)` — стандартный паттерн автоинкремента: до сохранения в базу `id` равен `None`, после — числу.
+- Subclass `SQLModel`.
+- `table=True` → DB table (without it → API schema only).
+- `id: int | None = Field(default=None, primary_key=True)` — autoincrement pattern: `None` pre-save, integer post-save.
 
-### 2. Field() для всех настроек поля
+### 2. `Field()` for column settings
 
 ```python
 class Product(SQLModel, table=True):
@@ -51,9 +49,9 @@ class Product(SQLModel, table=True):
     description: str | None = Field(default=None, max_length=500)
 ```
 
-Через `Field()` задаются: индексы, уникальность, foreign keys (`"category.id"` — таблица.поле), длина строк, валидаторы (`ge=0`, `le=5`), nullable.
+`Field()` configures: indexes, uniqueness, foreign keys (`"category.id"` — table.column), string length, validators (`ge=0`, `le=5`), nullable.
 
-### 3. Связи между таблицами
+### 3. Relationships
 
 ```python
 from sqlmodel import Relationship
@@ -72,9 +70,9 @@ class Hero(SQLModel, table=True):
     team: Team | None = Relationship(back_populates="heroes")
 ```
 
-`Relationship(back_populates=...)` создаёт двунаправленную связь. Это **не колонка в БД**, а удобный доступ к связанным записям.
+`Relationship(back_populates=...)` defines a bidirectional link. Not a DB column — accessor for related records.
 
-### 4. Engine и создание таблиц
+### 4. Engine + table creation
 
 ```python
 from sqlmodel import SQLModel, create_engine
@@ -87,27 +85,26 @@ def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
 ```
 
-- `create_engine(...)` — точка подключения к БД. Для SQLite — путь к файлу. Для PostgreSQL — `postgresql://...`. **Смена SQLite → PostgreSQL — это смена строки**, как обещано в [stack.md](../stack.md).
-- `SQLModel.metadata.create_all(engine)` — создаёт все таблицы, если их нет. На MVP этого достаточно. На этапе бета — миграции через Alembic (см. [DATABASE.md](../DATABASE.md)).
+- `create_engine(...)` — DB connection. SQLite → file path. PostgreSQL → `postgresql://...`. SQLite → PostgreSQL = string change (`stack.md`).
+- `SQLModel.metadata.create_all(engine)` — creates missing tables. Sufficient for MVP. Beta phase → Alembic migrations (`DATABASE.md`).
 
-## Подводные камни
+## Gotchas
 
-| Камень | Что делать |
+| Issue | Mitigation |
 |---|---|
-| SQLModel — pre-1.0, минорные версии могут менять API. | Пиннить версию. |
-| `table=True` обязательно для таблиц БД. Без него класс — просто Pydantic-схема и в БД не попадёт. | Помнить разделение: таблица vs API-схема. |
-| `id: int | None` обязательно `Optional`, иначе Pydantic будет требовать `id` при создании объекта — а его до записи в базу нет. | Использовать стандартный паттерн `id: int | None = Field(default=None, primary_key=True)`. |
-| `metadata.create_all` НЕ обновляет существующие таблицы при изменении модели — только создаёт отсутствующие. | На этапе MVP можно сносить файл `database.db` руками. На бете — переход на Alembic. |
+| Pre-1.0; minors may break API. | Pin version. |
+| `table=True` required for DB tables. Without it — Pydantic schema only, no DB. | Keep table vs API-schema split clear. |
+| `id: int | None` must be Optional, else Pydantic requires id at construction (none exists pre-save). | Use `id: int | None = Field(default=None, primary_key=True)`. |
+| `metadata.create_all` does not update existing tables on model change — only creates missing ones. | MVP: delete `database.db` manually. Beta: Alembic. |
 
-## Что нам важно из этой библиотеки прямо сейчас
+## Skeleton scope
 
-Для **структурного скелета**:
-- по одному файлу на сущность в `backend/app/db/models/`;
-- внутри — пустой класс с `table=True` без полей (или с одним `id`-полем для синтаксической корректности);
-- реальные поля наполняются позже, при thin slice (Phase 2).
+- One file per entity in `backend/app/db/models/`.
+- Empty class with `table=True` and minimal fields (e.g. `id`).
+- Real fields filled in thin slice (Phase 2).
 
-## Ссылки
+## Links
 
-- Официальная документация: <https://sqlmodel.tiangolo.com/>
+- Docs: <https://sqlmodel.tiangolo.com/>
 - Tutorial: <https://sqlmodel.tiangolo.com/tutorial/>
-- Релизы: <https://github.com/fastapi/sqlmodel/releases>
+- Releases: <https://github.com/fastapi/sqlmodel/releases>
