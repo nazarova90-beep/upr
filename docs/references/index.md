@@ -22,6 +22,7 @@ If a library is used in the project, its key rules must live here.
 |---|---|---|
 | `i18next.md` | approved | Translation engine: `i18next.init({ lng, fallbackLng, resources })`, `t(key)`, JSON dictionaries, pluralization. Version 26+. |
 | `react-i18next.md` | approved | i18next ↔ React bridge: `initReactI18next`, `useTranslation` hook, `<Trans>` component. Web client (formerly mobile). |
+| `i18next-browser-languagedetector.md` | approved | Browser locale detector for i18next: `.use(LanguageDetector)` placement, `detection.order`, sources (`navigator`, `htmlTag`, `localStorage`, `cookie`, …), `caches` option, "do not set `lng` with a detector". Version 8.2+. Replaces deprecated `expo-localization`. |
 | `react.md` | approved | UI library: `createRoot` + `<StrictMode>` entry, function components with TS props, hooks (`useState`, `useEffect`), `lazy` + `<Suspense>`. Version 19.2+. |
 | `vite.md` | approved | Build tool / dev server: `npm create vite@latest --template react-ts`, `vite.config.ts` with `@vitejs/plugin-react` and `server.proxy` `/api` → `localhost:8000`, `import.meta.env` (`VITE_*`). Version 8.0+. |
 | `react-router.md` | approved | Routing for the SPA (library/data mode): `createBrowserRouter` + `<RouterProvider>`, `<Outlet>`, `<Link>` / `<NavLink>`, `useParams` / `useNavigate`. Package renamed in v7: `react-router` (not `react-router-dom`). Version 7.9+. |
@@ -38,15 +39,11 @@ Plans superseded by `../exec-plans/active/EP-pivot-to-web.md`. Files moved to `d
 |---|---|---|
 | `deprecated/expo.md` | deprecated | Expo (React Native) research note. Replaced by web stack (`vite`, `react`). |
 | `deprecated/expo-router.md` | deprecated | Expo Router (file-based routing). Replacement: `react-router` (see `react-router.md`). |
-| `deprecated/expo-localization.md` | deprecated | `expo-localization` (device locale on RN). Replacement: `i18next-browser-languagedetector` (planned). |
+| `deprecated/expo-localization.md` | deprecated | `expo-localization` (device locale on RN). Replaced by `i18next-browser-languagedetector.md`. |
 
 ## Planned
 
 Required before code that uses these libraries (Rule §3 of `core-beliefs.md`).
-
-### Web pivot follow-ups (high priority)
-
-- `i18next-browser-languagedetector.md` — Browser locale detection. Replaces `expo-localization`.
 
 ### Phase 2 / thin slice
 
