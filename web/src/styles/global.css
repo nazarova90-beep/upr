@@ -1,0 +1,15 @@
+* { box-sizing: border-box; }
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-family-base, "Manrope", system-ui, sans-serif);
+  -webkit-font-smoothing: antialiased;
+}

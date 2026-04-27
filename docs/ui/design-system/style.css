@@ -622,16 +622,6 @@ i[data-lucide], svg { display: inline-block; }
   align-items: center;
   margin-bottom: var(--space-md);
 }
-.icon-btn {
-  width: 32px; height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-full);
-}
-.icon-btn svg { width: 18px; height: 18px; color: var(--color-text); }
-.icon-btn--circle { background: var(--color-surface-hover); }
-.icon-btn--circle svg { width: 14px; height: 14px; }
 .title-bar-h {
   font-size: 32px;
   font-weight: 700;
@@ -971,3 +961,71 @@ i[data-lucide], svg { display: inline-block; }
   color: var(--color-text);
 }
 .icon-variants svg { stroke-width: 1.5; }
+
+/* ============================================================
+   ICON BUTTONS
+   Token-driven circular icon-only button family.
+   Compose: .icon-btn .icon-btn--<size> .icon-btn--<intent>
+   Sizes: --sm 32, --md 40, --lg 44 px (mobile tap targets).
+   Intents: --neutral (transparent, secondary fg), --accent (filled, on-accent fg).
+   No hover-only states — touch-first design.
+   ============================================================ */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  cursor: pointer;
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  padding: 0;
+}
+.icon-btn .msr { font-size: 22px; color: inherit; }
+.icon-btn svg  { width: 18px; height: 18px; color: inherit; }
+
+.icon-btn--sm { width: 32px; height: 32px; }
+.icon-btn--md { width: 40px; height: 40px; }
+.icon-btn--lg { width: 44px; height: 44px; }
+
+.icon-btn--neutral { color: var(--color-text-secondary); background: transparent; }
+.icon-btn--accent  { color: var(--color-text-on-accent); background: var(--color-accent); }
+
+/* ============================================================
+   BOTTOM SHEET
+   Phone-first surface that anchors to the bottom edge with rounded
+   top corners. Pair with .bottom-sheet-scrim for the dim backdrop.
+   The drag-handle pill (::before) is a phone affordance hint, not
+   a functional control (mockups are static).
+   ============================================================ */
+.bottom-sheet-scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--alpha-black-40);
+  z-index: 1;
+}
+.bottom-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: var(--space-lg);
+  padding-bottom: max(var(--space-lg), env(safe-area-inset-bottom));
+  box-shadow: 0 -8px 24px var(--color-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+.bottom-sheet::before {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 4px;
+  background: var(--color-border);
+  border-radius: var(--radius-pill);
+  margin: 0 auto var(--space-xs);
+}

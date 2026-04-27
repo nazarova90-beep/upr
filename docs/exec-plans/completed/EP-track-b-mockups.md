@@ -2,7 +2,7 @@
 id: EP-track-b-mockups
 tier: ExecPlan
 status: completed
-last_updated: 2026-04-27
+last_updated: 2026-04-28
 owner: Кристина
 related: ../index.md, ../PLANS.md, ../active/roadmap.md, ../active/EP-mvp-product-spec.md, ../../ui/index.md, ../../ui/components.md, ../../ui/voice-and-tone.md, ../../ui/design-system/README.md, ../../ui/mockups/README.md, ../../product-specs/workout.md, ../../product-specs/exercise-chat.md, ../../product-specs/exercises-base.md, ../../product-specs/videosinstruction.md, ../../user-flows/upload-video-and-get-feedback.md, ../../FRONTEND.md, ../../product.md
 ---
@@ -151,7 +151,7 @@ After this plan closes, Phase 1 exit-trigger gains the "mockups for 2–3 key sc
 
 ## Open Questions
 
-- ~~**Bottom sheet vs centered modal for technique pop-up.**~~ **Resolved 2026-04-27 (Phase 2):** centered modal (fallback). Lucent `style.css` has no bottom-sheet treatment; gap deferred to `EP-web-skeleton.md`. See Decision Log + Surprises & Discoveries.
+- ~~**Bottom sheet vs centered modal for technique pop-up.**~~ **Resolved 2026-04-27 (Phase 2):** centered modal (fallback). Lucent `style.css` has no bottom-sheet treatment; gap deferred to `EP-web-skeleton.md`. See Decision Log + Surprises & Discoveries. **Closed 2026-04-28** by `../active/EP-web-skeleton.md` Phase 5: bottom-sheet treatment authored in Lucent, technique pop-up re-rendered.
 - ~~**Realistic AI reply text in `chat-active.html`.**~~ **Resolved 2026-04-27 (Phase 4 retrospective):** keep the existing 1–2 invented trainer-style sentences as **design-only demo content**. Same string is already cited as a tone exemplar in `../../ui/voice-and-tone.md` § 3 ("Good — specific + supportive"), which makes it tone-canonical for design purposes. Replacement with a real Gemini output is deferred to a content pass after Phase 2 thin-slice produces real outputs; that pass owns its own (small) plan, not this one.
 - ~~**Per-exercise chat header — info-icon affordance.**~~ **Deferred 2026-04-27 (Phase 4 retrospective)** to Phase 2 thin-slice feedback per `../active/roadmap.md` § 5. Mockups ship without the icon (`row-icon-btn`-shaped second slot is reserved in `chat-empty.html` lines 131–132 and `chat-active.html` lines 226–227). If thin-slice usage shows users miss the affordance, the slot is already there to populate; no mockup re-author needed.
 
@@ -192,8 +192,8 @@ _Closed 2026-04-27._
 
 | Item | Status | Inheritor |
 |---|---|---|
-| Bottom-sheet treatment for technique pop-up | Deferred — Lucent `style.css` has no bottom-sheet component yet; mockup uses centered `.modal` (340 px) instead. | `EP-web-skeleton.md` (add `.bottom-sheet` to `style.css`, re-render the technique pop-up). |
-| Token-driven `.icon-btn` Lucent component | Deferred — current mockups inline-style 32–44 px circular icon buttons (`.exercise-icon-btn`, `.header-icon-btn`, `.input-icon-btn`, `.modal-close`). | `EP-web-skeleton.md` (promote to a single Lucent class consumed by all four sites). |
+| Bottom-sheet treatment for technique pop-up | Closed 2026-04-28 by `../active/EP-web-skeleton.md` Phase 5. `.bottom-sheet` + `.bottom-sheet-scrim` authored in `../../ui/design-system/style.css`; `../../ui/mockups/technique-popup.html` re-rendered as a slide-up sheet with rounded top corners and a 36 × 4 px drag-handle pill. | `../active/EP-web-skeleton.md` Phase 5 (closed). |
+| Token-driven `.icon-btn` Lucent component | Closed 2026-04-28 by `../active/EP-web-skeleton.md` Phase 5. Lucent gained a token-driven `.icon-btn` family (sizes `--sm`/`--md`/`--lg` × intents `--neutral`/`--accent`); the four ad-hoc inline classes (`.exercise-icon-btn`, `.header-icon-btn`, `.input-icon-btn` / `--send`, `.modal-close`) were removed across all four mockup HTML files in lockstep. | `../active/EP-web-skeleton.md` Phase 5 (closed). |
 | Replace demo AI reply text in `chat-active.html` with a real Gemini output | Deferred — string is already tone-canonical (cited in `voice-and-tone.md` § 3). | Post-Phase-2 content pass (future small plan, not this one). |
 | Info-icon affordance in chat header (re-open technique pop-up from chat) | Deferred — slot reserved in both chat mockups; populate only if thin-slice (`../active/roadmap.md` Phase 2) feedback flags the gap. | Phase 2 of the roadmap. |
 | Queue-busy "one analysis in queue" rendered as a separate mockup file | Dropped — string lives in `voice-and-tone.md` § 4 (Q4 row), reserved for the web client to compose against the existing chat-active layout. | `EP-web-skeleton.md`. |

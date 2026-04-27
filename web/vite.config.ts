@@ -14,6 +14,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      '@lucent': fileURLToPath(new URL('../docs/ui/design-system/', import.meta.url)),
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },

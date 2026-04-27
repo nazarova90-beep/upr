@@ -2,7 +2,7 @@
 status: in-progress
 last_updated: 2026-04-27
 owner: Кристина
-related: PLANS.md, ../../AGENTS.md, tech-debt-tracker.md, active/roadmap.md, active/EP-web-skeleton.md, completed/EP-track-b-mockups.md
+related: PLANS.md, ../../AGENTS.md, tech-debt-tracker.md, active/roadmap.md, completed/EP-web-skeleton.md, completed/EP-track-b-mockups.md
 ---
 
 # Exec plans — index
@@ -25,7 +25,7 @@ Updated together with the plan it tracks. Index out of sync with disk = bug.
 |---|---|---|---|---|---|---|
 | `EP-mvp-product-spec` | MVP product specification | ExecPlan | active | 2026-04-18 | — | `active/EP-mvp-product-spec.md` |
 | `EP-pivot-to-web` | Frontend pivot mobile → web | ExecPlan | active | 2026-04-27 | — | `active/EP-pivot-to-web.md` |
-| `EP-web-skeleton` | Phase 1 / Track D — `web/` skeleton (Vite + React + TS) | ExecPlan | active | 2026-04-27 | — | `active/EP-web-skeleton.md` |
+| `EP-web-skeleton` | Phase 1 / Track D — `web/` skeleton (Vite + React + TS) | ExecPlan | completed | 2026-04-27 | 2026-04-27 | `completed/EP-web-skeleton.md` |
 | `EP-track-b-mockups` | Phase 1 / Track B — UI mockups for Single-scenario MVP | ExecPlan | completed | 2026-04-27 | 2026-04-27 | `completed/EP-track-b-mockups.md` |
 | `EP-phase1-track-c-skeleton` | Phase 1 / Track C — `backend/` + `mobile/` skeleton | ExecPlan | completed | 2026-04-19 | 2026-04-27 | `completed/EP-phase1-track-c-skeleton.md` |
 | `EP-hello-world` | Hello-world (mobile-via-ngrok) | ExecPlan | superseded | 2026-04-21 | — | `superseded/EP-hello-world.md` |

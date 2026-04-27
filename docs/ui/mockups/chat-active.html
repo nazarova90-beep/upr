@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="../design-system/style.css" />
 
   <style>
-    /* Mockup-only layout. No new tokens — only composes Lucent variables.
-       Promote any reusable rules to design-system/style.css when porting to the web client. */
+    /* Mockup-only layout. Composes Lucent variables + the .icon-btn
+       family added in EP-web-skeleton.md Phase 5. */
     body {
       min-height: 100vh;
       background: var(--color-bg);
@@ -37,19 +37,6 @@
       padding: var(--space-md) var(--space-sm);
       gap: var(--space-xs);
       border-bottom: 1px solid var(--color-border);
-    }
-    .header-icon-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: var(--radius-full);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-text);
-    }
-    .header-icon-btn .msr {
-      font-size: 22px;
-      color: inherit;
     }
     .chat-title {
       text-align: center;
@@ -184,22 +171,6 @@
       border-top: 1px solid var(--color-border);
       background: var(--color-bg);
     }
-    .input-icon-btn {
-      flex-shrink: 0;
-      width: 40px;
-      height: 40px;
-      border-radius: var(--radius-full);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-text-secondary);
-    }
-    .input-icon-btn .msr { font-size: 22px; color: inherit; }
-    .input-icon-btn--send {
-      background: var(--color-accent);
-      color: var(--color-text-on-accent);
-    }
-    .input-icon-btn--send .msr { color: inherit; }
 
     .text-input {
       flex: 1;
@@ -220,7 +191,7 @@
 
     <!-- HEADER: same as chat-empty.html — Back chevron + centered exercise name. -->
     <header class="chat-header">
-      <button type="button" class="header-icon-btn" aria-label="Назад">
+      <button type="button" class="icon-btn icon-btn--lg icon-btn--neutral" aria-label="Назад">
         <span class="msr">arrow_back_ios_new</span>
       </button>
       <h1 class="chat-title">Румынская тяга со штангой</h1>
@@ -299,11 +270,11 @@
       state. One bottom affordance keeps mobile uncluttered.
     -->
     <div class="input-bar">
-      <button type="button" class="input-icon-btn" aria-label="Прикрепить видео">
+      <button type="button" class="icon-btn icon-btn--md icon-btn--neutral" aria-label="Прикрепить видео">
         <span class="msr">attach_file</span>
       </button>
       <div class="text-input" aria-label="Поле ввода сообщения">Спроси что-нибудь о технике…</div>
-      <button type="button" class="input-icon-btn input-icon-btn--send" aria-label="Отправить">
+      <button type="button" class="icon-btn icon-btn--md icon-btn--accent" aria-label="Отправить">
         <span class="msr">arrow_upward</span>
       </button>
     </div>

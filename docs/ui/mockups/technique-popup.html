@@ -12,10 +12,9 @@
   <link rel="stylesheet" href="../design-system/style.css" />
 
   <style>
-    /* Mockup-only layout. No new tokens — composes Lucent variables.
-       NOTE: Lucent style.css has no bottom-sheet treatment. Per the decision
-       in EP-track-b-mockups.md (Phase 2), this pop-up falls back to a
-       centered modal. Gap recorded in the plan's "Surprises & Discoveries". */
+    /* Mockup-only layout. Composes Lucent variables and the new
+       .bottom-sheet / .bottom-sheet-scrim / .icon-btn families
+       added to design-system/style.css in EP-web-skeleton.md Phase 5. */
     body {
       min-height: 100vh;
       background: var(--color-bg);
@@ -102,92 +101,39 @@
       gap: var(--space-2xs);
       flex-shrink: 0;
     }
-    .exercise-icon-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: var(--radius-full);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-text-secondary);
-    }
-    .exercise-icon-btn .msr {
-      font-size: 22px;
-      color: inherit;
-    }
-    .exercise-chevron .msr {
-      font-size: 24px;
-      color: var(--color-text-secondary);
-    }
+    /* Chevron is the only mockup-local override: bumps the chevron
+       glyph one notch to align with the visual weight of the row. */
+    .exercise-chevron .msr { font-size: 24px; }
 
-    /* === Scrim (dark overlay over the underlay) === */
-    .scrim {
-      position: absolute;
-      inset: 0;
-      background: var(--alpha-black-40);
-      z-index: 1;
-    }
-
-    /* === Modal === */
-    .modal-wrap {
-      position: absolute;
-      inset: 0;
-      z-index: 2;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: var(--space-md);
-    }
-    .modal {
-      width: 100%;
-      max-width: 340px;
-      background: var(--color-surface);
-      border-radius: var(--radius-lg);
-      padding: var(--space-lg);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-md);
-      box-shadow: 0 8px 24px var(--color-shadow);
-    }
-    .modal-head {
+    /* === Bottom sheet head: title + close icon-button === */
+    .bottom-sheet-head {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
       gap: var(--space-md);
     }
-    .modal-title {
+    .bottom-sheet-title {
       font-size: 18px;
       font-weight: 700;
       color: var(--color-text);
       line-height: 1.25;
       letter-spacing: -0.01em;
     }
-    .modal-close {
-      flex-shrink: 0;
-      width: 32px;
-      height: 32px;
-      border-radius: var(--radius-full);
-      background: var(--color-surface-hover);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-text-secondary);
-    }
-    .modal-close .msr { font-size: 20px; color: inherit; }
-    .modal-body {
+    .bottom-sheet-body {
       font-size: 14px;
       line-height: 1.55;
       color: var(--color-text);
     }
-    /* Use the Lucent .btn .btn--solid .btn--block classes for the primary
-       action; only override height to fit the comfortable mobile target. */
-    .modal-actions .btn { height: 48px; font-size: 15px; border-radius: var(--radius-md); }
+    /* Use the Lucent .btn .btn--solid .btn--block classes for the
+       primary action; only override height to fit the comfortable
+       mobile target. */
+    .bottom-sheet-actions .btn { height: 48px; font-size: 15px; border-radius: var(--radius-md); }
   </style>
 </head>
 <body>
   <main class="phone">
 
-    <!-- ========== UNDERLAY: workout screen, dimmed via .scrim ========== -->
+    <!-- ========== UNDERLAY: workout screen, dimmed via .bottom-sheet-scrim ========== -->
     <div class="underlay" aria-hidden="true">
       <div>
         <h1 class="workout-name">Вайбкодинговая тренировка</h1>
@@ -203,55 +149,53 @@
           <span class="exercise-number">1</span>
           <span class="exercise-name">Румынская тяга со штангой</span>
           <div class="exercise-actions">
-            <span class="exercise-icon-btn"><span class="msr">info</span></span>
-            <span class="exercise-icon-btn exercise-chevron"><span class="msr">chevron_right</span></span>
+            <span class="icon-btn icon-btn--md icon-btn--neutral"><span class="msr">info</span></span>
+            <span class="icon-btn icon-btn--md icon-btn--neutral exercise-chevron"><span class="msr">chevron_right</span></span>
           </div>
         </article>
         <article class="exercise-card">
           <span class="exercise-number">2</span>
           <span class="exercise-name">Вертикальная тяга блока к груди</span>
           <div class="exercise-actions">
-            <span class="exercise-icon-btn"><span class="msr">info</span></span>
-            <span class="exercise-icon-btn exercise-chevron"><span class="msr">chevron_right</span></span>
+            <span class="icon-btn icon-btn--md icon-btn--neutral"><span class="msr">info</span></span>
+            <span class="icon-btn icon-btn--md icon-btn--neutral exercise-chevron"><span class="msr">chevron_right</span></span>
           </div>
         </article>
         <article class="exercise-card">
           <span class="exercise-number">3</span>
           <span class="exercise-name">Подъём гантелей на бицепс</span>
           <div class="exercise-actions">
-            <span class="exercise-icon-btn"><span class="msr">info</span></span>
-            <span class="exercise-icon-btn exercise-chevron"><span class="msr">chevron_right</span></span>
+            <span class="icon-btn icon-btn--md icon-btn--neutral"><span class="msr">info</span></span>
+            <span class="icon-btn icon-btn--md icon-btn--neutral exercise-chevron"><span class="msr">chevron_right</span></span>
           </div>
         </article>
       </section>
     </div>
 
     <!-- Dark overlay over the workout content -->
-    <div class="scrim"></div>
+    <div class="bottom-sheet-scrim"></div>
 
-    <!-- ========== MODAL: technique description ========== -->
-    <div class="modal-wrap" role="dialog" aria-labelledby="tech-title" aria-modal="true">
-      <div class="modal">
+    <!-- ========== BOTTOM SHEET: technique description ========== -->
+    <aside class="bottom-sheet" role="dialog" aria-labelledby="tech-title" aria-modal="true">
 
-        <div class="modal-head">
-          <h2 class="modal-title" id="tech-title">Румынская тяга со штангой</h2>
-          <button type="button" class="modal-close" aria-label="Закрыть">
-            <span class="msr">close</span>
-          </button>
-        </div>
-
-        <!-- Body: real `technique` text for romanian_deadlift,
-             verbatim from product-specs/exercises-base.md § 1. -->
-        <p class="modal-body">
-          Стой со штангой в опущенных руках, ноги на ширине таза, колени слегка согнуты. На вдохе медленно отводи таз назад и наклоняйся вперёд с прямой спиной — штанга едет вдоль ног. Опускайся, пока не почувствуешь сильное натяжение задней поверхности бедра (обычно штанга оказывается чуть ниже колен). На выдохе плавно вернись в исходное за счёт усилия ягодиц и бицепса бедра, а не за счёт спины. Вес берётся работой таза, а не сгибанием поясницы.
-        </p>
-
-        <div class="modal-actions">
-          <button type="button" class="btn btn--solid btn--block">Понятно</button>
-        </div>
-
+      <div class="bottom-sheet-head">
+        <h2 class="bottom-sheet-title" id="tech-title">Румынская тяга со штангой</h2>
+        <button type="button" class="icon-btn icon-btn--sm icon-btn--neutral" aria-label="Закрыть">
+          <span class="msr">close</span>
+        </button>
       </div>
-    </div>
+
+      <!-- Body: real `technique` text for romanian_deadlift,
+           verbatim from product-specs/exercises-base.md § 1. -->
+      <p class="bottom-sheet-body">
+        Стой со штангой в опущенных руках, ноги на ширине таза, колени слегка согнуты. На вдохе медленно отводи таз назад и наклоняйся вперёд с прямой спиной — штанга едет вдоль ног. Опускайся, пока не почувствуешь сильное натяжение задней поверхности бедра (обычно штанга оказывается чуть ниже колен). На выдохе плавно вернись в исходное за счёт усилия ягодиц и бицепса бедра, а не за счёт спины. Вес берётся работой таза, а не сгибанием поясницы.
+      </p>
+
+      <div class="bottom-sheet-actions">
+        <button type="button" class="btn btn--solid btn--block">Понятно</button>
+      </div>
+
+    </aside>
 
   </main>
 </body>

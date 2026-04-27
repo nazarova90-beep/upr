@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="../design-system/style.css" />
 
   <style>
-    /* Mockup-only layout. No new tokens — only composes Lucent variables.
-       Promote any reusable rules to design-system/style.css when porting to the web client. */
+    /* Mockup-only layout. Composes Lucent variables + the .icon-btn
+       family added in EP-web-skeleton.md Phase 5. */
     body {
       min-height: 100vh;
       background: var(--color-bg);
@@ -101,23 +101,9 @@
       gap: var(--space-2xs);
       flex-shrink: 0;
     }
-    .exercise-icon-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: var(--radius-full);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-text-secondary);
-    }
-    .exercise-icon-btn .msr {
-      font-size: 22px;
-      color: inherit;
-    }
-    .exercise-chevron .msr {
-      font-size: 24px;
-      color: var(--color-text-secondary);
-    }
+    /* Local override only for the chevron glyph size — the .icon-btn
+       wrapping it owns shape, color, and tap target. */
+    .exercise-chevron .msr { font-size: 24px; }
   </style>
 </head>
 <body>
@@ -142,11 +128,11 @@
         <span class="exercise-name">Румынская тяга со штангой</span>
         <div class="exercise-actions">
           <!-- Info icon → tap opens technique pop-up (see technique-popup.html) -->
-          <button type="button" class="exercise-icon-btn" aria-label="Описание техники">
+          <button type="button" class="icon-btn icon-btn--md icon-btn--neutral" aria-label="Описание техники">
             <span class="msr">info</span>
           </button>
           <!-- Chevron → tap opens per-exercise chat (Phase 3 mockups) -->
-          <span class="exercise-icon-btn exercise-chevron" aria-hidden="true">
+          <span class="icon-btn icon-btn--md icon-btn--neutral exercise-chevron" aria-hidden="true">
             <span class="msr">chevron_right</span>
           </span>
         </div>
@@ -157,10 +143,10 @@
         <span class="exercise-number" aria-label="Упражнение 2">2</span>
         <span class="exercise-name">Вертикальная тяга блока к груди</span>
         <div class="exercise-actions">
-          <button type="button" class="exercise-icon-btn" aria-label="Описание техники">
+          <button type="button" class="icon-btn icon-btn--md icon-btn--neutral" aria-label="Описание техники">
             <span class="msr">info</span>
           </button>
-          <span class="exercise-icon-btn exercise-chevron" aria-hidden="true">
+          <span class="icon-btn icon-btn--md icon-btn--neutral exercise-chevron" aria-hidden="true">
             <span class="msr">chevron_right</span>
           </span>
         </div>
@@ -171,10 +157,10 @@
         <span class="exercise-number" aria-label="Упражнение 3">3</span>
         <span class="exercise-name">Подъём гантелей на бицепс</span>
         <div class="exercise-actions">
-          <button type="button" class="exercise-icon-btn" aria-label="Описание техники">
+          <button type="button" class="icon-btn icon-btn--md icon-btn--neutral" aria-label="Описание техники">
             <span class="msr">info</span>
           </button>
-          <span class="exercise-icon-btn exercise-chevron" aria-hidden="true">
+          <span class="icon-btn icon-btn--md icon-btn--neutral exercise-chevron" aria-hidden="true">
             <span class="msr">chevron_right</span>
           </span>
         </div>

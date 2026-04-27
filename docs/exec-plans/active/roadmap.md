@@ -2,7 +2,7 @@
 status: in-progress
 last_updated: 2026-04-27
 owner: Кристина
-related: ../index.md, ../PLANS.md, EP-mvp-product-spec.md, EP-pivot-to-web.md, ../../product.md, ../../stack.md, ../../FRONTEND.md, ../../../ARCHITECTURE.md
+related: ../index.md, ../PLANS.md, EP-mvp-product-spec.md, EP-pivot-to-web.md, ../completed/EP-web-skeleton.md, ../../product.md, ../../stack.md, ../../FRONTEND.md, ../../../ARCHITECTURE.md
 ---
 
 # UPR — roadmap
@@ -18,7 +18,8 @@ Top-level plan: phases in order, exit triggers per phase. Detailed exec-plans ap
 - Operating principles — `docs/design-docs/core-beliefs.md`.
 - Lucent design system — `docs/ui/design-system/`.
 - `backend/` skeleton — closed 2026-04-27 (`docs/exec-plans/completed/EP-phase1-track-c-skeleton.md`).
-- `mobile/` skeleton (React Native + Expo) — frozen 2026-04-27 by frontend pivot (`docs/exec-plans/active/EP-pivot-to-web.md`); files retained on disk, marked in `mobile/README.md`. Active client surface moves to `web/` (skeleton plan to follow).
+- `mobile/` skeleton (React Native + Expo) — frozen 2026-04-27 by frontend pivot (`docs/exec-plans/active/EP-pivot-to-web.md`); files retained on disk, marked in `mobile/README.md`. Active client surface moved to `web/`.
+- `web/` skeleton — closed 2026-04-27 (`docs/exec-plans/completed/EP-web-skeleton.md`). Vite + React + TypeScript scaffold, Lucent dark theme, i18next with browser language detection, route shells (`/` Workout, `/chat/:exerciseId` Chat), domain TS types ported from `mobile/`; verified locally on Mac Safari with FastAPI reachable via Vite proxy. Two Lucent gaps inherited from Track B closed in the same plan: `.bottom-sheet` and `.icon-btn` families.
 
 ## 2. Two MVP levels
 
@@ -72,9 +73,9 @@ Single user scenario taken to working state first:
 | **A** — Product specs for Single-scenario MVP | 3 exercises + hardcoded workout + single user flow | ✅ Closed 2026-04-19 |
 | **B** — UI mockups for Single-scenario MVP | 2 main screens + states, `ui/components.md`, `ui/voice-and-tone.md` | ✅ Closed 2026-04-27 (`completed/EP-track-b-mockups.md`) |
 | **C** — `mobile/` + `backend/` skeletons | Folder structure per architecture, no logic | ✅ Closed 2026-04-27 (`completed/EP-phase1-track-c-skeleton.md`); `mobile/` part frozen 2026-04-27 by web pivot |
-| **D** — Frontend pivot mobile → web + `web/` skeleton | Doc pivot (this commit, see `EP-pivot-to-web.md`) → library refs (React, Vite, react-router) → Vite + React TS scaffold → Lucent CSS + i18next | 🔄 In progress (started 2026-04-27) |
+| **D** — Frontend pivot mobile → web + `web/` skeleton | Doc pivot (`EP-pivot-to-web.md`) → library refs (React, Vite, react-router, i18next, react-i18next, i18next-browser-languagedetector) → Vite + React TS scaffold → Lucent CSS + i18next + route shells → Lucent gap fixes (`.bottom-sheet`, `.icon-btn`) | ✅ Closed 2026-04-27 (`completed/EP-web-skeleton.md`) |
 
-**Exit trigger:** mockups for 2–3 key screens ready, specs closed, `web/` skeleton runs locally on Mac Safari.
+**Exit trigger:** mockups for 2–3 key screens ready ✅, specs closed ✅, `web/` skeleton runs locally on Mac Safari ✅. **Phase 1 fully closed 2026-04-27.**
 
 ### Phase 2 — Thin slice (first working Single-scenario MVP)
 
@@ -177,3 +178,4 @@ flowchart TD
 | 2026-04-27 | **Frontend pivot: React Native + Expo (mobile, iOS via Expo Go) → React + Vite + TypeScript (web).** Cause: owner runs always-on VPN on both Mac and iPhone, blocking LAN reach between Expo Go and FastAPI; Apple Developer Account ($99/year) out of MVP budget; Lucent already authored in HTML/CSS — direct consumption in web. Phase 9 "web build via RN-for-Web" removed; native iOS/Android shell repositioned to optional ≥ Phase 9. New Track D added under Phase 1 to drive `web/` skeleton. `mobile/` skeleton retained on disk as frozen reference. Hello-world plan superseded. Driven by `active/EP-pivot-to-web.md`. |
 | 2026-04-27 | **Plans system formalized per OpenAI Harness Engineering.** Added `docs/exec-plans/PLANS.md` (format spec). Renamed all plans to `EP-<slug>.md`. Index rewritten as catalog. AGENTS.md adds Planning workflow + hard rules #10 (ask before AGENTS.md edits) and #11 (plan before non-trivial work). |
 | 2026-04-27 | **Phase 1 / Track B closed.** Four HTML mockups (`workout`, `technique-popup`, `chat-empty`, `chat-active`), `voice-and-tone.md`, and `components.md` shipped. Two known gaps deferred to `EP-web-skeleton.md`: bottom-sheet treatment for the technique pop-up (Lucent has none yet — fallback to centered modal) and a token-driven `.icon-btn` Lucent component (mockups inline-style icon buttons). Plan: `completed/EP-track-b-mockups.md`. |
+| 2026-04-27 | **Phase 1 / Track D closed — Phase 1 fully closed.** `web/` skeleton runs locally on Mac Safari: Vite + React + TypeScript scaffold, Lucent dark theme + Manrope + Material Symbols Rounded, i18next with browser language detection (Russian-only catalogue), route shells `/` (Workout) + `/chat/:exerciseId` (Chat) with `useTranslation` and `useParams` wiring, domain TS types ported from `mobile/`. FastAPI reachable through Vite proxy (`/api/openapi.json` returns FastAPI JSON 404 with `server: uvicorn` header — proxy verified). Two Lucent gaps inherited from Track B closed inside the same plan: `.bottom-sheet` (with rounded top corners, drag-handle pill, safe-area padding) and `.icon-btn` family (size + intent variants). Plan: `completed/EP-web-skeleton.md`. Project advances to Phase 2 (thin slice). |

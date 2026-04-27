@@ -2,7 +2,7 @@
 status: approved
 last_updated: 2026-04-27
 owner: Кристина
-related: stack.md, ../ARCHITECTURE.md, BACKEND.md, ui/index.md, SECURITY.md, exec-plans/active/EP-pivot-to-web.md
+related: stack.md, ../ARCHITECTURE.md, BACKEND.md, ui/index.md, SECURITY.md, exec-plans/active/EP-pivot-to-web.md, exec-plans/completed/EP-web-skeleton.md
 ---
 
 # Frontend — web client
@@ -45,7 +45,7 @@ related: stack.md, ../ARCHITECTURE.md, BACKEND.md, ui/index.md, SECURITY.md, exe
 
 Future (post-MVP): app language from settings or `navigator.languages`; sync preference with backend for localized server errors.
 
-References: `references/i18next.md`, `references/react-i18next.md`. New ref pending: `references/i18next-browser-languagedetector.md`.
+References: `references/i18next.md`, `references/react-i18next.md`, `references/i18next-browser-languagedetector.md`.
 
 ## Design tokens and theme
 
@@ -102,7 +102,7 @@ Ref-doc (`references/cloudflared.md` or `references/ngrok.md`) written only when
 
 | Phase | Frontend additions |
 |---|---|
-| 1 (current) | Web skeleton (Vite + React + TS), Lucent CSS, i18next, route shells. |
+| 1 (closed 2026-04-27) | Web skeleton (Vite + React + TS), Lucent CSS, i18next, route shells (`completed/EP-web-skeleton.md`). |
 | 2 (thin slice) | Video upload, chat UI, real Gemini call from backend. |
 | 3 (polish) | Two-stage video quality check (browser-side `@mediapipe/tasks-vision` optional), PWA manifest + service worker (Add to Home Screen on iOS Safari). |
 | 4 (Full MVP) | Workout builder, set log, exercise catalog (20). |
@@ -117,22 +117,22 @@ Ref-doc (`references/cloudflared.md` or `references/ngrok.md`) written only when
 web/
 ├── public/                    # static assets, favicon, PWA manifest (Phase 3)
 ├── src/
-│   ├── main.tsx               # entry point
-│   ├── App.tsx                # router root
+│   ├── main.tsx               # entry point — mounts <RouterProvider>
+│   ├── router.tsx             # createBrowserRouter (v7 library/data mode)
 │   ├── routes/                # screen components
 │   │   ├── Workout.tsx        # workout screen
 │   │   └── Chat.tsx           # chat screen (exerciseId param)
 │   ├── styles/                # global CSS, Lucent tokens
-│   │   ├── tokens.css
+│   │   ├── tokens.css         # @import "@lucent/style.css"
 │   │   └── global.css
 │   ├── i18n/                  # i18next init + locales/ru.json
 │   ├── domain/                # TS types (mirror backend models)
 │   ├── components/            # reusable UI (CSS modules)
 │   └── api/                   # HTTP client to backend
 ├── index.html
-├── vite.config.ts             # proxy /api/* → localhost:8000
-├── tsconfig.json              # path alias ~/foo → src/foo
+├── vite.config.ts             # proxy /api/* → localhost:8000; @lucent + @ aliases
+├── tsconfig.app.json          # path alias @/foo → src/foo
 └── package.json
 ```
 
-Mirror of `mobile/src/` where applicable (same `theme/`, `i18n/`, `domain/`, `components/`, `api/` conventions). `mobile/` retained on disk as frozen skeleton; see `mobile/README.md`.
+Mirror of `mobile/src/` where applicable (same `i18n/`, `domain/`, `components/`, `api/` conventions). Two intentional deviations from the legacy `mobile/` shape: (a) no `App.tsx` — `router.tsx` is the root container under React Router v7's library/data mode; (b) path alias is `@/foo` (Vite/Next ecosystem default), not `~/foo` as in `mobile/`. Both fixed at `web/` skeleton time per `completed/EP-web-skeleton.md` Decision Log. `mobile/` retained on disk as frozen skeleton; see `mobile/README.md`.
