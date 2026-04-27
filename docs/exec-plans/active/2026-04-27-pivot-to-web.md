@@ -50,7 +50,7 @@ Outputs of this plan are entirely textual: project documentation reflects the pi
 | Framework | `react` (latest stable) |
 | Build / dev server | `vite` |
 | Language | TypeScript |
-| Routing | `react-router-dom` |
+| Routing | `react-router` (v7) |
 | HTTP / FormData | native `fetch` |
 | File picker | native `<input type="file" accept="video/*">` |
 | Video playback | native `<video>` |
@@ -163,7 +163,7 @@ This single commit (after owner approval) covers everything below. Each item ref
 1. `docs/references/react.md` — purpose, version, key API (function components, hooks), gotchas. Sourced via MCP `user-context7`.
 2. `docs/references/vite.md` — purpose, version, key API (`vite.config.ts`, dev server, proxy, build), gotchas.
 3. `docs/references/react-router.md` — `BrowserRouter`, route definitions, `useParams`.
-4. `docs/exec-plans/active/<date>-web-skeleton.md` — exec-plan for the actual `web/` directory creation: `npm create vite@latest web -- --template react-ts`, install `react-router-dom` / `i18next` / `react-i18next` / `i18next-browser-languagedetector` / `zustand`, write `vite.config.ts` proxy, `tokens.css` from Lucent, route shells, locale `ru.json` mirrored from `mobile/src/i18n/locales/ru.json`.
+4. `docs/exec-plans/active/<date>-web-skeleton.md` — exec-plan for the actual `web/` directory creation: `npm create vite@latest web -- --template react-ts`, install `react-router` / `i18next` / `react-i18next` / `i18next-browser-languagedetector` / `zustand`, write `vite.config.ts` proxy, `tokens.css` from Lucent, route shells, locale `ru.json` mirrored from `mobile/src/i18n/locales/ru.json`.
 5. `docs/exec-plans/active/<date>-web-hello-world.md` — exec-plan replacing the superseded mobile hello-world: backend `/health` endpoint (design reusable from superseded plan, lives in `backend/app/core/health.py`), `web/src/api/health.ts`, dev-only health-check button (gated by `import.meta.env.DEV`), Mac Safari verification first, optional Cloudflare-tunnel iPhone Safari verification.
 
 ## Open questions

@@ -37,7 +37,7 @@ Plans superseded by `../exec-plans/active/2026-04-27-pivot-to-web.md`. Files mov
 | File | Status | Subject |
 |---|---|---|
 | `deprecated/expo.md` | deprecated | Expo (React Native) research note. Replaced by web stack (`vite`, `react`). |
-| `deprecated/expo-router.md` | deprecated | Expo Router (file-based routing). Replacement: `react-router-dom` (planned). |
+| `deprecated/expo-router.md` | deprecated | Expo Router (file-based routing). Replacement: `react-router` (see `react-router.md`). |
 | `deprecated/expo-localization.md` | deprecated | `expo-localization` (device locale on RN). Replacement: `i18next-browser-languagedetector` (planned). |
 
 ## Planned

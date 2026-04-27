@@ -4,7 +4,7 @@ last_updated: 2026-04-27
 owner: Кристина
 deprecated_on: 2026-04-27
 deprecated_by: ../../exec-plans/active/2026-04-27-pivot-to-web.md
-deprecation_reason: Frontend pivot from React Native + Expo to React + Vite + TypeScript (web). Replacement router for web client: `react-router-dom` (planned ref `../react-router.md`).
+deprecation_reason: Frontend pivot from React Native + Expo to React + Vite + TypeScript (web). Replacement router for web client: `react-router` v7 (see `../react-router.md`).
 related: ../../FRONTEND.md, ../../stack.md, expo.md, ../index.md
 ---
 
@@ -12,9 +12,9 @@ related: ../../FRONTEND.md, ../../stack.md, expo.md, ../index.md
 
 > **Deprecated by frontend pivot to web on 2026-04-27.** See `../../exec-plans/active/2026-04-27-pivot-to-web.md`.
 >
-> Replacement: `react-router-dom` for web client (ref `../react-router.md` to be authored before use).
+> Replacement: `react-router` v7 for web client (see `../react-router.md`).
 >
-> Kept as historical record. The file-based-routing concept partially carries over: `web/src/routes/` mirrors what `mobile/app/` was doing, although `react-router-dom` uses imperative route configuration rather than file-based routes by default.
+> Kept as historical record. The file-based-routing concept partially carries over: `web/src/routes/` mirrors what `mobile/app/` was doing, although `react-router` uses imperative route configuration rather than file-based routes by default.
 
 Source: MCP `user-context7`, library ID `/expo/expo` (Source Reputation: High; Benchmark Score: 81.41; branch `sdk-54`). Fetched: 2026-04-27.
 
@@ -105,7 +105,7 @@ router.navigate({
 - `mobile/app/_layout.tsx` — root layout (`<Stack />` + i18n init).
 - `mobile/app/index.tsx` — workout screen stub.
 - `mobile/app/chat/[exerciseId].tsx` — chat screen stub.
-- Mobile skeleton retained on disk (frozen). Web equivalent will use `react-router-dom` — separate ref pending.
+- Mobile skeleton retained on disk (frozen). Web equivalent uses `react-router` v7 — see `../react-router.md`.
 
 ## Links
 
@@ -118,4 +118,4 @@ router.navigate({
 ## Decision history
 
 - 2026-04-27: Adopted as default routing in `mobile/` skeleton.
-- 2026-04-27: **Deprecated.** Web pivot — `react-router-dom` will replace.
+- 2026-04-27: **Deprecated.** Web pivot — `react-router` v7 replaces (see `../react-router.md`).

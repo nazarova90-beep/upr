@@ -64,7 +64,7 @@ Details: `docs/ui/design-system/README.md`.
 | Framework | `react` (latest stable) |
 | Build / dev server | `vite` |
 | Language | TypeScript |
-| Routing | `react-router-dom` |
+| Routing | `react-router` (v7; package was `react-router-dom` in v6) |
 | File picker | native `<input type="file" accept="video/*">` (no library) |
 | Video playback | native `<video>` (no library) |
 | HTTP / FormData | native `fetch` (no library) |

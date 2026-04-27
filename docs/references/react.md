@@ -170,7 +170,7 @@ Not needed in initial MVP (small bundle), but reserved for the technique pop-up 
 Active (web client, target after `web-skeleton-plan`):
 
 - `web/src/main.tsx`: `createRoot(...).render(<StrictMode><App /></StrictMode>)`. Side-effect imports for `./i18n` and global CSS.
-- `web/src/App.tsx`: router root (uses `react-router-dom`, ref pending in `react-router.md`). No real screens yet — only stub routes.
+- Router setup lives in `web/src/router.tsx` (uses `react-router`, see `react-router.md`); `<RouterProvider>` is rendered directly in `main.tsx` instead of an `App.tsx`. No real screens yet — only stub routes.
 - `web/src/routes/Workout.tsx`, `web/src/routes/Chat.tsx`: empty function components returning a placeholder `<div>`.
 - `web/src/components/`: empty in skeleton; populated as UI is built.
 - No hooks usage in stub routes — `useState`/`useEffect` arrive with the thin slice (Phase 2).

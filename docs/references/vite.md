@@ -138,7 +138,7 @@ Static files only — no Node.js server needed at runtime. Phase 5 will upload `
 
 | Issue | Mitigation |
 |---|---|
-| Vite is **ESM-only** — no CommonJS `require`. Some legacy Node libs ship CJS. | MVP libraries (`react`, `react-router-dom`, `i18next`, `zustand`, `@tanstack/react-query`) are all ESM-clean. |
+| Vite is **ESM-only** — no CommonJS `require`. Some legacy Node libs ship CJS. | MVP libraries (`react`, `react-router`, `i18next`, `zustand`, `@tanstack/react-query`) are all ESM-clean. |
 | Env vars without `VITE_` prefix are silently undefined in the browser. | Always rename to `VITE_*` before reading via `import.meta.env`. |
 | Editing `vite.config.ts` requires restarting `npm run dev`. HMR does not cover the config itself. | Stop and restart the dev server after config changes. |
 | `server.proxy` with `rewrite` is a common foot-gun: stripping the prefix makes the backend 404. Backend routes here live under `/api/...` (see `fastapi.md`). | Do **not** add `rewrite`. Keep the path identical between browser and backend. |
