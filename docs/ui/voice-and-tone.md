@@ -2,7 +2,7 @@
 status: approved
 last_updated: 2026-04-27
 owner: Кристина
-related: index.md, ../product.md, ../product-specs/exercise-chat.md, ../user-flows/upload-video-and-get-feedback.md, ../exec-plans/active/EP-track-b-mockups.md
+related: index.md, ../product.md, ../product-specs/exercise-chat.md, ../product-specs/exercises-base.md, ../user-flows/upload-video-and-get-feedback.md, ../exec-plans/active/EP-track-b-mockups.md
 ---
 
 # Voice and tone
@@ -72,16 +72,29 @@ Other invariants for AI replies:
 
 Canonical Russian phrasings for shared slots across mockups and screens. Each slot has exactly one canonical string. Variants are not provided. If a screen needs a different phrasing, it requires a new Decision Log entry, not an inline rewrite.
 
-Slots marked **TBD** are filled in Phase 3 of `../exec-plans/active/EP-track-b-mockups.md` (open questions Q2 and Q4 of `../user-flows/upload-video-and-get-feedback.md` § 8); this file is updated in the same commit.
+All slots filled as of 2026-04-27 (Phase 3 of `../exec-plans/active/EP-track-b-mockups.md` resolved open questions Q2 and Q4 of `../user-flows/upload-video-and-get-feedback.md` § 8).
 
 | Slot | Canonical string | Used in | Source / decided in |
 |---|---|---|---|
 | Empty-chat placeholder | «Загрузи видео с выполнением упражнения, и я проверю технику выполнения» | `mockups/chat-empty.html` (Phase 3) | `../user-flows/upload-video-and-get-feedback.md` § 3 step 3 |
-| Empty-chat camera-angle hint | TBD (per-exercise: deadlift / biceps / lat pulldown) | `mockups/chat-empty.html` (Phase 3), second line under main placeholder | `../product-specs/exercises-base.md` § "Camera angle"; wording fixed Phase 3 Q2 of `EP-track-b-mockups.md` |
+| Empty-chat camera-angle hint | Per exercise — see § 4.1 below | `mockups/chat-empty.html` (Phase 3), second line under main placeholder | `../product-specs/exercises-base.md` § "Camera angle"; wording fixed Phase 3 Q2 of `EP-track-b-mockups.md` |
 | AI thinking placeholder | «Анализирую твой подход…» | `mockups/chat-active.html` (Phase 3); active chat after video sent | `../product-specs/exercise-chat.md` § "AI is thinking" + `../user-flows/upload-video-and-get-feedback.md` § 3 step 5 |
 | AI cannot analyze | «Не смог разобрать твой подход. Попробуй переснять видео и загрузить ещё раз» | active chat on AI failure (Phase 3 mockup branch) | `../user-flows/upload-video-and-get-feedback.md` § 4.1; confirmed Phase 3 Q3 of `EP-track-b-mockups.md` |
-| Queue-busy hint (in another chat) | TBD | other-exercise chat while first analysis pending | `../user-flows/upload-video-and-get-feedback.md` § 4.3; wording fixed Phase 3 Q4 of `EP-track-b-mockups.md` |
+| Queue-busy hint (in another chat) | «Дождись разбора предыдущего видео, иначе я запутаюсь» | other-exercise chat while first analysis pending; rendered as a system message below the feed, alongside a disabled «Загрузить видео» button (no tooltip) | `../user-flows/upload-video-and-get-feedback.md` § 4.3; wording fixed Phase 3 Q4 of `EP-track-b-mockups.md` |
 | Upload network error (Phase 2 minimal) | «Не получилось загрузить, проверь интернет» | active chat on network failure during upload | `../user-flows/upload-video-and-get-feedback.md` § 5 |
+| Chat input placeholder (active state) | «Спроси что-нибудь о технике…» | `mockups/chat-active.html` text-input placeholder | `EP-track-b-mockups.md` Phase 3 (this row) |
+
+### 4.1 Camera-angle hints (per exercise)
+
+The camera-angle slot is per-exercise; the source-of-truth column is `../product-specs/exercises-base.md` § "Camera angle". Canonical strings:
+
+| Exercise | Canonical hint |
+|---|---|
+| `romanian_deadlift` (Румынская тяга со штангой) | «Снимай сбоку» |
+| `dumbbell_biceps_curl` (Подъём гантелей на бицепс) | «Снимай сбоку» |
+| `lat_pulldown_to_chest` (Вертикальная тяга блока к груди) | «Снимай спереди или в три четверти» |
+
+The hint sits as a second line directly under the main empty-chat placeholder, in `--color-text-secondary`. Used only in `mockups/chat-empty.html` (and the future per-exercise empty chat in `web/`).
 
 Notes:
 
@@ -105,4 +118,3 @@ Forbidden across all UI strings (consolidates negative space from §§ 1–3):
 
 - AI persona configuration UI (stricter / softer) — deferred to v2 (`../product.md` § 10 + § 11). The supportive baseline documented here remains the default regardless of future personas.
 - Internationalization rollout (English / other) — out of MVP (`../product.md` § 9). § 1 row 7 above is preparation, not delivery.
-- Phase 3 of `EP-track-b-mockups.md` will fill the two `TBD` rows in § 4. After that, this file moves from "approved with reserved slots" to "approved, complete" without a status change.

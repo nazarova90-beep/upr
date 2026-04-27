@@ -122,6 +122,11 @@ Floating indicator across screens — deferred to v2.
 
 Standard messenger pattern: bottom-up feed, input at bottom, scroll up for history. Exact visual treatment (separate screen vs sheet over exercise screen) — design phase.
 
+Mockups (Single-scenario MVP, Track B Phase 3):
+
+- Empty state (before first AI reply): [`../ui/mockups/chat-empty.html`](../ui/mockups/chat-empty.html) — only «Загрузить видео» button + placeholder; no input field.
+- Active state (after first AI reply): [`../ui/mockups/chat-active.html`](../ui/mockups/chat-active.html) — feed + text input + attach + send. The «Загрузить видео» button is replaced by the attach (paperclip) icon as the upload affordance.
+
 ## Connections
 
 - Exercise screen — entry point for chat + video upload.

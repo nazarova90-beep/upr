@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=390, initial-scale=1.0" />
+  <title>UPR — Чат: Румынская тяга (пусто)</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet" />
+  <link rel="stylesheet" href="../design-system/style.css" />
+
+  <style>
+    /* Mockup-only layout. No new tokens — only composes Lucent variables.
+       Promote any reusable rules to design-system/style.css when porting to the web client. */
+    body {
+      min-height: 100vh;
+      background: var(--color-bg);
+      display: flex;
+      justify-content: center;
+    }
+    .phone {
+      width: 100%;
+      max-width: 390px;
+      min-height: 100vh;
+      background: var(--color-bg);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* === Chat header (Back chevron + centered exercise name) === */
+    .chat-header {
+      display: grid;
+      grid-template-columns: 44px 1fr 44px;
+      align-items: center;
+      padding: var(--space-md) var(--space-sm);
+      gap: var(--space-xs);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .header-icon-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-full);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text);
+    }
+    .header-icon-btn .msr {
+      font-size: 22px;
+      color: inherit;
+    }
+    .chat-title {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-text);
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+      /* Truncate if exercise name overflows the centered slot. */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* === Empty feed (centered placeholder) === */
+    .feed {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-xl) var(--space-lg);
+    }
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-md);
+      max-width: 300px;
+      text-align: center;
+    }
+    .empty-icon-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: var(--radius-full);
+      background: var(--color-surface);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-secondary);
+    }
+    .empty-icon-wrap .msr {
+      font-size: 36px;
+      color: inherit;
+    }
+    .empty-text {
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--color-text);
+    }
+    .empty-hint {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--color-text-secondary);
+    }
+
+    /* === Bottom action: full-width primary button === */
+    .chat-action {
+      padding: var(--space-md) var(--space-md) var(--space-lg);
+    }
+    /* Compose Lucent .btn .btn--solid .btn--block; only override mobile sizing. */
+    .chat-action .btn {
+      height: 52px;
+      font-size: 15px;
+      border-radius: var(--radius-md);
+    }
+  </style>
+</head>
+<body>
+  <main class="phone">
+
+    <!-- HEADER: Back chevron + exercise name centered.
+         Open question (plan § Open Questions): include info-icon to re-open
+         technique pop-up from chat? Currently omitted; revisit after Phase 2. -->
+    <header class="chat-header">
+      <button type="button" class="header-icon-btn" aria-label="Назад">
+        <span class="msr">arrow_back_ios_new</span>
+      </button>
+      <h1 class="chat-title">Румынская тяга со штангой</h1>
+      <!-- Right slot reserved for symmetry; empty in Single-scenario MVP. -->
+      <span aria-hidden="true"></span>
+    </header>
+
+    <!-- EMPTY FEED: large neutral icon + two-line placeholder.
+         Strings sourced from voice-and-tone.md § 4 (canonical):
+           1. Empty-chat placeholder: «Загрузи видео с выполнением упражнения, и я проверю технику выполнения».
+           2. Empty-chat camera-angle hint (per-exercise; deadlift = side): «Снимай сбоку».
+              For lat pulldown the canonical hint is «Снимай спереди или в три четверти». -->
+    <section class="feed" aria-label="Чат пуст">
+      <div class="empty-state">
+        <span class="empty-icon-wrap" aria-hidden="true">
+          <span class="msr">videocam</span>
+        </span>
+        <p class="empty-text">Загрузи видео с выполнением упражнения, и я проверю технику выполнения.</p>
+        <p class="empty-hint">Снимай сбоку.</p>
+      </div>
+    </section>
+
+    <!-- BOTTOM ACTION: full-width primary button.
+         No text input, no attach button at this stage — matches user-flow step 3.
+         After first AI reply, this button cross-fades into a chat input bar
+         (see chat-active.html). -->
+    <div class="chat-action">
+      <button type="button" class="btn btn--solid btn--block">Загрузить видео</button>
+    </div>
+
+  </main>
+</body>
+</html>

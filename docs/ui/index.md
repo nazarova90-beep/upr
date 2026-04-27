@@ -13,15 +13,15 @@ Visual layer: design system, screen mockups, icons, illustrations, style rules.
 
 Lucent design system loaded in project (HTML + CSS, draft) at `design-system/`. Source of truth for visuals. After 2026-04-27 frontend pivot to web, `style.css` is consumed directly by the web client (CSS variables imported into `web/src/styles/tokens.css`). No translation to RN `StyleSheet` constants is required. Details: `design-system/README.md`. Pivot rationale: `../exec-plans/active/EP-pivot-to-web.md`.
 
-Screen mockups and component spec — not started; arrive with scenario work.
+Screen mockups in progress: Workout + technique pop-up landed (Phase 2 of `../exec-plans/active/EP-track-b-mockups.md`); chat-empty + chat-active landed (Phase 3); component inventory (`components.md`) closes Phase 4.
 
 ## Folder structure
 
 | Path | Status | Contents |
 |---|---|---|
 | `design-system/` | draft | Lucent style guide: `index.html` (browser preview), `style.css` (design tokens), `Lucent.png` (brand cover). See `design-system/README.md`. |
-| `components.md` | TBD | UI component spec (buttons, cards, inputs), references `design-system/`. |
-| `mockups/` | TBD | Mockup screenshots / Figma links. |
+| `components.md` | TBD | UI component spec (buttons, cards, inputs), references `design-system/`. Authored at the end of `../exec-plans/active/EP-track-b-mockups.md` (Phase 4). |
+| [`mockups/`](mockups/README.md) | in-progress | Static HTML mockups of MVP screens. Phase 2 of `EP-track-b-mockups.md`: [`workout.html`](mockups/workout.html), [`technique-popup.html`](mockups/technique-popup.html). Phase 3: [`chat-empty.html`](mockups/chat-empty.html), [`chat-active.html`](mockups/chat-active.html). |
 | `flows-visual/` | TBD | Visual user-flow diagrams. |
 | [`voice-and-tone.md`](voice-and-tone.md) | approved | UI text principles (Russian copy, address form, AI tone, error vocabulary). |
 

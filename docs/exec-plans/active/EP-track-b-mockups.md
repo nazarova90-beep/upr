@@ -47,8 +47,8 @@ After this plan closes, Phase 1 exit-trigger gains the "mockups for 2–3 key sc
 
 **Steps:**
 
-- [ ] Create `docs/ui/mockups/` directory; add small `README.md` inside explaining: format (standalone HTML, mobile-first 390 px, imports `../design-system/style.css`), how to open (double-click in Finder, opens in default browser), what the directory is for (visual source of truth before web client exists).
-- [ ] Author `docs/ui/mockups/workout.html`:
+- [x] Create `docs/ui/mockups/` directory; add small `README.md` inside explaining: format (standalone HTML, mobile-first 390 px, imports `../design-system/style.css`), how to open (double-click in Finder, opens in default browser), what the directory is for (visual source of truth before web client exists).
+- [x] Author `docs/ui/mockups/workout.html`:
   - `<!DOCTYPE html>`, `<meta name="viewport" content="width=390">`.
   - `<link rel="stylesheet" href="../design-system/style.css">`.
   - Google Fonts links for Manrope + Material Symbols Rounded (per `docs/ui/design-system/README.md`).
@@ -56,7 +56,7 @@ After this plan closes, Phase 1 exit-trigger gains the "mockups for 2–3 key sc
   - Header block: workout name "Вайбкодинговая тренировка", date "19.04.2026", counter "3 упражнения".
   - Three exercise cards in fixed order from `workout.md` (Romanian deadlift, lat pulldown, biceps curl). Card anatomy: sequence number, exercise name, info-icon (Material Symbols `info`), right-arrow (Material Symbols `chevron_right`).
   - Tokens used: `--color-bg`, `--color-surface`, `--color-text`, `--color-text-secondary`, `--space-md/lg`, `--radius-md`. **No raw hex colors** — only CSS variables from Lucent.
-- [ ] Author `docs/ui/mockups/technique-popup.html`:
+- [x] Author `docs/ui/mockups/technique-popup.html`:
   - Same boilerplate as workout.html; same 390 px container.
   - Underlay = workout screen at 50 % opacity (or just dimmed background `var(--alpha-black-40)` overlay).
   - Pop-up surface: `var(--color-surface)`, radius `var(--radius-lg)`, padding `var(--space-lg)`.
@@ -64,9 +64,10 @@ After this plan closes, Phase 1 exit-trigger gains the "mockups for 2–3 key sc
   - Body: full `technique` paragraph for `romanian_deadlift` from `docs/product-specs/exercises-base.md` § 1.
   - Close affordance: "Понятно" button (primary accent, full-width) **and** top-right close icon (Material Symbols `close`). Decision in this plan's Decision Log: both, because button on phone is the cheap tap target, icon is the muscle-memory affordance.
   - Decision (record in Decision Log): pop-up format = **bottom sheet** (slide-up from bottom, rounded top corners) rather than centered modal. Reason: phone ergonomics (thumb reach), and the existing Lucent style.css already has bottom-sheet treatment (verify by reading style.css; if absent, fall back to centered modal and note the gap in Surprises & Discoveries).
-- [ ] Cross-link from specs: add a one-line "Mockup: `../ui/mockups/workout.html`" pointer under `docs/product-specs/workout.md` § "Visual decisions" and "Mockup: `../ui/mockups/technique-popup.html`" under "Exercise card anatomy".
-- [ ] Update `docs/ui/index.md` § "Folder structure": add `mockups/` row, status `in-progress`, list the two files.
-- [ ] Verify by opening both files in Safari (manual check by owner; phase considered done after owner sign-off in chat).
+  - **Verified 2026-04-27:** `docs/ui/design-system/style.css` has no bottom-sheet treatment (only `.dialog`, a 320 px centered modal). Per fallback rule above, the mockup uses a centered modal at 340 px max-width; gap recorded in `## Surprises & Discoveries` below.
+- [x] Cross-link from specs: add a one-line "Mockup: `../ui/mockups/workout.html`" pointer under `docs/product-specs/workout.md` § "Visual decisions" and "Mockup: `../ui/mockups/technique-popup.html`" under "Exercise card anatomy".
+- [x] Update `docs/ui/index.md` § "Folder structure": add `mockups/` row, status `in-progress`, list the two files.
+- [x] Verify by opening both files in Safari (manual check by owner; phase considered done after owner sign-off in chat). _Sign-off: owner approved 2026-04-27 («отлично!»)._
 
 ### Phase 3 — Per-exercise chat mockups (empty + active)
 
@@ -76,18 +77,19 @@ After this plan closes, Phase 1 exit-trigger gains the "mockups for 2–3 key sc
 
 **Steps:**
 
-- [ ] Decide answers to user-flow § 8 open questions (record each in this plan's Decision Log + the user-flow's Decision Log):
+- [x] Decide answers to user-flow § 8 open questions (record each in this plan's Decision Log + the user-flow's Decision Log):
   - **Q1 — empty→active transition.** Recommendation: cross-fade. `Загрузить видео` button stays, text input + attach button fade in below it after first AI message. No animation library; pure CSS `opacity` transition.
   - **Q2 — camera-angle hint location.** Recommendation: inside empty-chat placeholder text, a second sentence under the main "Загрузи видео…" line. Per-exercise: deadlift / biceps → "Снимай сбоку"; lat pulldown → "Снимай спереди или в три четверти". Comes from `exercises-base.md` "Camera angle" column.
   - **Q3 — "не смог разобрать" wording.** Use `docs/user-flows/upload-video-and-get-feedback.md` § 4.1 verbatim: «Не смог разобрать твой подход. Попробуй переснять видео и загрузить ещё раз».
   - **Q4 — "one analysis in queue" UI in another chat.** Recommendation: «Загрузить видео» disabled (greyed out) + small system message below feed: «Дождись разбора предыдущего видео, иначе я запутаюсь». No tooltip (poor mobile pattern).
-- [ ] Author `docs/ui/mockups/chat-empty.html`:
+  - **Q1 actually decided:** the Q1 recommendation above conflicts with the chat-active step's "the original 'Загрузить видео' button is **replaced** by the attach icon" instruction. Resolved in favor of the latter (single bottom affordance, less mobile clutter): cross-fade, but the button is replaced — not joined — by the chat input bar. Recorded in Decision Log row "2026-04-27 / Q1".
+- [x] Author `docs/ui/mockups/chat-empty.html`:
   - Same boilerplate as Phase 2 mockups.
   - Header: back chevron (Material Symbols `arrow_back_ios_new`) + exercise name "Румынская тяга со штангой" centered.
   - Empty feed area: large neutral icon (Material Symbols `videocam` or similar) + two-line placeholder: «Загрузи видео с выполнением упражнения, и я проверю технику выполнения» + per-exercise camera-angle line (Q2 above).
   - Bottom action: full-width primary button «Загрузить видео» (`var(--color-accent)`, radius `var(--radius-md)`).
   - **No** text input, **no** attach button — match user-flow step 3.
-- [ ] Author `docs/ui/mockups/chat-active.html`:
+- [x] Author `docs/ui/mockups/chat-active.html`:
   - Same header as empty.
   - Feed (bottom-up):
     1. User message — embedded video thumbnail (placeholder `<div>` with play icon, no real video).
@@ -95,11 +97,11 @@ After this plan closes, Phase 1 exit-trigger gains the "mockups for 2–3 key sc
     3. AI reply message — short trainer-style text from `exercise-chat.md` "AI reply format" (1–2 sentences invented for the mockup, marked with HTML comment as "demo content, not authored AI output").
     4. (Optional) User follow-up text bubble.
   - Bottom: text input field («Спроси что-нибудь о технике…»), attach icon (Material Symbols `attach_file`), send button (Material Symbols `arrow_upward`). Mention in HTML comment that the original "Загрузить видео" button is **replaced** by the attach icon in the active state.
-- [ ] Update `docs/ui/voice-and-tone.md` § "Error / placeholder vocabulary" with the four canonical strings decided in step 1.
-- [ ] Cross-link from specs: in `docs/product-specs/exercise-chat.md` § "Chat UI" add pointer to both mockups; in `docs/user-flows/upload-video-and-get-feedback.md` § 7 "Related screens" link each of the two chat states to its mockup file.
-- [ ] Append four rows to `docs/user-flows/upload-video-and-get-feedback.md` § 9 "Decision log" (Q1…Q4), each row sourced as "Track B (Phase 3 of `EP-track-b-mockups`)".
-- [ ] Update `docs/ui/index.md` § "Folder structure": `mockups/` row gains the two new files.
-- [ ] Verify by opening both files in Safari (manual check; phase done after owner sign-off).
+- [x] Update `docs/ui/voice-and-tone.md` § "Error / placeholder vocabulary" with the four canonical strings decided in step 1.
+- [x] Cross-link from specs: in `docs/product-specs/exercise-chat.md` § "Chat UI" add pointer to both mockups; in `docs/user-flows/upload-video-and-get-feedback.md` § 7 "Related screens" link each of the two chat states to its mockup file.
+- [x] Append four rows to `docs/user-flows/upload-video-and-get-feedback.md` § 9 "Decision log" (Q1…Q4), each row sourced as "Track B (Phase 3 of `EP-track-b-mockups`)".
+- [x] Update `docs/ui/index.md` § "Folder structure": `mockups/` row gains the two new files.
+- [x] Verify by opening both files in Safari (manual check; phase done after owner sign-off). _Sign-off: owner approved 2026-04-27 («все отлично») after the chat-active video-bubble overflow fix landed (see § Surprises & Discoveries)._
 
 ### Phase 4 — Component inventory + close Track B
 
@@ -130,10 +132,26 @@ After this plan closes, Phase 1 exit-trigger gains the "mockups for 2–3 key sc
 | 2026-04-27 | Address form = «ты» (informal singular). | Matches existing user-flow placeholder strings («Загрузи видео…»); supportive coach tone (`docs/ui/index.md` § Principles); no «вы» or «ребята». |
 | 2026-04-27 | Open Questions in `upload-video-and-get-feedback.md` § 8 are resolved inside Phase 3 of this plan, not deferred. | These four are explicitly tagged as Track B inputs in the user-flow doc. Track B is this plan. Resolving here closes the corresponding Decision Log rows in user-flow doc in the same commit. |
 | 2026-04-27 | Plan approved by owner. Execution proceeds phase by phase via fresh-chat agent runs (one chat per phase). | Per `AGENTS.md` planning workflow + `PLANS.md` § 5 owner workflow. |
+| 2026-04-27 | Technique pop-up close affordances = **both** "Понятно" full-width primary button **and** top-right close icon. | Mobile target ergonomics: button is the cheap tap target on phone, icon is the muscle-memory dismiss affordance. (Phase 2 of this plan.) |
+| 2026-04-27 | Technique pop-up format = **centered modal** (downgraded from bottom sheet). | Bottom sheet was the preferred form (phone-thumb reach), but Lucent `style.css` has no bottom-sheet treatment — only `.dialog` (320 px centered). Per the fallback rule in Phase 2 step 3, the mockup uses a centered modal at 340 px max-width. Gap recorded in § "Surprises & Discoveries". Promotion to bottom sheet is deferred to `EP-web-skeleton.md`. |
+| 2026-04-27 | Workout-screen exercise card anatomy in mockup = `[#] [name] [info-icon] [chevron]` arranged horizontally; number rendered as a 32 px circle on `--color-surface-hover`. | Numbered circle keeps "1/2/3" visually distinct from name without consuming a separate row, and reuses an existing token without inventing a new one. (Phase 2 of this plan.) |
+| 2026-04-27 | **Q1** — Empty→active chat transition: cross-fade. After the first AI reply, the full-width «Загрузить видео» button is **replaced** by the chat input bar (text field + attach paperclip + send arrow). The attach icon becomes the new upload affordance. Pure CSS `opacity` transition, no animation library. | Resolves the contradiction inside Phase 3 step 1 (Q1 said "button stays") vs Phase 3 step 3 ("button replaced"). Single bottom affordance keeps the mobile bottom uncluttered; the user-flow's "Text input + attach button appear" wording (§ 3 step 7) is preserved — the attach icon is exactly the appearing attach button. (Phase 3 of this plan.) |
+| 2026-04-27 | **Q2** — Camera-angle hint lives inside the empty-chat placeholder, second line, in `--color-text-secondary`. Per-exercise canonical strings: deadlift / biceps → «Снимай сбоку»; lat pulldown → «Снимай спереди или в три четверти». | Option (a) of user-flow § 8 Q2: hint co-located with the action it modifies (load video → from this angle). AI-system-message option (b) defers the hint until *after* upload, which is too late. Strings recorded in `voice-and-tone.md` § 4 + § 4.1. (Phase 3 of this plan.) |
+| 2026-04-27 | **Q3** — Canonical "AI cannot analyze" wording: «Не смог разобрать твой подход. Попробуй переснять видео и загрузить ещё раз». No mockup variants. | Verbatim from user-flow § 4.1; matches voice-and-tone.md § 1 row 5 ("honesty about limits") and § 2 (singular «ты»). No reason to invent a second variant when the existing one already passes the tone bar. (Phase 3 of this plan.) |
+| 2026-04-27 | **Q4** — "One analysis in queue" UI in another chat: «Загрузить видео» rendered disabled (greyed) + system message below the feed «Дождись разбора предыдущего видео, иначе я запутаюсь». No tooltip. | Tooltips are a poor mobile pattern (no hover, easy-to-miss long-press). A visible system message + disabled button gives both a why and a what. Wording personifies AI ("иначе я запутаюсь") to match the trainer-tone register from voice-and-tone.md § 3. (Phase 3 of this plan.) Not rendered as a separate mockup file in Phase 3 — recorded as a string in `voice-and-tone.md` § 4 and reserved for the web client to compose against existing chat-active layout. |
+
+## Surprises & Discoveries
+
+| Date | Discovery | Implication / next step |
+|---|---|---|
+| 2026-04-27 | Lucent `docs/ui/design-system/style.css` has **no** bottom-sheet component (only a 320 px centered `.dialog`). | Phase 2 fallback rule triggered: `technique-popup.html` ships with a centered modal. When `EP-web-skeleton.md` wires Lucent into `web/`, add a `.bottom-sheet` (or equivalent) treatment to `style.css` and re-render the technique pop-up in the web client to match the original ergonomic intent. |
+| 2026-04-27 | Lucent ships a `.btn` family but no dedicated `.icon-btn` / circular icon-button (the existing `.icon-btn` in `style.css` is style-guide layout, not a token-driven component). | The two info / chevron / close affordances in the mockups are styled inline using existing Lucent tokens (`--color-surface-hover`, `--radius-full`). Promote to a reusable component class when authoring `components.md` (Phase 4) and consuming in `web/`. |
+| 2026-04-27 | Safari on macOS blocks loading `style.css` from a sibling directory (`../design-system/style.css`) over `file://` by default — page renders without colors, fonts, or icons; Chrome loads it without complaint. | Documented the gotcha in `docs/ui/mockups/README.md` § "Safari gotcha" with two fixes (Develop → Disable Local File Restrictions, or `python3 -m http.server`). When the `web/` skeleton lands (`EP-web-skeleton.md`), Vite's dev server makes this irrelevant. |
+| 2026-04-27 | First Safari render of `chat-active.html` showed the user-video bubble's thumbnail overflowing the bubble's right edge. Cause: thumbnail had a fixed `width: 220px` while the bubble was clamped by a percentage `max-width: 70%`; on a 358 px row those constraints fought (228 px content vs ≤ 250.6 px container, but flex-item sizing in Safari pushed the thumbnail past the bubble). | Reversed the sizing direction: bubble now sets the size (`width: 65%; max-width: 240px`), thumbnail fills it (`width: 100%`). Added an inner `.video-thumb-inner` absolute layer to keep the play-icon centering separate from the aspect-ratio sizing. General lesson: inside flex/percent containers, prefer "container sizes child" over "child sizes container", and never mix fixed-pixel children with percentage-clamped parents on small viewports. |
 
 ## Open Questions
 
-- **Bottom sheet vs centered modal for technique pop-up.** Default = bottom sheet (Phase 2 step 3 above). If `docs/ui/design-system/style.css` lacks a bottom-sheet treatment, fall back to centered modal and record in `Surprises & Discoveries`.
+- ~~**Bottom sheet vs centered modal for technique pop-up.**~~ **Resolved 2026-04-27 (Phase 2):** centered modal (fallback). Lucent `style.css` has no bottom-sheet treatment; gap deferred to `EP-web-skeleton.md`. See Decision Log + Surprises & Discoveries.
 - **Realistic AI reply text in `chat-active.html`.** Phase 3 mockup uses 1–2 invented trainer-style sentences as demo content. Open question: replace with a real Gemini output once Phase 2 (thin slice) produces one, or keep as design-only demo. Decision deferred to Phase 4 retrospective.
 - **Per-exercise chat header.** User-flow says "Back + exercise name". Open question: include the small info-icon in chat header so user can re-open technique pop-up without going back to workout screen? Currently mockup omits it; revisit if Phase 2 (thin slice) feedback flags the gap.
 

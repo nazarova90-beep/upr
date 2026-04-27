@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=390, initial-scale=1.0" />
+  <title>UPR — Чат: Румынская тяга (активный)</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet" />
+  <link rel="stylesheet" href="../design-system/style.css" />
+
+  <style>
+    /* Mockup-only layout. No new tokens — only composes Lucent variables.
+       Promote any reusable rules to design-system/style.css when porting to the web client. */
+    body {
+      min-height: 100vh;
+      background: var(--color-bg);
+      display: flex;
+      justify-content: center;
+    }
+    .phone {
+      width: 100%;
+      max-width: 390px;
+      min-height: 100vh;
+      background: var(--color-bg);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* === Chat header (Back chevron + centered exercise name) === */
+    .chat-header {
+      display: grid;
+      grid-template-columns: 44px 1fr 44px;
+      align-items: center;
+      padding: var(--space-md) var(--space-sm);
+      gap: var(--space-xs);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .header-icon-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-full);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text);
+    }
+    .header-icon-btn .msr {
+      font-size: 22px;
+      color: inherit;
+    }
+    .chat-title {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-text);
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* === Feed (scrollable list of message bubbles) === */
+    .feed {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      padding: var(--space-md);
+      overflow-y: auto;
+    }
+    .row {
+      display: flex;
+      width: 100%;
+    }
+    .row--ai   { justify-content: flex-start; }
+    .row--user { justify-content: flex-end; }
+
+    .bubble {
+      max-width: 82%;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-lg);
+      font-size: 14px;
+      line-height: 1.5;
+      word-wrap: break-word;
+    }
+    .bubble--ai {
+      background: var(--color-surface);
+      color: var(--color-text);
+      border-bottom-left-radius: var(--radius-xs);
+    }
+    .bubble--user {
+      background: var(--color-accent);
+      color: var(--color-text-on-accent);
+      border-bottom-right-radius: var(--radius-xs);
+    }
+    /* User-video bubble. Sizing logic:
+       - Bubble takes a fixed share of the row (width: 65%) so the video
+         has predictable space, capped at 240px on wider viewports.
+       - The video-thumb inside is width: 100% of the bubble's content
+         area, never wider. Avoids the earlier overflow where a fixed
+         220 px thumbnail outgrew a percentage-clamped bubble. */
+    .bubble--video {
+      padding: 4px;
+      width: 65%;
+      max-width: 240px;
+      box-sizing: border-box;
+    }
+
+    /* === Video thumbnail placeholder inside user message === */
+    .video-thumb {
+      position: relative;
+      display: block;
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      max-height: 280px;
+      border-radius: var(--radius-md);
+      background:
+        linear-gradient(135deg, var(--color-surface-strong) 0%, var(--neutral-50) 100%);
+      overflow: hidden;
+    }
+    .video-thumb-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .video-thumb .msr {
+      font-size: 56px;
+      color: var(--alpha-white-85);
+    }
+    .video-thumb .duration {
+      position: absolute;
+      right: var(--space-xs);
+      bottom: var(--space-xs);
+      background: var(--alpha-black-40);
+      color: var(--neutral-1000);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px var(--space-2xs);
+      border-radius: var(--radius-xs);
+      letter-spacing: 0.01em;
+    }
+
+    /* === AI "thinking" placeholder with three animated dots === */
+    .thinking {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+    .thinking-text {
+      color: var(--color-text-secondary);
+      font-style: italic;
+    }
+    .dots {
+      display: inline-flex;
+      gap: 4px;
+    }
+    .dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: var(--radius-full);
+      background: var(--color-text-secondary);
+      animation: typing-bounce 1.2s infinite ease-in-out both;
+    }
+    .dots span:nth-child(1) { animation-delay: 0s; }
+    .dots span:nth-child(2) { animation-delay: 0.18s; }
+    .dots span:nth-child(3) { animation-delay: 0.36s; }
+    @keyframes typing-bounce {
+      0%, 80%, 100% { opacity: 0.3; transform: translateY(0); }
+      40%           { opacity: 1;   transform: translateY(-3px); }
+    }
+
+    /* === Bottom input bar (replaces "Загрузить видео" button after first AI reply) === */
+    .input-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: var(--space-sm) var(--space-sm) var(--space-md);
+      border-top: 1px solid var(--color-border);
+      background: var(--color-bg);
+    }
+    .input-icon-btn {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-secondary);
+    }
+    .input-icon-btn .msr { font-size: 22px; color: inherit; }
+    .input-icon-btn--send {
+      background: var(--color-accent);
+      color: var(--color-text-on-accent);
+    }
+    .input-icon-btn--send .msr { color: inherit; }
+
+    .text-input {
+      flex: 1;
+      background: var(--color-surface);
+      border-radius: var(--radius-pill);
+      padding: var(--space-sm) var(--space-md);
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <main class="phone">
+
+    <!-- HEADER: same as chat-empty.html — Back chevron + centered exercise name. -->
+    <header class="chat-header">
+      <button type="button" class="header-icon-btn" aria-label="Назад">
+        <span class="msr">arrow_back_ios_new</span>
+      </button>
+      <h1 class="chat-title">Румынская тяга со штангой</h1>
+      <span aria-hidden="true"></span>
+    </header>
+
+    <!--
+      FEED (top-to-bottom = oldest-to-newest).
+
+      This mockup is a compendium showing every bubble type the active chat
+      can render, not a single real temporal state. In the real flow the
+      AI "Анализирую…" placeholder is REPLACED by the AI reply, not shown
+      alongside it. Order chosen here:
+
+        1. User video (oldest — first upload)
+        2. AI "Анализирую…" placeholder (transient state, included for visibility)
+        3. AI reply (demo content, NOT authored AI output)
+        4. User follow-up text bubble (latest)
+
+      Strings sourced from voice-and-tone.md § 4 (canonical):
+        - AI thinking placeholder: «Анализирую твой подход…».
+    -->
+    <section class="feed" aria-label="Чат">
+
+      <!-- (1) User message — embedded video thumbnail (placeholder, no real video).
+              Inner wrapper centers the play icon over the aspect-ratio box without
+              fighting the aspect-ratio sizing. -->
+      <div class="row row--user">
+        <div class="bubble bubble--user bubble--video">
+          <div class="video-thumb" role="img" aria-label="Видео подхода">
+            <div class="video-thumb-inner">
+              <span class="msr" aria-hidden="true">play_circle</span>
+            </div>
+            <span class="duration">0:08</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- (2) AI placeholder — three-dot CSS animation, no JS -->
+      <div class="row row--ai">
+        <div class="bubble bubble--ai">
+          <span class="thinking">
+            <span class="thinking-text">Анализирую твой подход</span>
+            <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+          </span>
+        </div>
+      </div>
+
+      <!-- (3) AI reply — demo content, NOT authored AI output.
+              Tone calibrated by voice-and-tone.md § 3 ("specific + supportive"). -->
+      <div class="row row--ai">
+        <div class="bubble bubble--ai">
+          Спина держится прямой на старте, это хорошо. На обратном движении штанга ушла вперёд от голеней — попробуй вести её ближе к ногам.
+        </div>
+      </div>
+
+      <!-- (4) User follow-up text bubble (optional, per plan) -->
+      <div class="row row--user">
+        <div class="bubble bubble--user">
+          А колени чуть согнуть нормально?
+        </div>
+      </div>
+
+    </section>
+
+    <!--
+      BOTTOM INPUT BAR.
+
+      In the active state, the full-width "Загрузить видео" button (see
+      chat-empty.html) is REPLACED by this input bar. Cross-fade transition
+      between the two states is decided in plan EP-track-b-mockups.md
+      Phase 3 Decision Log (Q1).
+
+      The attach (paperclip) icon is the new entry-point for uploading
+      another video — same target as "Загрузить видео" was in the empty
+      state. One bottom affordance keeps mobile uncluttered.
+    -->
+    <div class="input-bar">
+      <button type="button" class="input-icon-btn" aria-label="Прикрепить видео">
+        <span class="msr">attach_file</span>
+      </button>
+      <div class="text-input" aria-label="Поле ввода сообщения">Спроси что-нибудь о технике…</div>
+      <button type="button" class="input-icon-btn input-icon-btn--send" aria-label="Отправить">
+        <span class="msr">arrow_upward</span>
+      </button>
+    </div>
+
+  </main>
+</body>
+</html>

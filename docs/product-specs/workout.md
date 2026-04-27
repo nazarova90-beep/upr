@@ -58,6 +58,8 @@ Top-down:
 
 Tap-card → straight to chat (no separate exercise screen with technique / set log) is the key Single-scenario MVP decision (`roadmap.md` § 3). Technique description lives in the info-icon pop-up.
 
+Mockup: [`../ui/mockups/technique-popup.html`](../ui/mockups/technique-popup.html) — info-icon pop-up over the workout screen, real `technique` text for `romanian_deadlift`.
+
 #### Absent on workout screen in Single-scenario MVP
 
 - "Начать тренировку" / "Завершить тренировку" buttons.
@@ -70,6 +72,8 @@ Tap-card → straight to chat (no separate exercise screen with technique / set 
 ### Visual decisions
 
 Exact visuals (paddings, typography, card style, info-icon style, pop-up form: modal vs bottom sheet) — Track B (Phase 1 mockups). This doc fixes meaning, not pixels.
+
+Mockup: [`../ui/mockups/workout.html`](../ui/mockups/workout.html) — Workout screen, mobile-first 390 px, Lucent dark theme.
 
 Chat-screen visuals (target of arrow tap) — separate Track B task, not described here.
 

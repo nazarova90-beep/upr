@@ -76,20 +76,20 @@ Rule **"one analysis per user"** (`videosinstruction.md` § "Analysis queue") pr
 
 Two screens + one pop-up in this scenario:
 
-1. **Workout screen** — entry point, always. Spec: `workout.md` § "MVP: single hardcoded workout". Mockup: Track B.
-2. **Per-exercise chat** — opened from card tap. Spec: `exercise-chat.md` (Full MVP) + "Single-scenario MVP simplifications". Mockup: Track B. Two visual states:
-   - **Empty (before first AI reply):** only "Загрузить видео" button + placeholder text. No text input, no attach button.
-   - **Active (after first AI reply):** standard messenger: feed + text input + attach button + "Загрузить видео" (or same behavior via attach — Track B).
-3. **Technique pop-up** — over workout screen, opened from info icon. Spec: `workout.md` § "Exercise card anatomy". Mockup: Track B.
+1. **Workout screen** — entry point, always. Spec: `../product-specs/workout.md` § "MVP: single hardcoded workout". Mockup: [`../ui/mockups/workout.html`](../ui/mockups/workout.html).
+2. **Per-exercise chat** — opened from card tap. Spec: `../product-specs/exercise-chat.md` (Full MVP) + "Single-scenario MVP simplifications". Two visual states:
+   - **Empty (before first AI reply):** only "Загрузить видео" button + placeholder text. No text input, no attach button. Mockup: [`../ui/mockups/chat-empty.html`](../ui/mockups/chat-empty.html).
+   - **Active (after first AI reply):** standard messenger: feed + text input + attach (paperclip) + send. The "Загрузить видео" button is replaced by the attach icon — single upload affordance. Mockup: [`../ui/mockups/chat-active.html`](../ui/mockups/chat-active.html).
+3. **Technique pop-up** — over workout screen, opened from info icon. Spec: `../product-specs/workout.md` § "Exercise card anatomy". Mockup: [`../ui/mockups/technique-popup.html`](../ui/mockups/technique-popup.html).
 
 ## 8. Open questions (for Track B + Phase 2)
 
-Non-blocking for Track A; resolve at Track B (mockups) or Phase 2 (implementation).
+All four resolved in Phase 3 of `../exec-plans/active/EP-track-b-mockups.md` (2026-04-27); rows appended to § 9 below.
 
-- Exact transition from "empty chat" to "active chat" — how does the input field appear?
-- Where does the camera-angle hint live (side for deadlift + biceps; front or 3⁄4 for lat pulldown)? Options: (a) inside empty-chat placeholder, (b) AI system message in chat, (c) hint on "Загрузить видео" tap, (d) inside technique pop-up.
-- Exact "не смог разобрать" wording — list of mockup variants.
-- "One analysis in queue" behavior in another chat — disabled button + tooltip vs system message?
+- ~~Exact transition from "empty chat" to "active chat" — how does the input field appear?~~ **Resolved Q1.**
+- ~~Where does the camera-angle hint live (side for deadlift + biceps; front or 3⁄4 for lat pulldown)? Options: (a) inside empty-chat placeholder, (b) AI system message in chat, (c) hint on "Загрузить видео" tap, (d) inside technique pop-up.~~ **Resolved Q2.**
+- ~~Exact "не смог разобрать" wording — list of mockup variants.~~ **Resolved Q3.**
+- ~~"One analysis in queue" behavior in another chat — disabled button + tooltip vs system message?~~ **Resolved Q4.**
 
 ## 9. Decision log
 
@@ -98,3 +98,7 @@ Non-blocking for Track A; resolve at Track B (mockups) or Phase 2 (implementatio
 | 2026-04-19 | Chat has two states: empty (placeholder + "Загрузить видео" only) and active (text input + attach appear after first AI reply). Header: "Back" + exercise name. | Chat, Phase 1 / Track A, step 6. |
 | 2026-04-19 | Video upload — instant send: no preview screen after gallery picker; video appears in chat as user message immediately + AI placeholder "Анализирую…" below. | Chat, Phase 1 / Track A, step 6. |
 | 2026-04-19 | Single-scenario MVP / Phase 2 excludes: exercise recognition + chat-match check, full two-stage video quality check, floating cross-screen indicator. All move to Phase 3. | Chat, Phase 1 / Track A, step 6; `exercise-chat.md`, `videosinstruction.md`. |
+| 2026-04-27 | **Q1** — Empty→active chat transition: cross-fade. After the first AI reply, the full-width «Загрузить видео» button cross-fades into a chat input bar (text field + attach paperclip + send arrow). The attach icon becomes the new upload affordance — one bottom affordance instead of two. Pure CSS `opacity` transition; no animation library. | Track B (Phase 3 of `../exec-plans/active/EP-track-b-mockups.md`); rendered in `../ui/mockups/chat-active.html`. |
+| 2026-04-27 | **Q2** — Camera-angle hint location: option (a) — inside the empty-chat placeholder, as a second line under the main «Загрузи видео…» string, in `--color-text-secondary`. Per-exercise canonical strings: `romanian_deadlift` / `dumbbell_biceps_curl` → «Снимай сбоку»; `lat_pulldown_to_chest` → «Снимай спереди или в три четверти». Source: `../product-specs/exercises-base.md` § "Camera angle". | Track B (Phase 3 of `EP-track-b-mockups.md`); strings recorded in `../ui/voice-and-tone.md` § 4 + § 4.1; rendered in `../ui/mockups/chat-empty.html`. |
+| 2026-04-27 | **Q3** — Canonical "не смог разобрать" wording: «Не смог разобрать твой подход. Попробуй переснять видео и загрузить ещё раз». Verbatim string from § 4.1 above; no variants. | Track B (Phase 3 of `EP-track-b-mockups.md`); confirmed canonical in `../ui/voice-and-tone.md` § 4. |
+| 2026-04-27 | **Q4** — "One analysis in queue" UI in another chat: «Загрузить видео» button rendered disabled (greyed) + a system message below the feed — «Дождись разбора предыдущего видео, иначе я запутаюсь». No tooltip (poor mobile pattern). | Track B (Phase 3 of `EP-track-b-mockups.md`); string recorded in `../ui/voice-and-tone.md` § 4. |
