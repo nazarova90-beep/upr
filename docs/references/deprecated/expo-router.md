@@ -1,24 +1,33 @@
 ---
-status: approved
+status: deprecated
 last_updated: 2026-04-27
 owner: Кристина
-related: ../FRONTEND.md, ../stack.md, expo.md, index.md
+deprecated_on: 2026-04-27
+deprecated_by: ../../exec-plans/active/2026-04-27-pivot-to-web.md
+deprecation_reason: Frontend pivot from React Native + Expo to React + Vite + TypeScript (web). Replacement router for web client: `react-router-dom` (planned ref `../react-router.md`).
+related: ../../FRONTEND.md, ../../stack.md, expo.md, ../index.md
 ---
 
-# Expo Router — research note
+# Expo Router — research note (DEPRECATED 2026-04-27)
+
+> **Deprecated by frontend pivot to web on 2026-04-27.** See `../../exec-plans/active/2026-04-27-pivot-to-web.md`.
+>
+> Replacement: `react-router-dom` for web client (ref `../react-router.md` to be authored before use).
+>
+> Kept as historical record. The file-based-routing concept partially carries over: `web/src/routes/` mirrors what `mobile/app/` was doing, although `react-router-dom` uses imperative route configuration rather than file-based routes by default.
 
 Source: MCP `user-context7`, library ID `/expo/expo` (Source Reputation: High; Benchmark Score: 81.41; branch `sdk-54`). Fetched: 2026-04-27.
 
-## Purpose in project
+## Purpose in project (historical)
 
 File-based navigation built into Expo. File = screen, folder = URL segment. Default in `npx create-expo-app` template since SDK 50+.
 
-## Version
+## Version (frozen at deprecation)
 
 - Bundled with Expo SDK 54. Updated with SDK; no separate pin.
 - Context7 branch: `/expo/expo` `__branch__sdk-54`.
 
-## Key API
+## Key API (historical reference)
 
 ### 1. Folder layout
 
@@ -47,37 +56,6 @@ Rules:
 import { Stack } from "expo-router";
 
 export default function RootLayout() {
-  return <Stack />;
-}
-```
-
-Sufficient for basic stack navigation. `Stack` = standard push/pop screen stack with back-button.
-
-With font loading and splash-screen (future, once Manrope wired):
-
-```tsx
-import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
-
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const [loaded] = useFonts({
-    /* fonts */
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hide();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
   return <Stack />;
 }
 ```
@@ -112,7 +90,7 @@ router.navigate({
 });
 ```
 
-## Gotchas
+## Gotchas (historical)
 
 | Issue | Mitigation |
 |---|---|
@@ -120,14 +98,14 @@ router.navigate({
 | Any `.tsx` in `app/` becomes a screen. | Helper components → `src/components/`, not `app/`. |
 | `useLocalSearchParams` without generic returns `string | string[] | undefined`. | Use generic: `useLocalSearchParams<{ id: string }>()`. |
 | Conflict if a stray `App.tsx` exists at root. | Don't create `App.tsx` manually; default template is correct. |
-| Deep nesting (`app/a/b/c/[d]/index.tsx`) hurts readability. | Keep depth 1-2 for MVP. |
+| Deep nesting hurts readability. | Keep depth 1-2 for MVP. |
 
-## Skeleton scope (Single-scenario MVP)
+## Skeleton scope (frozen at deprecation)
 
-- `app/_layout.tsx` — root layout (`<Stack />` + i18n init).
-- `app/index.tsx` — workout screen stub.
-- `app/chat/[exerciseId].tsx` — chat screen stub.
-- Real transitions (`Link` / `router.navigate`) added in hello-world / thin slice.
+- `mobile/app/_layout.tsx` — root layout (`<Stack />` + i18n init).
+- `mobile/app/index.tsx` — workout screen stub.
+- `mobile/app/chat/[exerciseId].tsx` — chat screen stub.
+- Mobile skeleton retained on disk (frozen). Web equivalent will use `react-router-dom` — separate ref pending.
 
 ## Links
 
@@ -136,3 +114,8 @@ router.navigate({
 - Layouts: <https://docs.expo.dev/router/basics/layout/>
 - Navigation: <https://docs.expo.dev/router/basics/navigation/>
 - Typed Routes: <https://docs.expo.dev/router/reference/typed-routes/>
+
+## Decision history
+
+- 2026-04-27: Adopted as default routing in `mobile/` skeleton.
+- 2026-04-27: **Deprecated.** Web pivot — `react-router-dom` will replace.

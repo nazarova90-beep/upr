@@ -11,7 +11,7 @@ Visual layer: design system, screen mockups, icons, illustrations, style rules.
 
 ## Status
 
-Lucent design system loaded in project (HTML + CSS, draft) at `design-system/`. Source of truth for visuals. Code transfer (`style.css` → `theme.ts` constants for React Native `StyleSheet`) — separate task. Details: `design-system/README.md`.
+Lucent design system loaded in project (HTML + CSS, draft) at `design-system/`. Source of truth for visuals. After 2026-04-27 frontend pivot to web, `style.css` is consumed directly by the web client (CSS variables imported into `web/src/styles/tokens.css`). No translation to RN `StyleSheet` constants is required. Details: `design-system/README.md`. Pivot rationale: `../exec-plans/active/2026-04-27-pivot-to-web.md`.
 
 Screen mockups and component spec — not started; arrive with scenario work.
 

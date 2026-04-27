@@ -2,7 +2,7 @@
 status: approved
 last_updated: 2026-04-27
 owner: Кристина
-related: ../FRONTEND.md, ../stack.md, react-i18next.md, expo-localization.md, index.md
+related: ../FRONTEND.md, ../stack.md, react-i18next.md, deprecated/expo-localization.md, index.md
 ---
 
 # i18next — research note
@@ -13,12 +13,12 @@ Source: MCP `user-context7`, library ID `/i18next/i18next` (Source Reputation: H
 
 i18n engine for JS/TS. Loads JSON dictionaries (`ru.json`, future `en.json`, …), returns text by key. Supports interpolation (`Hello {{name}}`), pluralization, nested keys, namespaces.
 
-Stack relations: engine only. React components use via `react-i18next.md`. Device language detected by `expo-localization.md`.
+Stack relations: engine only. React components use via `react-i18next.md`. Browser language detection: planned `i18next-browser-languagedetector.md` (replaces deprecated `deprecated/expo-localization.md` after 2026-04-27 web pivot — see `../exec-plans/active/2026-04-27-pivot-to-web.md`).
 
 ## Version
 
 - Stable: `v26`. LTS: `v23`. New projects: `v26`.
-- React Native + Expo compatible via `react-i18next`.
+- Web (React) — primary surface. Also React Native + Expo compatible via `react-i18next` (relevant to frozen `mobile/` skeleton only).
 - Pin: `i18next>=26,<27`.
 
 ## Key API
@@ -42,7 +42,7 @@ i18next.init({
 });
 ```
 
-- `lng` — current language. MVP: hardcoded `"ru"`. Later: from `expo-localization`.
+- `lng` — current language. MVP: hardcoded `"ru"`. Later: from `i18next-browser-languagedetector` (web).
 - `fallbackLng` — fallback when key missing.
 - `resources` — `{ <lang>: { <namespace>: <dictionary> } }`.
 
@@ -96,10 +96,16 @@ Used in Phase 9 when adding English.
 
 ## Skeleton scope (Single-scenario MVP)
 
-- `mobile/src/i18n/index.ts`: `i18next.init({ lng: "ru", fallbackLng: "ru", resources: { ru: { translation: ru } } })`.
-- `mobile/src/i18n/locales/ru.json`: `{}` or one test key (e.g. `app.name: "UPR"`).
+Active (web client, target after web-skeleton plan):
+
+- `web/src/i18n/index.ts`: `i18next.use(LanguageDetector).use(initReactI18next).init({ fallbackLng: "ru", supportedLngs: ["ru"], resources: { ru: { translation: ru } } })`.
+- `web/src/i18n/locales/ru.json`: `{}` or one test key (e.g. `app.name: "UPR"`).
 - Real UI strings added in Track B (mockups) and Phase 2 (thin slice).
-- Import i18n in `app/_layout.tsx` for single init at app start.
+- Import i18n in `web/src/main.tsx` for single init at app start.
+
+Frozen (mobile skeleton, retained on disk):
+
+- `mobile/src/i18n/index.ts`: `i18next.init({ lng: "ru", fallbackLng: "ru", resources: { ru: { translation: ru } } })`. Imported once in `mobile/app/_layout.tsx`.
 
 ## Links
 

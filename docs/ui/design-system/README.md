@@ -30,7 +30,7 @@ Source-of-truth design system: colors, typography, spacing, radii, icons, base c
 ## Usage rules
 
 1. Don't edit files casually. Change deliberately, bump `last_updated`.
-2. These files are **not** application code. App is React Native + Expo (TypeScript) — see `../../stack.md`, `../../FRONTEND.md`. Does not consume HTML/CSS directly. Code transfer = extract values into `mobile/src/theme/*.ts` constants for `StyleSheet`.
+2. These files are **not** application code, but the active client (web — React + Vite + TypeScript; see `../../stack.md`, `../../FRONTEND.md`) consumes them directly. CSS variables in `style.css` import into `web/src/styles/tokens.css`. No translation to TS constants required (was needed in deprecated mobile/RN stack — see `../../exec-plans/active/2026-04-27-pivot-to-web.md`).
 3. **HTML/CSS here is the source of truth.** App-vs-style-guide divergence — fix app.
 4. Icons: **Material Symbols Rounded** font (Google Fonts). No separate icons folder; icons by name (e.g. `home`, `settings`).
 5. Body font: **Manrope** (Google Fonts).
@@ -39,14 +39,15 @@ Source-of-truth design system: colors, typography, spacing, radii, icons, base c
 
 Static HTML page + CSS. Imported 2026-04-19. External source: `~/Desktop/luc/` on owner's machine.
 
-## Forward plan (deferred)
+## Forward plan (web client)
 
-Task "transfer Lucent tokens to Expo theme":
+Task "wire Lucent tokens into web client" — covered by future web-skeleton plan (see `../../exec-plans/active/2026-04-27-pivot-to-web.md` § "Future work"):
 
-- Extract values from `style.css` (colors, spacing, radii, fonts).
-- Place in `mobile/src/theme/*.ts` as constants (`colors`, `spacing`, `radius`, `typography`) for `StyleSheet.create({...})`.
-- Load **Manrope** via `expo-font`.
-- Load **Material Symbols Rounded** via `@expo/vector-icons` or direct font load.
-- Plan filed under `docs/exec-plans/active/` after approval.
+- Import `style.css` directly into `web/src/styles/tokens.css` (or include via `@import`).
+- Use CSS variables in component-level CSS modules (`.module.css`).
+- Load **Manrope** via `@font-face` (self-hosted) or Google Fonts CSS link in `index.html`.
+- Load **Material Symbols Rounded** via Google Fonts CSS link in `index.html`.
 
-Partial transfer already done in Phase 1 / Track C (colors + base spacing); Manrope / Material Symbols are a separate future step.
+### Historical note (deprecated mobile path)
+
+Earlier plan was to extract `style.css` values into `mobile/src/theme/*.ts` constants for `StyleSheet`, load Manrope via `expo-font`, and load Material Symbols via `@expo/vector-icons`. Partial transfer (colors + base spacing) was completed in Phase 1 / Track C. After 2026-04-27 web pivot the mobile theme files in `mobile/src/theme/` are frozen alongside the rest of the mobile skeleton.

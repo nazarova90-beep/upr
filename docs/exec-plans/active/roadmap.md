@@ -13,11 +13,12 @@ Top-level plan: phases in order, exit triggers per phase. Detailed exec-plans ap
 
 - Strategy + MVP — `docs/product.md`.
 - Product specs (partial): `product-specs/exercise-chat.md`, `videosinstruction.md`, `exercises-base.md` (3 starting exercises), `workout.md` (hardcoded workout).
-- Stack — `docs/stack.md`: React Native + Expo (TypeScript) + Python/FastAPI + SQLite (via ORM) + Gemini Free Tier + MediaPipe.
+- Stack — `docs/stack.md`: React + Vite + TypeScript (web) + Python/FastAPI + SQLite (via ORM) + Gemini Free Tier + MediaPipe.
 - Architecture — `ARCHITECTURE.md`.
 - Operating principles — `docs/design-docs/core-beliefs.md`.
 - Lucent design system — `docs/ui/design-system/`.
-- `mobile/` + `backend/` skeletons — closed 2026-04-27 (`docs/exec-plans/completed/2026-04-27-phase1-track-c-skeleton.md`).
+- `backend/` skeleton — closed 2026-04-27 (`docs/exec-plans/completed/2026-04-27-phase1-track-c-skeleton.md`).
+- `mobile/` skeleton (React Native + Expo) — frozen 2026-04-27 by frontend pivot (`docs/exec-plans/active/2026-04-27-pivot-to-web.md`); files retained on disk, marked in `mobile/README.md`. Active client surface moves to `web/` (skeleton plan to follow).
 
 ## 2. Two MVP levels
 
@@ -70,9 +71,10 @@ Single user scenario taken to working state first:
 |---|---|---|
 | **A** — Product specs for Single-scenario MVP | 3 exercises + hardcoded workout + single user flow | ✅ Closed 2026-04-19 |
 | **B** — UI mockups for Single-scenario MVP | 2 main screens + states, `ui/components.md`, `ui/voice-and-tone.md` | 🔄 In progress |
-| **C** — `mobile/` + `backend/` skeletons | Folder structure per architecture, no logic | ✅ Closed 2026-04-27 (`completed/2026-04-27-phase1-track-c-skeleton.md`) |
+| **C** — `mobile/` + `backend/` skeletons | Folder structure per architecture, no logic | ✅ Closed 2026-04-27 (`completed/2026-04-27-phase1-track-c-skeleton.md`); `mobile/` part frozen 2026-04-27 by web pivot |
+| **D** — Frontend pivot mobile → web + `web/` skeleton | Doc pivot (this commit, see `2026-04-27-pivot-to-web.md`) → library refs (React, Vite, react-router) → Vite + React TS scaffold → Lucent CSS + i18next | 🔄 In progress (started 2026-04-27) |
 
-**Exit trigger:** mockups for 2–3 key screens ready, specs closed, skeleton runs locally.
+**Exit trigger:** mockups for 2–3 key screens ready, specs closed, `web/` skeleton runs locally on Mac Safari.
 
 ### Phase 2 — Thin slice (first working Single-scenario MVP)
 
@@ -82,7 +84,7 @@ Goal: Single-scenario MVP runs end-to-end on owner's machine: front → back →
 - Minimal chat UI, minimal backend endpoint, real Gemini call.
 - New refs: `references/gemini.md`, `references/mediapipe.md`.
 
-**Exit trigger:** test video sent from iPhone via Expo Go yields real Gemini analysis; follow-up question answered.
+**Exit trigger:** test video uploaded from owner's Mac Safari (or iPhone Safari via tunnel) yields real Gemini analysis; follow-up question answered.
 
 ### Phase 3 — Polish Single-scenario MVP
 
@@ -134,7 +136,7 @@ Horizontal scaling, Redis cache, CDN, possible dedicated AI worker with GPU, bac
 
 ### Phase 9 — Audience expansion (= stack.md Phase 9)
 
-English + other locales, live-trainer marketplace, web build via React Native for Web.
+English + other locales, live-trainer marketplace, optional native iOS/Android shell (fresh Expo project beside `web/`, requires Apple Developer Account at this point — owner-approved decision).
 
 ## 6. Dependency map
 
@@ -154,7 +156,7 @@ flowchart TD
 ## 7. Not planned now
 
 - Live-trainer marketplace — ≥ Phase 9. Ladder first step — Phase 7.
-- Web build — ≥ Phase 9.
+- Native iOS/Android shell — ≥ Phase 9, optional; web is the active client.
 - Concrete subscription prices — ≥ Phase 5; tiers active at Phase 7.
 - Push, floating indicator — Phase 6+.
 - Extended workout metrics (RPE, tempo, rest) — Phase 6+.
@@ -172,3 +174,4 @@ flowchart TD
 | 2026-04-27 | Phase 1 Track C closed — `mobile/` + `backend/` skeletons committed. |
 | 2026-04-27 | Documentation refactored to OpenAI Harness Engineering principles: removed premature `RELIABILITY.md`, `PRODUCT_SENSE.md`, `product-specs/product.md` (merged into `docs/product.md`); heavily trimmed `SECURITY.md`, `BACKEND.md`, `DATABASE.md`; full security checklist preserved in `design-docs/security-future-reference.md`. |
 | 2026-04-27 | Documentation pass: stripped beginner-oriented narrative and analogies from all `docs/*` files; documentation files are agent-optimized — analogies live in chat output, not in files. |
+| 2026-04-27 | **Frontend pivot: React Native + Expo (mobile, iOS via Expo Go) → React + Vite + TypeScript (web).** Cause: owner runs always-on VPN on both Mac and iPhone, blocking LAN reach between Expo Go and FastAPI; Apple Developer Account ($99/year) out of MVP budget; Lucent already authored in HTML/CSS — direct consumption in web. Phase 9 "web build via RN-for-Web" removed; native iOS/Android shell repositioned to optional ≥ Phase 9. New Track D added under Phase 1 to drive `web/` skeleton. `mobile/` skeleton retained on disk as frozen reference. Hello-world plan superseded. Driven by `active/2026-04-27-pivot-to-web.md`. |

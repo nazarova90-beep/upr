@@ -2,7 +2,7 @@
 status: approved
 last_updated: 2026-04-27
 owner: Кристина
-related: ../README.md, ../ARCHITECTURE.md, BACKEND.md, FRONTEND.md, DATABASE.md, SECURITY.md, product.md, references/expo.md
+related: ../README.md, ../ARCHITECTURE.md, BACKEND.md, FRONTEND.md, DATABASE.md, SECURITY.md, product.md, exec-plans/active/2026-04-27-pivot-to-web.md
 ---
 
 # UPR — stack
@@ -34,7 +34,7 @@ Single source of truth for the chosen stack: current MVP picks, future expansion
 
 | Layer | Choice | Note |
 |---|---|---|
-| Mobile | React Native + Expo (TypeScript), Expo SDK 54 | Expo Go on physical device — no Xcode/Android Studio. `references/expo.md`. |
+| Web client | React + Vite + TypeScript | Browser app (PWA-capable). Mac Safari is primary dev surface; iPhone Safari via tunnel. No Xcode, no Apple Developer Account. |
 | Backend | Python + FastAPI | Async, AI-friendly. |
 | ORM | SQLAlchemy + SQLModel | Single model dictionary for DB and (future) admin. |
 | DB (start) | SQLite (single file) | |
@@ -44,16 +44,17 @@ Single source of truth for the chosen stack: current MVP picks, future expansion
 | Task queue | None on MVP — `async`/`await` in FastAPI | |
 | Auth / billing / push | None on MVP | |
 | Admin panel | None on MVP | SQLAdmin reserved on top of ORM models. |
-| Deploy | None | Local. |
-| i18n | `expo-localization` + `i18next` + JSON catalogs | |
+| Deploy | None | Local. Single-origin via Vite proxy `/api/*` → `localhost:8000`. |
+| i18n | `i18next-browser-languagedetector` + `i18next` + JSON catalogs | |
 
 ### Choice notes
 
-- **React Native + Expo, not Flutter.** Onboarding cost: Flutter requires Xcode (~15 GB) or Android Studio (~10 GB) with simulators. Expo Go runs the project on a physical iPhone via QR code without local native infra. Custom UI under Lucent achievable on RN. First need for native build: Phase 3 (on-device MediaPipe, optional).
+- **React + Vite (web), not React Native + Expo (mobile), not Flutter.** Owner constraints (2026-04-27): always-on VPN on Mac and iPhone blocks LAN reach between Expo Go and FastAPI; Apple Developer Account ($99/year) out of MVP budget. Browser app sidesteps both. Lucent design system already authored in HTML/CSS — direct consumption, no token re-translation. Vite dev server gives <1 s hot reload on `localhost`. Native iOS/Android shell tracked as ≥ Phase 9 if owner-approved.
 - **FastAPI, not Django.** Center of gravity is AI interaction (long requests, async, streaming). Free admin via SQLAdmin without changing backend.
 - **SQLite, not PostgreSQL on day one.** Single user — PostgreSQL is overkill. ORM allows config-line migration later.
 - **Gemini Free Tier, not GPT-4o / Claude.** Native video input + free tier sufficient for one user. GPT-4o / Claude considered as paid alternatives at public release.
-- **MediaPipe, not LLM-only.** Free pose estimation provides exact body angles → fed alongside video → cheaper, more concrete analysis.
+- **MediaPipe, not LLM-only.** Free pose estimation provides exact body angles → fed alongside video → cheaper, more concrete analysis. Browser-side `@mediapipe/tasks-vision` available for optional on-device pre-filter (Phase 3).
+- **Plain CSS + CSS modules, not CSS-in-JS / Tailwind.** Lucent ships as CSS; direct consumption is simplest. Boring tech first.
 
 ## Deliberately excluded from MVP
 
@@ -132,7 +133,7 @@ Trigger: stable growth, load spikes.
 
 - English + other locales (i18n already wired).
 - Live trainer marketplace.
-- Web build via React Native for Web.
+- Optional native iOS/Android shell (if owner-approved) — fresh React Native + Expo project beside `web/`, sharing TS domain types and i18n catalogs. Requires Apple Developer Account at this point.
 
 ## Future admin (anticipated capabilities)
 
@@ -165,10 +166,11 @@ Free supplementary tool at any phase: **MediaPipe Pose** — reduces cloud AI bi
 ## Open questions
 
 - Specific Gemini version for MVP (Pro / Flash / Flash-Lite).
-- Phase 5 hosting choice (Render / Railway / Fly.io / VPS).
+- Phase 5 hosting choice for backend (Render / Railway / Fly.io / VPS) and for static `web/` build (Cloudflare Pages / Vercel / Netlify / same host as backend).
 - Admin stack: classic SQLAdmin or spa-sqladmin.
 - Phase 7 payment provider (region-dependent).
-- On-device MediaPipe inference (Phase 3, requires Dev Build — `references/expo.md`).
+- PWA manifest + service worker timing: Phase 1 (early polish) or Phase 3 (after thin slice).
+- On-device MediaPipe (Phase 3, optional): browser-native `@mediapipe/tasks-vision`. No Dev Build required (was a constraint in the deprecated mobile stack).
 
 ## Decision log
 
@@ -176,3 +178,4 @@ Free supplementary tool at any phase: **MediaPipe Pose** — reduces cloud AI bi
 |---|---|
 | 2026-04-19 | Initial MVP stack: Flutter + Python/FastAPI + SQLite (via ORM) + Gemini Free Tier + MediaPipe. |
 | 2026-04-19 | Frontend revised: Flutter → React Native + Expo (TypeScript). Cause: onboarding cost (Flutter needs Xcode ~15 GB or Android Studio ~10 GB; Expo Go runs on physical iPhone via QR code). All Single-scenario MVP capabilities (gallery video picker, video player, network upload, dark theme, Manrope, i18n) supported in Expo Go without Dev Build (verified via MCP `user-context7`, `references/expo.md`). First need for native build: Phase 3 (on-device MediaPipe, optional). |
+| 2026-04-27 | Frontend revised: React Native + Expo → React + Vite + TypeScript (web client). Cause: owner runs always-on VPN on both Mac and iPhone, blocking LAN reach between Expo Go and FastAPI (already worked around via ngrok in superseded `exec-plans/active/2026-04-27-hello-world.md`); Apple Developer Account ($99/year) out of MVP budget; Lucent design system already authored in HTML/CSS — direct consumption in web; backend platform-agnostic by design. Browser app removes Xcode / Android Studio / Apple Developer / TestFlight from MVP path entirely. Native iOS/Android shell moved from Phase 1 to optional ≥ Phase 9. Pivot driven by `exec-plans/active/2026-04-27-pivot-to-web.md`. |

@@ -2,7 +2,7 @@
 status: approved
 last_updated: 2026-04-27
 owner: Кристина
-related: ../FRONTEND.md, ../stack.md, i18next.md, expo-localization.md, index.md
+related: ../FRONTEND.md, ../stack.md, i18next.md, deprecated/expo-localization.md, index.md
 ---
 
 # react-i18next — research note
@@ -11,12 +11,12 @@ Source: MCP `user-context7`, library ID `/i18next/react-i18next` (Source Reputat
 
 ## Purpose in project
 
-React bindings for `i18next.md`. Provides `useTranslation()` hook and `<Trans>` component. Standard for Expo/React Native.
+React bindings for `i18next.md`. Provides `useTranslation()` hook and `<Trans>` component. Active surface: web client (React + Vite). Same library was used in deprecated mobile/Expo stack — frozen `mobile/` skeleton retains it.
 
 ## Version
 
 - Pairs with `i18next`. Current: `react-i18next >= 15`.
-- React 18+ / React Native 0.74+ (Expo SDK 54).
+- React 18+ (web). Also React Native 0.74+ / Expo SDK 54 (mobile, frozen).
 - Pin: `react-i18next>=15,<17`.
 
 ## Key API
@@ -51,6 +51,23 @@ export default i18n;
 `useSuspense: false`: resources are loaded statically, no Suspense needed; avoids component suspension.
 
 ### 2. `useTranslation` hook
+
+Web (active):
+
+```tsx
+import { useTranslation } from "react-i18next";
+
+export default function ChatScreen() {
+  const { t } = useTranslation();
+  return (
+    <div>
+      <p>{t("chat.empty.placeholder")}</p>
+    </div>
+  );
+}
+```
+
+React Native (frozen mobile skeleton):
 
 ```tsx
 import { Text, View } from "react-native";
@@ -114,14 +131,21 @@ MVP likely won't need `<Trans>`; reserved for future complex strings.
 | Suspense + static resources adds needless async. | Set `react.useSuspense: false`. |
 | Key drift between JSON and code (typos surface as raw keys). | Enable TS translation types when string count grows. |
 | `i18n.changeLanguage(lng)` is async; rerender after promise. | MVP: single language (`ru`); no switching. |
-| `escapeValue: true` breaks quotes etc. | Always `escapeValue: false` in React/RN. |
+| `escapeValue: true` breaks quotes etc. | Always `escapeValue: false` in React (web or RN). |
 | `useTranslation` without args uses `defaultNS`. Adding namespaces later requires updates. | MVP: single namespace `translation`. |
 
 ## Skeleton scope
 
-- `mobile/src/i18n/index.ts`: `.use(initReactI18next).init(...)`. MVP: no HTTP backend, no Language Detector (language from `expo-localization` directly).
-- `mobile/app/_layout.tsx`: `import "../src/i18n"` once at app start (init via import side-effect).
-- `useTranslation()` not used in stub screens (no real UI strings yet).
+Active (web client, target after web-skeleton plan):
+
+- `web/src/i18n/index.ts`: `.use(LanguageDetector).use(initReactI18next).init(...)`. MVP: no HTTP backend; locale from `i18next-browser-languagedetector` (planned ref `i18next-browser-languagedetector.md`).
+- `web/src/main.tsx`: `import "./i18n"` once at app start (init via import side-effect).
+- `useTranslation()` not used in stub routes (no real UI strings yet).
+
+Frozen (mobile skeleton, retained on disk):
+
+- `mobile/src/i18n/index.ts`: `.use(initReactI18next).init(...)`. No Language Detector — locale was passed in directly from `expo-localization` (now `deprecated/expo-localization.md`).
+- `mobile/app/_layout.tsx`: `import "../src/i18n"` once at app start.
 
 ## Links
 

@@ -4,7 +4,7 @@ Entry point for AI agents. Table of contents, not a manual. Facts live in `docs/
 
 ## Project
 
-UPR — mobile (iOS/Android) AI coach reviewing strength-exercise technique from user-uploaded video. Per-exercise long-lived chat is the core feature. UI/AI replies in MVP — Russian (i18n-ready).
+UPR — web AI coach (browser app, PWA-capable) reviewing strength-exercise technique from user-uploaded video. Per-exercise long-lived chat is the core feature. UI/AI replies in MVP — Russian (i18n-ready). Native iOS/Android shell deferred to ≥ Phase 9 (optional).
 
 ## Read this first
 
@@ -38,7 +38,7 @@ UPR — mobile (iOS/Android) AI coach reviewing strength-exercise technique from
 | `docs/product.md` | Product strategy, MVP scope, principles, decisions. |
 | `docs/stack.md` | Stack (MVP) + scaling triggers + decision log. |
 | `docs/BACKEND.md` | Backend (Python + FastAPI) — domains, rules. |
-| `docs/FRONTEND.md` | Mobile (React Native + Expo, TypeScript) — stack, libraries, i18n. |
+| `docs/FRONTEND.md` | Web client (React + Vite + TypeScript) — stack, libraries, i18n. Deprecated mobile stack: `docs/exec-plans/active/2026-04-27-pivot-to-web.md`. |
 | `docs/DATABASE.md` | Data model (SQLite MVP → PostgreSQL Phase 6). |
 | `docs/SECURITY.md` | Active security rules. Future checklist: `docs/design-docs/security-future-reference.md`. |
 

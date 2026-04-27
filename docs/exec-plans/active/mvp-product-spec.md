@@ -7,7 +7,7 @@ related: ../../product.md, ../../product-specs/index.md, roadmap.md, ../../user-
 
 # Plan: MVP product specification
 
-Place in roadmap: Phase 1 / Track A. Track B = UI mockups. Track C = `mobile/` + `backend/` skeleton. All three converge at end of Phase 1 → Phase 2 (thin slice).
+Place in roadmap: Phase 1 / Track A. Track B = UI mockups. Track C = `mobile/` + `backend/` skeleton (closed; mobile part frozen by 2026-04-27 web pivot). Track D = web pivot + `web/` skeleton (in progress; see `2026-04-27-pivot-to-web.md`). All converge at end of Phase 1 → Phase 2 (thin slice).
 
 ## Goal
 
@@ -71,7 +71,7 @@ Fully describe MVP product surface before technical implementation. Outputs land
 - [x] Expo project (TypeScript), Lucent design tokens in `theme.ts` (constants for `StyleSheet`), i18n via `i18next`. Manrope / Material Symbols — separate step.
 - [x] FastAPI project per `BACKEND.md` domains: `backend/app/{workout,exercise_chat,video_analysis,ai_coach}/` + `ai_provider/` + `storage/` + `db/` — empty routers/services/models.
 - [x] Baseline ORM models for Single-scenario MVP: `Exercise`, `Workout` (hardcoded), `ExerciseChat`, `ChatMessage`, `VideoAnalysis`. `User` — hardcoded singleton, no table. Empty SQLModel classes in `backend/app/db/models/`. Fields filled in Phase 2.
-- [ ] Local "hello world": backend serves `/health`, mobile app calls it.
+- [ ] Local "hello world": backend serves `/health`, **web** app calls it via Vite proxy (replaces superseded mobile-via-ngrok plan; see `2026-04-27-pivot-to-web.md`).
 - [ ] Full DB schema (`DATABASE.md` + `generated/db-schema.md`) — auto-generated after models.
 
 ---
@@ -138,3 +138,4 @@ Run after Single-scenario MVP is stable (end of Phase 3).
 | 2026-04-19 | Track A of Phase 1 closed. Fixed: 3 starting exercises (Romanian deadlift, biceps curl, lat pulldown) with minimal `id` / `name` / `technique`; single hardcoded workout "Вайбкодинговая тренировка" 19.04.2026; workout-screen and exercise-card anatomy; single user flow (`user-flows/upload-video-and-get-feedback.md`); "Single-scenario MVP simplifications" notes in `exercise-chat.md` and `videosinstruction.md`. | this file (A.1, A.2 → `[x]`); `exercises-base.md`; `workout.md`; `user-flows/upload-video-and-get-feedback.md`; `exercise-chat.md`; `videosinstruction.md` |
 | 2026-04-19 | Frontend stack revised at start of Track B: Flutter → React Native + Expo (TypeScript). Reason: onboarding cost (Flutter requires Xcode ~15 GB or Android Studio ~10 GB; Expo Go runs on owner's iPhone via QR code without native infra). All Single-scenario MVP features supported in Expo Go without Dev Build (verified via MCP `user-context7`). Track C updated: instead of "Flutter project + ARB + ThemeData" → "Expo project + i18next + theme.ts". Possible Track B + C merger. | `docs/stack.md`, `docs/FRONTEND.md`, `docs/references/expo.md`, `docs/exec-plans/active/roadmap.md`, this file (Track C) |
 | 2026-04-27 | Documentation refactored to agent-first: removed beginner narratives and analogies from all `docs/*` files. | `roadmap.md` decision log |
+| 2026-04-27 | **Frontend pivot: React Native + Expo → React + Vite + TypeScript (web).** Cause: always-on VPN on owner's Mac and iPhone blocking LAN reach between Expo Go and FastAPI; Apple Developer Account out of MVP budget; Lucent design system already in HTML/CSS. `mobile/` skeleton frozen on disk; new Track D added under Phase 1 to drive `web/` skeleton. Hello-world plan superseded. A.4 hello-world bullet retargeted to web client. | `active/2026-04-27-pivot-to-web.md`, `docs/stack.md`, `docs/FRONTEND.md`, `AGENTS.md`, `roadmap.md` decision log |
