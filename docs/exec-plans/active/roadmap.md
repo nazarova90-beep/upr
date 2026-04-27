@@ -70,7 +70,7 @@ Single user scenario taken to working state first:
 | Track | Subject | Status |
 |---|---|---|
 | **A** — Product specs for Single-scenario MVP | 3 exercises + hardcoded workout + single user flow | ✅ Closed 2026-04-19 |
-| **B** — UI mockups for Single-scenario MVP | 2 main screens + states, `ui/components.md`, `ui/voice-and-tone.md` | 🔄 In progress |
+| **B** — UI mockups for Single-scenario MVP | 2 main screens + states, `ui/components.md`, `ui/voice-and-tone.md` | ✅ Closed 2026-04-27 (`completed/EP-track-b-mockups.md`) |
 | **C** — `mobile/` + `backend/` skeletons | Folder structure per architecture, no logic | ✅ Closed 2026-04-27 (`completed/EP-phase1-track-c-skeleton.md`); `mobile/` part frozen 2026-04-27 by web pivot |
 | **D** — Frontend pivot mobile → web + `web/` skeleton | Doc pivot (this commit, see `EP-pivot-to-web.md`) → library refs (React, Vite, react-router) → Vite + React TS scaffold → Lucent CSS + i18next | 🔄 In progress (started 2026-04-27) |
 
@@ -176,3 +176,4 @@ flowchart TD
 | 2026-04-27 | Documentation pass: stripped beginner-oriented narrative and analogies from all `docs/*` files; documentation files are agent-optimized — analogies live in chat output, not in files. |
 | 2026-04-27 | **Frontend pivot: React Native + Expo (mobile, iOS via Expo Go) → React + Vite + TypeScript (web).** Cause: owner runs always-on VPN on both Mac and iPhone, blocking LAN reach between Expo Go and FastAPI; Apple Developer Account ($99/year) out of MVP budget; Lucent already authored in HTML/CSS — direct consumption in web. Phase 9 "web build via RN-for-Web" removed; native iOS/Android shell repositioned to optional ≥ Phase 9. New Track D added under Phase 1 to drive `web/` skeleton. `mobile/` skeleton retained on disk as frozen reference. Hello-world plan superseded. Driven by `active/EP-pivot-to-web.md`. |
 | 2026-04-27 | **Plans system formalized per OpenAI Harness Engineering.** Added `docs/exec-plans/PLANS.md` (format spec). Renamed all plans to `EP-<slug>.md`. Index rewritten as catalog. AGENTS.md adds Planning workflow + hard rules #10 (ask before AGENTS.md edits) and #11 (plan before non-trivial work). |
+| 2026-04-27 | **Phase 1 / Track B closed.** Four HTML mockups (`workout`, `technique-popup`, `chat-empty`, `chat-active`), `voice-and-tone.md`, and `components.md` shipped. Two known gaps deferred to `EP-web-skeleton.md`: bottom-sheet treatment for the technique pop-up (Lucent has none yet — fallback to centered modal) and a token-driven `.icon-btn` Lucent component (mockups inline-style icon buttons). Plan: `completed/EP-track-b-mockups.md`. |

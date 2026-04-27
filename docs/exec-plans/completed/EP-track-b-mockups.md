@@ -1,15 +1,15 @@
 ---
 id: EP-track-b-mockups
 tier: ExecPlan
-status: active
+status: completed
 last_updated: 2026-04-27
 owner: Кристина
-related: ../index.md, ../PLANS.md, roadmap.md, EP-mvp-product-spec.md, ../../ui/index.md, ../../ui/design-system/README.md, ../../product-specs/workout.md, ../../product-specs/exercise-chat.md, ../../product-specs/exercises-base.md, ../../product-specs/videosinstruction.md, ../../user-flows/upload-video-and-get-feedback.md, ../../FRONTEND.md, ../../product.md
+related: ../index.md, ../PLANS.md, ../active/roadmap.md, ../active/EP-mvp-product-spec.md, ../../ui/index.md, ../../ui/components.md, ../../ui/voice-and-tone.md, ../../ui/design-system/README.md, ../../ui/mockups/README.md, ../../product-specs/workout.md, ../../product-specs/exercise-chat.md, ../../product-specs/exercises-base.md, ../../product-specs/videosinstruction.md, ../../user-flows/upload-video-and-get-feedback.md, ../../FRONTEND.md, ../../product.md
 ---
 
 # Plan: Track B — UI mockups for Single-scenario MVP
 
-Closes Track B of Phase 1 in `roadmap.md`. Produces the visual artifacts that the future `EP-web-skeleton.md` plan translates into React components: HTML mockups for the two screens of Single-scenario MVP plus the technique pop-up, a UI text principles doc (`voice-and-tone.md`), and a component inventory (`components.md`).
+Closes Track B of Phase 1 in `../active/roadmap.md`. Produces the visual artifacts that the future `EP-web-skeleton.md` plan translates into React components: HTML mockups for the two screens of Single-scenario MVP plus the technique pop-up, a UI text principles doc (`voice-and-tone.md`), and a component inventory (`components.md`).
 
 ## Goal & Context
 
@@ -105,20 +105,20 @@ After this plan closes, Phase 1 exit-trigger gains the "mockups for 2–3 key sc
 
 ### Phase 4 — Component inventory + close Track B
 
-**Goal:** `docs/ui/components.md` written as a digest of components actually used across the four mockups; Phase 1 exit-trigger updated in `roadmap.md`; this plan flipped to `completed` and moved to `completed/`.
+**Goal:** `docs/ui/components.md` written as a digest of components actually used across the four mockups; Phase 1 exit-trigger updated in `../active/roadmap.md`; this plan flipped to `completed` and moved to `completed/`.
 
-**Done when:** `components.md` exists with status `approved`; every component listed has at least one mockup citation; `roadmap.md` § 5 Phase 1 marks Track B as ✅ Closed `<date>`; `index.md` table reflects the new state; `Outcomes & Retrospective` section of this plan is filled.
+**Done when:** `components.md` exists with status `approved`; every component listed has at least one mockup citation; `../active/roadmap.md` § 5 Phase 1 marks Track B as ✅ Closed `<date>`; `../index.md` table reflects the new state; `Outcomes & Retrospective` section of this plan is filled.
 
 **Steps:**
 
-- [ ] Walk all four mockup HTML files; list every distinct UI element used (button-primary, button-icon, exercise-card, list-header, popup-bottom-sheet, chat-bubble-user, chat-bubble-ai, chat-input-bar, exercise-info-popup-trigger, …). Group into categories: layout, content, controls, feedback.
-- [ ] Author `docs/ui/components.md`:
+- [x] Walk all four mockup HTML files; list every distinct UI element used (button-primary, button-icon, exercise-card, list-header, popup-bottom-sheet, chat-bubble-user, chat-bubble-ai, chat-input-bar, exercise-info-popup-trigger, …). Group into categories: layout, content, controls, feedback.
+- [x] Author `docs/ui/components.md`:
   - For each component: name, purpose (one sentence), Lucent token usage (which CSS variables / classes), where it's used (mockup file + line range), when **not** to use it.
   - Header note: "Components are an inventory, not a library. Reusable React abstractions are decided in `EP-web-skeleton.md`, not here."
-- [ ] Update `docs/ui/index.md` § "Folder structure": `components.md` row TBD → approved + link.
-- [ ] Update `docs/exec-plans/active/roadmap.md` § 5 Phase 1: Track B status `🔄 In progress` → `✅ Closed YYYY-MM-DD (active/EP-track-b-mockups.md → completed/EP-track-b-mockups.md)`. Add a row in § 8 "Decision log".
-- [ ] Flip this plan's YAML `status: active` → `status: completed`. Fill `## Outcomes & Retrospective` (what shipped, dropped, lessons).
-- [ ] Move file: `docs/exec-plans/active/EP-track-b-mockups.md` → `docs/exec-plans/completed/EP-track-b-mockups.md`. Update `docs/exec-plans/index.md` (move row from "Active" to "completed", set `Closed` date).
+- [x] Update `docs/ui/index.md` § "Folder structure": `components.md` row TBD → approved + link.
+- [x] Update `docs/exec-plans/active/roadmap.md` § 5 Phase 1: Track B status `🔄 In progress` → `✅ Closed 2026-04-27 (completed/EP-track-b-mockups.md)`. Decision Log row added in § 8.
+- [x] Flip this plan's YAML `status: active` → `status: completed`. `## Outcomes & Retrospective` filled below.
+- [x] Move file: `docs/exec-plans/active/EP-track-b-mockups.md` → `docs/exec-plans/completed/EP-track-b-mockups.md`. `docs/exec-plans/index.md` updated (row moved Active → Plans / completed, `Closed` set to 2026-04-27).
 
 ## Decision Log
 
@@ -152,15 +152,15 @@ After this plan closes, Phase 1 exit-trigger gains the "mockups for 2–3 key sc
 ## Open Questions
 
 - ~~**Bottom sheet vs centered modal for technique pop-up.**~~ **Resolved 2026-04-27 (Phase 2):** centered modal (fallback). Lucent `style.css` has no bottom-sheet treatment; gap deferred to `EP-web-skeleton.md`. See Decision Log + Surprises & Discoveries.
-- **Realistic AI reply text in `chat-active.html`.** Phase 3 mockup uses 1–2 invented trainer-style sentences as demo content. Open question: replace with a real Gemini output once Phase 2 (thin slice) produces one, or keep as design-only demo. Decision deferred to Phase 4 retrospective.
-- **Per-exercise chat header.** User-flow says "Back + exercise name". Open question: include the small info-icon in chat header so user can re-open technique pop-up without going back to workout screen? Currently mockup omits it; revisit if Phase 2 (thin slice) feedback flags the gap.
+- ~~**Realistic AI reply text in `chat-active.html`.**~~ **Resolved 2026-04-27 (Phase 4 retrospective):** keep the existing 1–2 invented trainer-style sentences as **design-only demo content**. Same string is already cited as a tone exemplar in `../../ui/voice-and-tone.md` § 3 ("Good — specific + supportive"), which makes it tone-canonical for design purposes. Replacement with a real Gemini output is deferred to a content pass after Phase 2 thin-slice produces real outputs; that pass owns its own (small) plan, not this one.
+- ~~**Per-exercise chat header — info-icon affordance.**~~ **Deferred 2026-04-27 (Phase 4 retrospective)** to Phase 2 thin-slice feedback per `../active/roadmap.md` § 5. Mockups ship without the icon (`row-icon-btn`-shaped second slot is reserved in `chat-empty.html` lines 131–132 and `chat-active.html` lines 226–227). If thin-slice usage shows users miss the affordance, the slot is already there to populate; no mockup re-author needed.
 
 ## Related documents
 
 | Path | Role |
 |---|---|
-| `roadmap.md` | Track B closure target. § 5 Phase 1 + § 8 Decision Log updated by Phase 4. |
-| `EP-mvp-product-spec.md` | Parent plan; references Track B as a required closure for Phase 1 exit trigger. |
+| `../active/roadmap.md` | Track B closure target. § 5 Phase 1 + § 8 Decision Log updated by Phase 4. |
+| `../active/EP-mvp-product-spec.md` | Parent plan; references Track B as a required closure for Phase 1 exit trigger. |
 | `../../ui/index.md` | Folder structure updated by Phases 1–4 as new files appear. |
 | `../../ui/design-system/README.md` | Source of truth for Lucent CSS variables consumed by the mockups. |
 | `../../product-specs/workout.md` | Source for Workout-screen anatomy (Phase 2). Cross-linked back via "Mockup:" pointer. |
@@ -168,3 +168,45 @@ After this plan closes, Phase 1 exit-trigger gains the "mockups for 2–3 key sc
 | `../../product-specs/exercises-base.md` | Source for exercise names, technique text, camera angles (Phases 2, 3). |
 | `../../user-flows/upload-video-and-get-feedback.md` | Source of two chat states + § 8 open questions (Phase 3). Decision Log appended in Phase 3. |
 | `../../FRONTEND.md` | Confirms web stack + mobile-first viewport target. |
+| `../../ui/components.md` | Authored in Phase 4. Inventory of UI elements actually used across the four mockups. |
+
+## Outcomes & Retrospective
+
+_Closed 2026-04-27._
+
+### What shipped
+
+- **Voice & tone foundation** — `../../ui/voice-and-tone.md` (status `approved`). Address form («ты»), AI tone invariants, anti-patterns, and a canonical-strings table whose six rows underwrite every Russian string the four mockups use.
+- **Four HTML mockups** at 390 px in Lucent dark theme:
+  - `../../ui/mockups/workout.html` — workout screen (header + 3 exercise cards from `workout.md`).
+  - `../../ui/mockups/technique-popup.html` — technique pop-up over the workout screen, with the real `romanian_deadlift` paragraph from `exercises-base.md`.
+  - `../../ui/mockups/chat-empty.html` — empty per-exercise chat (icon + placeholder + camera-angle hint + full-width «Загрузить видео»).
+  - `../../ui/mockups/chat-active.html` — active per-exercise chat with every bubble type (user video, AI thinking, AI reply, user follow-up) and the bottom input bar.
+- **Mockup README** — `../../ui/mockups/README.md` (format, how to open, Safari `file://` gotcha + workarounds).
+- **Component inventory** — `../../ui/components.md` (status `approved`). Inventory grouped into Layout / Content / Controls / Feedback; every entry cited to a mockup file + line range.
+- **Open-question closure in `../../user-flows/upload-video-and-get-feedback.md`** — four Decision-Log rows added (Q1 empty→active transition, Q2 camera-angle hint location, Q3 "не смог разобрать" wording, Q4 queue-busy UI in another chat).
+- **Cross-links written into product specs** — `workout.md` (Visual decisions + Exercise card anatomy), `exercise-chat.md` (Chat UI), and the user-flow's "Related screens" now point at the corresponding mockup files.
+- **`../../ui/index.md` folder structure** updated for `mockups/`, `voice-and-tone.md`, and `components.md`. **`../active/roadmap.md`** § 5 Phase 1 marks Track B `✅ Closed 2026-04-27`; § 8 Decision Log gains a closure row.
+
+### What was dropped or deferred
+
+| Item | Status | Inheritor |
+|---|---|---|
+| Bottom-sheet treatment for technique pop-up | Deferred — Lucent `style.css` has no bottom-sheet component yet; mockup uses centered `.modal` (340 px) instead. | `EP-web-skeleton.md` (add `.bottom-sheet` to `style.css`, re-render the technique pop-up). |
+| Token-driven `.icon-btn` Lucent component | Deferred — current mockups inline-style 32–44 px circular icon buttons (`.exercise-icon-btn`, `.header-icon-btn`, `.input-icon-btn`, `.modal-close`). | `EP-web-skeleton.md` (promote to a single Lucent class consumed by all four sites). |
+| Replace demo AI reply text in `chat-active.html` with a real Gemini output | Deferred — string is already tone-canonical (cited in `voice-and-tone.md` § 3). | Post-Phase-2 content pass (future small plan, not this one). |
+| Info-icon affordance in chat header (re-open technique pop-up from chat) | Deferred — slot reserved in both chat mockups; populate only if thin-slice (`../active/roadmap.md` Phase 2) feedback flags the gap. | Phase 2 of the roadmap. |
+| Queue-busy "one analysis in queue" rendered as a separate mockup file | Dropped — string lives in `voice-and-tone.md` § 4 (Q4 row), reserved for the web client to compose against the existing chat-active layout. | `EP-web-skeleton.md`. |
+
+### Lessons
+
+1. **CSS-first mockups eliminate a redesign pass.** HTML mockups that import the Lucent `style.css` directly mean the eventual `web/` build is a near-port, not a re-author. Reusing this pattern for any future screen plan is a default decision unless evidence forces otherwise.
+2. **Voice-and-tone first, components last was the correct ordering.** Phase 1 (voice-and-tone) before Phases 2–3 (mockups) avoided retro-fixing copy across four files. Phase 4 (components) after the mockups avoided speccing components no screen ended up needing. Both orderings appeared in the Decision Log up front (2026-04-27 rows) and held under execution; keep this shape for similar surface plans.
+3. **Inside flex / percent containers, "container sizes child" beats "child sizes container".** The chat-active video-bubble overflow bug (Surprises & Discoveries 2026-04-27) generalised: never mix a fixed-pixel child with a percentage-clamped parent on a 390 px viewport. Carries directly into the React port — same CSS pattern, same trap.
+4. **Lucent gaps must be recorded with named inheritors at the moment of detection.** The bottom-sheet and `.icon-btn` gaps would have silently drifted otherwise. Pattern: a Decision Log row in the source plan, a row in Surprises & Discoveries, and an explicit naming of the plan that owns the fix (`EP-web-skeleton.md` in both cases).
+5. **Resolve open questions in the consuming plan, not the producing doc.** All four user-flow open questions were resolved here (Track B is the consumer of those decisions); the user-flow's Decision Log got back-pointers, not duplicate decisions. Keeps source-of-truth single.
+6. **Safari `file://` gotcha matters only at the mockup stage.** Documented in `mockups/README.md`; the Vite dev server makes it irrelevant in `web/`. No carryover beyond the README.
+
+### Phase 1 exit-trigger contribution
+
+`../active/roadmap.md` § 5 Phase 1 exit trigger reads: "mockups for 2–3 key screens ready, specs closed, `web/` skeleton runs locally on Mac Safari." Track B closure delivers the **mockups** clause (four screens — exceeds the 2–3 minimum). Specs were closed earlier (Track A, 2026-04-19). The remaining clause — `web/` skeleton on Mac Safari — is owned by `EP-web-skeleton.md` (a follow-up to `EP-pivot-to-web.md`); not this plan.
