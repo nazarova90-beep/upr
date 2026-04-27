@@ -1,0 +1,152 @@
+---
+id: EP-track-b-mockups
+tier: ExecPlan
+status: active
+last_updated: 2026-04-27
+owner: Кристина
+related: ../index.md, ../PLANS.md, roadmap.md, EP-mvp-product-spec.md, ../../ui/index.md, ../../ui/design-system/README.md, ../../product-specs/workout.md, ../../product-specs/exercise-chat.md, ../../product-specs/exercises-base.md, ../../product-specs/videosinstruction.md, ../../user-flows/upload-video-and-get-feedback.md, ../../FRONTEND.md, ../../product.md
+---
+
+# Plan: Track B — UI mockups for Single-scenario MVP
+
+Closes Track B of Phase 1 in `roadmap.md`. Produces the visual artifacts that the future `EP-web-skeleton.md` plan translates into React components: HTML mockups for the two screens of Single-scenario MVP plus the technique pop-up, a UI text principles doc (`voice-and-tone.md`), and a component inventory (`components.md`).
+
+## Goal & Context
+
+Phase 1 of the project (`docs/exec-plans/active/roadmap.md` § 5) runs four parallel tracks. Track A (product specs) and Track C (skeletons) are closed. Track D (frontend pivot to web + future `web/` skeleton) is in progress. Track B (UI mockups) is in progress only in the sense that the Lucent design system is loaded at `docs/ui/design-system/`; no screen-level mockups exist yet, no `components.md`, no `voice-and-tone.md`. This plan brings Track B to a closeable state.
+
+The Single-scenario MVP user flow (`docs/user-flows/upload-video-and-get-feedback.md` § 7) lists three distinct visual artifacts: the Workout screen, the per-exercise Chat screen with two states (empty / active), and the technique pop-up over the Workout screen. Mockups must visualize those four states using **real Lucent CSS** so that the eventual `web/` build is a near-direct port (no second-pass redesign). Mockup format is static HTML files in `docs/ui/mockups/`, each importing `../design-system/style.css`. Open-questions list in the user-flow § 8 (chat empty→active transition, camera-angle hint placement, "не смог разобрать" wording, "one analysis in queue" UI behavior) is resolved in Phase 3 of this plan and written back into the user-flow's Decision Log. Mobile-first viewport (≈ 390 px wide), dark theme only — gym context (`docs/ui/index.md` § Principles).
+
+After this plan closes, Phase 1 exit-trigger gains the "mockups for 2–3 key screens ready" checkbox; the remaining trigger ("`web/` skeleton runs locally on Mac Safari") is owned by `EP-web-skeleton.md` (separate plan, follow-up to `EP-pivot-to-web.md`). No code is written here.
+
+## Phases
+
+### Phase 1 — Voice & tone foundation
+
+**Goal:** A single approved file `docs/ui/voice-and-tone.md` codifying UI-text principles, ready to consult while drafting strings inside the screen mockups.
+
+**Done when:** `docs/ui/voice-and-tone.md` exists with status `approved`; all four mandatory sections present (Principles, Address form, AI tone, Error / placeholder vocabulary); `docs/ui/index.md` updated (folder-structure row TBD → status link).
+
+**Steps:**
+
+- [x] Read `docs/product.md` "Voice and tone" (or equivalent) and `docs/product-specs/exercise-chat.md` § "AI reply format" + "Exercise recognition" for already-fixed tone decisions; consolidate into a list of known invariants.
+- [x] Decide and write the **address form** (single decision: «ты» informal vs «вы» formal). Recommendation: «ты», matching `docs/user-flows/upload-video-and-get-feedback.md` step 3 placeholder ("Загрузи видео…"). Record in Decision Log of this plan.
+- [x] Draft `docs/ui/voice-and-tone.md` body sections:
+  - **Principles** (calm, supportive, no gamification — pulled from `docs/ui/index.md` § Principles + `docs/product.md`).
+  - **Address form** (singular «ты», never «вы»; never plural «ребята»).
+  - **AI tone** (trainer-style, plain language, no rigid structure — verbatim from `exercise-chat.md` § "AI reply format"; add 2–3 short example replies).
+  - **Error / placeholder vocabulary** (canonical Russian phrasings for: empty chat placeholder, "Анализирую твой подход…", "Не смог разобрать твой подход…", queue-busy hint — exact wording is fixed in Phase 3, this section reserves the slots and links to Phase 3 outcomes).
+- [x] Add YAML header (`status: approved`, `last_updated`, `related`).
+- [x] Update `docs/ui/index.md` § "Folder structure": `voice-and-tone.md` row TBD → approved + link.
+
+### Phase 2 — Workout screen + technique pop-up mockups
+
+**Goal:** Two viewable HTML mockups: `docs/ui/mockups/workout.html` (Workout screen) and `docs/ui/mockups/technique-popup.html` (technique pop-up over workout). Both open in any browser and visually demonstrate exactly the elements specified in `docs/product-specs/workout.md` § "Workout screen anatomy" and `docs/product-specs/exercises-base.md` § "Technique text".
+
+**Done when:** Both files exist; opening either in Safari renders the screen at ~390 px width with Lucent dark theme; pop-up mockup uses the real `technique` text for `romanian_deadlift` (so it shows realistic length, not placeholder lorem ipsum); `docs/ui/index.md` § "Folder structure" lists the new `mockups/` directory.
+
+**Steps:**
+
+- [ ] Create `docs/ui/mockups/` directory; add small `README.md` inside explaining: format (standalone HTML, mobile-first 390 px, imports `../design-system/style.css`), how to open (double-click in Finder, opens in default browser), what the directory is for (visual source of truth before web client exists).
+- [ ] Author `docs/ui/mockups/workout.html`:
+  - `<!DOCTYPE html>`, `<meta name="viewport" content="width=390">`.
+  - `<link rel="stylesheet" href="../design-system/style.css">`.
+  - Google Fonts links for Manrope + Material Symbols Rounded (per `docs/ui/design-system/README.md`).
+  - Phone-frame container (max-width 390 px, centered for desktop preview).
+  - Header block: workout name "Вайбкодинговая тренировка", date "19.04.2026", counter "3 упражнения".
+  - Three exercise cards in fixed order from `workout.md` (Romanian deadlift, lat pulldown, biceps curl). Card anatomy: sequence number, exercise name, info-icon (Material Symbols `info`), right-arrow (Material Symbols `chevron_right`).
+  - Tokens used: `--color-bg`, `--color-surface`, `--color-text`, `--color-text-secondary`, `--space-md/lg`, `--radius-md`. **No raw hex colors** — only CSS variables from Lucent.
+- [ ] Author `docs/ui/mockups/technique-popup.html`:
+  - Same boilerplate as workout.html; same 390 px container.
+  - Underlay = workout screen at 50 % opacity (or just dimmed background `var(--alpha-black-40)` overlay).
+  - Pop-up surface: `var(--color-surface)`, radius `var(--radius-lg)`, padding `var(--space-lg)`.
+  - Title: "Румынская тяга со штангой".
+  - Body: full `technique` paragraph for `romanian_deadlift` from `docs/product-specs/exercises-base.md` § 1.
+  - Close affordance: "Понятно" button (primary accent, full-width) **and** top-right close icon (Material Symbols `close`). Decision in this plan's Decision Log: both, because button on phone is the cheap tap target, icon is the muscle-memory affordance.
+  - Decision (record in Decision Log): pop-up format = **bottom sheet** (slide-up from bottom, rounded top corners) rather than centered modal. Reason: phone ergonomics (thumb reach), and the existing Lucent style.css already has bottom-sheet treatment (verify by reading style.css; if absent, fall back to centered modal and note the gap in Surprises & Discoveries).
+- [ ] Cross-link from specs: add a one-line "Mockup: `../ui/mockups/workout.html`" pointer under `docs/product-specs/workout.md` § "Visual decisions" and "Mockup: `../ui/mockups/technique-popup.html`" under "Exercise card anatomy".
+- [ ] Update `docs/ui/index.md` § "Folder structure": add `mockups/` row, status `in-progress`, list the two files.
+- [ ] Verify by opening both files in Safari (manual check by owner; phase considered done after owner sign-off in chat).
+
+### Phase 3 — Per-exercise chat mockups (empty + active)
+
+**Goal:** Two viewable HTML mockups — `docs/ui/mockups/chat-empty.html` and `docs/ui/mockups/chat-active.html` — covering both visual states from `docs/user-flows/upload-video-and-get-feedback.md` step 3 vs step 7. All four open questions in user-flow § 8 are resolved and recorded.
+
+**Done when:** Both HTML files exist and render at 390 px in Lucent dark theme; user-flow § 9 "Decision log" has four new rows (one per resolved open question); `voice-and-tone.md` § "Error / placeholder vocabulary" filled with the exact canonical strings now decided; `docs/ui/index.md` lists the new files.
+
+**Steps:**
+
+- [ ] Decide answers to user-flow § 8 open questions (record each in this plan's Decision Log + the user-flow's Decision Log):
+  - **Q1 — empty→active transition.** Recommendation: cross-fade. `Загрузить видео` button stays, text input + attach button fade in below it after first AI message. No animation library; pure CSS `opacity` transition.
+  - **Q2 — camera-angle hint location.** Recommendation: inside empty-chat placeholder text, a second sentence under the main "Загрузи видео…" line. Per-exercise: deadlift / biceps → "Снимай сбоку"; lat pulldown → "Снимай спереди или в три четверти". Comes from `exercises-base.md` "Camera angle" column.
+  - **Q3 — "не смог разобрать" wording.** Use `docs/user-flows/upload-video-and-get-feedback.md` § 4.1 verbatim: «Не смог разобрать твой подход. Попробуй переснять видео и загрузить ещё раз».
+  - **Q4 — "one analysis in queue" UI in another chat.** Recommendation: «Загрузить видео» disabled (greyed out) + small system message below feed: «Дождись разбора предыдущего видео, иначе я запутаюсь». No tooltip (poor mobile pattern).
+- [ ] Author `docs/ui/mockups/chat-empty.html`:
+  - Same boilerplate as Phase 2 mockups.
+  - Header: back chevron (Material Symbols `arrow_back_ios_new`) + exercise name "Румынская тяга со штангой" centered.
+  - Empty feed area: large neutral icon (Material Symbols `videocam` or similar) + two-line placeholder: «Загрузи видео с выполнением упражнения, и я проверю технику выполнения» + per-exercise camera-angle line (Q2 above).
+  - Bottom action: full-width primary button «Загрузить видео» (`var(--color-accent)`, radius `var(--radius-md)`).
+  - **No** text input, **no** attach button — match user-flow step 3.
+- [ ] Author `docs/ui/mockups/chat-active.html`:
+  - Same header as empty.
+  - Feed (bottom-up):
+    1. User message — embedded video thumbnail (placeholder `<div>` with play icon, no real video).
+    2. AI placeholder message «Анализирую твой подход…» with three-dot animated indicator (CSS `@keyframes`, no JS).
+    3. AI reply message — short trainer-style text from `exercise-chat.md` "AI reply format" (1–2 sentences invented for the mockup, marked with HTML comment as "demo content, not authored AI output").
+    4. (Optional) User follow-up text bubble.
+  - Bottom: text input field («Спроси что-нибудь о технике…»), attach icon (Material Symbols `attach_file`), send button (Material Symbols `arrow_upward`). Mention in HTML comment that the original "Загрузить видео" button is **replaced** by the attach icon in the active state.
+- [ ] Update `docs/ui/voice-and-tone.md` § "Error / placeholder vocabulary" with the four canonical strings decided in step 1.
+- [ ] Cross-link from specs: in `docs/product-specs/exercise-chat.md` § "Chat UI" add pointer to both mockups; in `docs/user-flows/upload-video-and-get-feedback.md` § 7 "Related screens" link each of the two chat states to its mockup file.
+- [ ] Append four rows to `docs/user-flows/upload-video-and-get-feedback.md` § 9 "Decision log" (Q1…Q4), each row sourced as "Track B (Phase 3 of `EP-track-b-mockups`)".
+- [ ] Update `docs/ui/index.md` § "Folder structure": `mockups/` row gains the two new files.
+- [ ] Verify by opening both files in Safari (manual check; phase done after owner sign-off).
+
+### Phase 4 — Component inventory + close Track B
+
+**Goal:** `docs/ui/components.md` written as a digest of components actually used across the four mockups; Phase 1 exit-trigger updated in `roadmap.md`; this plan flipped to `completed` and moved to `completed/`.
+
+**Done when:** `components.md` exists with status `approved`; every component listed has at least one mockup citation; `roadmap.md` § 5 Phase 1 marks Track B as ✅ Closed `<date>`; `index.md` table reflects the new state; `Outcomes & Retrospective` section of this plan is filled.
+
+**Steps:**
+
+- [ ] Walk all four mockup HTML files; list every distinct UI element used (button-primary, button-icon, exercise-card, list-header, popup-bottom-sheet, chat-bubble-user, chat-bubble-ai, chat-input-bar, exercise-info-popup-trigger, …). Group into categories: layout, content, controls, feedback.
+- [ ] Author `docs/ui/components.md`:
+  - For each component: name, purpose (one sentence), Lucent token usage (which CSS variables / classes), where it's used (mockup file + line range), when **not** to use it.
+  - Header note: "Components are an inventory, not a library. Reusable React abstractions are decided in `EP-web-skeleton.md`, not here."
+- [ ] Update `docs/ui/index.md` § "Folder structure": `components.md` row TBD → approved + link.
+- [ ] Update `docs/exec-plans/active/roadmap.md` § 5 Phase 1: Track B status `🔄 In progress` → `✅ Closed YYYY-MM-DD (active/EP-track-b-mockups.md → completed/EP-track-b-mockups.md)`. Add a row in § 8 "Decision log".
+- [ ] Flip this plan's YAML `status: active` → `status: completed`. Fill `## Outcomes & Retrospective` (what shipped, dropped, lessons).
+- [ ] Move file: `docs/exec-plans/active/EP-track-b-mockups.md` → `docs/exec-plans/completed/EP-track-b-mockups.md`. Update `docs/exec-plans/index.md` (move row from "Active" to "completed", set `Closed` date).
+
+## Decision Log
+
+| Date | Decision | Rationale |
+|---|---|---|
+| 2026-04-27 | Mockup format = standalone HTML files in `docs/ui/mockups/`, importing Lucent's `style.css` directly. Not Figma. | Owner is non-developer working through agent; agent authors HTML, not Figma. HTML mockups use the same CSS the eventual `web/` client will use, eliminating a redesign pass. Boring tech first. |
+| 2026-04-27 | Mockup viewport = 390 px wide, mobile-first. Desktop preview = same 390 px container centered on neutral background. | Gym context = phone usage; primary target Safari iOS. Desktop is preview-only at this stage. |
+| 2026-04-27 | Dark theme only in mockups. | `docs/ui/index.md` § Principles fixes dark theme as required for gym lighting. Light theme not in MVP. |
+| 2026-04-27 | `components.md` authored at end (Phase 4), not start. | Inventory-after-use beats abstract-component-library-first. Avoids speccing components no screen ends up needing. |
+| 2026-04-27 | `voice-and-tone.md` authored at start (Phase 1). | Mockup strings need approved tone before they are written. Avoids retro-fixing copy in 4 HTML files later. |
+| 2026-04-27 | Address form = «ты» (informal singular). | Matches existing user-flow placeholder strings («Загрузи видео…»); supportive coach tone (`docs/ui/index.md` § Principles); no «вы» or «ребята». |
+| 2026-04-27 | Open Questions in `upload-video-and-get-feedback.md` § 8 are resolved inside Phase 3 of this plan, not deferred. | These four are explicitly tagged as Track B inputs in the user-flow doc. Track B is this plan. Resolving here closes the corresponding Decision Log rows in user-flow doc in the same commit. |
+| 2026-04-27 | Plan approved by owner. Execution proceeds phase by phase via fresh-chat agent runs (one chat per phase). | Per `AGENTS.md` planning workflow + `PLANS.md` § 5 owner workflow. |
+
+## Open Questions
+
+- **Bottom sheet vs centered modal for technique pop-up.** Default = bottom sheet (Phase 2 step 3 above). If `docs/ui/design-system/style.css` lacks a bottom-sheet treatment, fall back to centered modal and record in `Surprises & Discoveries`.
+- **Realistic AI reply text in `chat-active.html`.** Phase 3 mockup uses 1–2 invented trainer-style sentences as demo content. Open question: replace with a real Gemini output once Phase 2 (thin slice) produces one, or keep as design-only demo. Decision deferred to Phase 4 retrospective.
+- **Per-exercise chat header.** User-flow says "Back + exercise name". Open question: include the small info-icon in chat header so user can re-open technique pop-up without going back to workout screen? Currently mockup omits it; revisit if Phase 2 (thin slice) feedback flags the gap.
+
+## Related documents
+
+| Path | Role |
+|---|---|
+| `roadmap.md` | Track B closure target. § 5 Phase 1 + § 8 Decision Log updated by Phase 4. |
+| `EP-mvp-product-spec.md` | Parent plan; references Track B as a required closure for Phase 1 exit trigger. |
+| `../../ui/index.md` | Folder structure updated by Phases 1–4 as new files appear. |
+| `../../ui/design-system/README.md` | Source of truth for Lucent CSS variables consumed by the mockups. |
+| `../../product-specs/workout.md` | Source for Workout-screen anatomy (Phase 2). Cross-linked back via "Mockup:" pointer. |
+| `../../product-specs/exercise-chat.md` | Source for chat structure + AI tone (Phases 1, 3). Cross-linked. |
+| `../../product-specs/exercises-base.md` | Source for exercise names, technique text, camera angles (Phases 2, 3). |
+| `../../user-flows/upload-video-and-get-feedback.md` | Source of two chat states + § 8 open questions (Phase 3). Decision Log appended in Phase 3. |
+| `../../FRONTEND.md` | Confirms web stack + mobile-first viewport target. |

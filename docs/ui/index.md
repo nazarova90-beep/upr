@@ -23,7 +23,7 @@ Screen mockups and component spec — not started; arrive with scenario work.
 | `components.md` | TBD | UI component spec (buttons, cards, inputs), references `design-system/`. |
 | `mockups/` | TBD | Mockup screenshots / Figma links. |
 | `flows-visual/` | TBD | Visual user-flow diagrams. |
-| `voice-and-tone.md` | TBD | UI text principles. |
+| [`voice-and-tone.md`](voice-and-tone.md) | approved | UI text principles (Russian copy, address form, AI tone, error vocabulary). |
 
 ## Principles
 
