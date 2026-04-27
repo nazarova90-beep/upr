@@ -24,6 +24,7 @@ If a library is used in the project, its key rules must live here.
 | `react-i18next.md` | approved | i18next ↔ React bridge: `initReactI18next`, `useTranslation` hook, `<Trans>` component. Web client (formerly mobile). |
 | `react.md` | approved | UI library: `createRoot` + `<StrictMode>` entry, function components with TS props, hooks (`useState`, `useEffect`), `lazy` + `<Suspense>`. Version 19.2+. |
 | `vite.md` | approved | Build tool / dev server: `npm create vite@latest --template react-ts`, `vite.config.ts` with `@vitejs/plugin-react` and `server.proxy` `/api` → `localhost:8000`, `import.meta.env` (`VITE_*`). Version 8.0+. |
+| `react-router.md` | approved | Routing for the SPA (library/data mode): `createBrowserRouter` + `<RouterProvider>`, `<Outlet>`, `<Link>` / `<NavLink>`, `useParams` / `useNavigate`. Package renamed in v7: `react-router` (not `react-router-dom`). Version 7.9+. |
 | `fastapi.md` | approved | Python web framework: `FastAPI()`, `APIRouter`, "Bigger Applications" layout. Version 0.118+. Used in `backend/`. |
 | `sqlmodel.md` | approved | ORM + Pydantic combined: class with `table=True`, `Field()`, `Relationship`, `create_engine`. Version 0.0.24+. Used in `backend/app/db/`. |
 | `pydantic-settings.md` | approved | Settings via `.env` / env-vars through `BaseSettings`. Version 2.x. Used in `backend/app/core/config.py`. |
@@ -45,7 +46,6 @@ Required before code that uses these libraries (Rule §3 of `core-beliefs.md`).
 
 ### Web pivot follow-ups (high priority)
 
-- `react-router.md` — `react-router-dom`. Routing for web client.
 - `i18next-browser-languagedetector.md` — Browser locale detection. Replaces `expo-localization`.
 
 ### Phase 2 / thin slice
