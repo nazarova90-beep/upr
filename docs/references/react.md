@@ -11,7 +11,7 @@ Source: MCP `user-context7`, library ID `/reactjs/react.dev` (Source Reputation:
 
 ## Purpose in project
 
-UI library for the web client. Drives the entire interface (workout screen, exercise chat, technique pop-up). Pairs with `vite` (build / dev server, ref pending) and TypeScript. Renders one root in `web/src/main.tsx`. Selected in `stack.md` "Choice notes" and pivot plan `exec-plans/active/2026-04-27-pivot-to-web.md`.
+UI library for the web client. Drives the entire interface (workout screen, exercise chat, technique pop-up). Pairs with `vite` (build / dev server, ref pending) and TypeScript. Renders one root in `web/src/main.tsx`. Selected in `stack.md` "Choice notes" and pivot plan `exec-plans/active/EP-pivot-to-web.md`.
 
 ## Version
 

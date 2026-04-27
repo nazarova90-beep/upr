@@ -3,14 +3,14 @@ status: deprecated
 last_updated: 2026-04-27
 owner: Кристина
 deprecated_on: 2026-04-27
-deprecated_by: ../../exec-plans/active/2026-04-27-pivot-to-web.md
+deprecated_by: ../../exec-plans/active/EP-pivot-to-web.md
 deprecation_reason: Frontend pivot from React Native + Expo to React + Vite + TypeScript (web). Replacement for browser locale detection: `i18next-browser-languagedetector` (planned ref `../i18next-browser-languagedetector.md`).
 related: ../../FRONTEND.md, ../../stack.md, expo.md, ../i18next.md, ../react-i18next.md, ../index.md
 ---
 
 # expo-localization — research note (DEPRECATED 2026-04-27)
 
-> **Deprecated by frontend pivot to web on 2026-04-27.** See `../../exec-plans/active/2026-04-27-pivot-to-web.md`.
+> **Deprecated by frontend pivot to web on 2026-04-27.** See `../../exec-plans/active/EP-pivot-to-web.md`.
 >
 > Replacement: `i18next-browser-languagedetector` (uses `navigator.languages` / `navigator.language`). Same role — feed device language to `i18next` on app start. Ref to be authored before use.
 >

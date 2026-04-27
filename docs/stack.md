@@ -2,7 +2,7 @@
 status: approved
 last_updated: 2026-04-27
 owner: Кристина
-related: ../README.md, ../ARCHITECTURE.md, BACKEND.md, FRONTEND.md, DATABASE.md, SECURITY.md, product.md, exec-plans/active/2026-04-27-pivot-to-web.md
+related: ../README.md, ../ARCHITECTURE.md, BACKEND.md, FRONTEND.md, DATABASE.md, SECURITY.md, product.md, exec-plans/active/EP-pivot-to-web.md
 ---
 
 # UPR — stack
@@ -178,4 +178,4 @@ Free supplementary tool at any phase: **MediaPipe Pose** — reduces cloud AI bi
 |---|---|
 | 2026-04-19 | Initial MVP stack: Flutter + Python/FastAPI + SQLite (via ORM) + Gemini Free Tier + MediaPipe. |
 | 2026-04-19 | Frontend revised: Flutter → React Native + Expo (TypeScript). Cause: onboarding cost (Flutter needs Xcode ~15 GB or Android Studio ~10 GB; Expo Go runs on physical iPhone via QR code). All Single-scenario MVP capabilities (gallery video picker, video player, network upload, dark theme, Manrope, i18n) supported in Expo Go without Dev Build (verified via MCP `user-context7`, `references/expo.md`). First need for native build: Phase 3 (on-device MediaPipe, optional). |
-| 2026-04-27 | Frontend revised: React Native + Expo → React + Vite + TypeScript (web client). Cause: owner runs always-on VPN on both Mac and iPhone, blocking LAN reach between Expo Go and FastAPI (already worked around via ngrok in superseded `exec-plans/active/2026-04-27-hello-world.md`); Apple Developer Account ($99/year) out of MVP budget; Lucent design system already authored in HTML/CSS — direct consumption in web; backend platform-agnostic by design. Browser app removes Xcode / Android Studio / Apple Developer / TestFlight from MVP path entirely. Native iOS/Android shell moved from Phase 1 to optional ≥ Phase 9. Pivot driven by `exec-plans/active/2026-04-27-pivot-to-web.md`. |
+| 2026-04-27 | Frontend revised: React Native + Expo → React + Vite + TypeScript (web client). Cause: owner runs always-on VPN on both Mac and iPhone, blocking LAN reach between Expo Go and FastAPI (already worked around via ngrok in superseded `exec-plans/superseded/EP-hello-world.md`); Apple Developer Account ($99/year) out of MVP budget; Lucent design system already authored in HTML/CSS — direct consumption in web; backend platform-agnostic by design. Browser app removes Xcode / Android Studio / Apple Developer / TestFlight from MVP path entirely. Native iOS/Android shell moved from Phase 1 to optional ≥ Phase 9. Pivot driven by `exec-plans/active/EP-pivot-to-web.md`. |

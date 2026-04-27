@@ -1,8 +1,10 @@
 ---
-status: in-progress
+id: EP-pivot-to-web
+tier: ExecPlan
+status: active
 last_updated: 2026-04-27
 owner: Кристина
-related: ../index.md, roadmap.md, mvp-product-spec.md, ../superseded/2026-04-27-hello-world.md, ../../stack.md, ../../FRONTEND.md, ../../product.md, ../../ui/index.md, ../../ui/design-system/README.md, ../../references/index.md, ../../references/i18next.md, ../../references/react-i18next.md, ../../references/deprecated/expo.md, ../../references/deprecated/expo-router.md, ../../references/deprecated/expo-localization.md, ../../../AGENTS.md, ../../../mobile/README.md
+related: ../index.md, ../PLANS.md, roadmap.md, EP-mvp-product-spec.md, ../superseded/EP-hello-world.md, ../../stack.md, ../../FRONTEND.md, ../../product.md, ../../ui/index.md, ../../ui/design-system/README.md, ../../references/index.md, ../../references/i18next.md, ../../references/react-i18next.md, ../../references/deprecated/expo.md, ../../references/deprecated/expo-router.md, ../../references/deprecated/expo-localization.md, ../../../AGENTS.md, ../../../mobile/README.md
 ---
 
 # Plan: Pivot frontend mobile → web
@@ -19,7 +21,7 @@ Outputs of this plan are entirely textual: project documentation reflects the pi
 
 ### Triggering owner constraints (2026-04-27 chat)
 
-1. **Always-on VPN on Mac and iPhone.** Both devices stay on consumer privacy VPNs full-time (privacy / region requirements). Direct LAN reach between Expo Go on iPhone and FastAPI on Mac (`192.168.x.x`) is unreliable: incoming local-network connections are blocked by Mac's VPN, outbound from iPhone goes through its own VPN tunnel and cannot resolve the Mac's private LAN. The superseded `superseded/2026-04-27-hello-world.md` plan worked around this with an ngrok HTTP tunnel — viable but adds a third-party dependency, an ephemeral URL per session, and ~100–300 ms latency, none of which exist on a `localhost`-served web client.
+1. **Always-on VPN on Mac and iPhone.** Both devices stay on consumer privacy VPNs full-time (privacy / region requirements). Direct LAN reach between Expo Go on iPhone and FastAPI on Mac (`192.168.x.x`) is unreliable: incoming local-network connections are blocked by Mac's VPN, outbound from iPhone goes through its own VPN tunnel and cannot resolve the Mac's private LAN. The superseded `superseded/EP-hello-world.md` plan worked around this with an ngrok HTTP tunnel — viable but adds a third-party dependency, an ephemeral URL per session, and ~100–300 ms latency, none of which exist on a `localhost`-served web client.
 2. **No Apple Developer Account.** $99/year is out of MVP budget. Without it, TestFlight (the documented Phase 5 distribution path for closed beta) is unreachable, and even owner-only iPhone use is gated by Expo Go's preview limitations.
 3. **Owner asked for "fastest path to product access for MVP."** Native iOS/Android delivery for a single owner-user is over-engineering relative to that goal.
 
@@ -33,7 +35,7 @@ Outputs of this plan are entirely textual: project documentation reflects the pi
 
 ### Superseded / deprecated assets
 
-- `docs/exec-plans/superseded/2026-04-27-hello-world.md` (was `active/`). Original mobile-via-ngrok hello-world plan. Status flipped to `superseded`, moved to `superseded/`, banner added, content preserved as historical record. Reusable parts (`/health` endpoint design, `__DEV__`-gated debug button pattern) are explicitly noted for the future `active/2026-04-27-web-hello-world.md` plan.
+- `docs/exec-plans/superseded/EP-hello-world.md` (was `active/`, formerly `2026-04-27-hello-world.md`). Original mobile-via-ngrok hello-world plan. Status flipped to `superseded`, moved to `superseded/`, banner added, content preserved as historical record. Reusable parts (`/health` endpoint design, `__DEV__`-gated debug button pattern) are explicitly noted for the future `active/EP-web-hello-world.md` plan.
 - `docs/references/deprecated/expo.md`, `docs/references/deprecated/expo-router.md`, `docs/references/deprecated/expo-localization.md` (were `references/`). Status flipped to `deprecated`, files moved into `references/deprecated/`, banner added at the top of each, otherwise content preserved.
 
 ### Alternatives considered and rejected
@@ -100,7 +102,7 @@ upr/
 - **Phase 1 / new Track D** added: "Frontend pivot mobile → web + `web/` skeleton". Status: in progress. Sub-deliverables:
   1. This documentation commit (closes Track D step 1).
   2. New library refs: `references/react.md`, `references/vite.md`, `references/react-router.md` (and later `references/i18next-browser-languagedetector.md`, `references/zustand.md`, `references/tanstack-react-query.md` per "boring tech first").
-  3. `active/<date>-web-skeleton.md` exec-plan (analogue of `completed/2026-04-27-phase1-track-c-skeleton.md` for `web/`).
+  3. `active/EP-web-skeleton.md` exec-plan (analogue of `completed/EP-phase1-track-c-skeleton.md` for `web/`).
   4. `active/<date>-web-hello-world.md` exec-plan (analogue of superseded mobile hello-world).
 - **Phase 1 exit trigger** updated in `roadmap.md`: "mockups + specs closed + `web/` skeleton runs locally on Mac Safari" (was: "Expo Go on owner's iPhone").
 - **Phase 2 exit trigger** updated: "test video uploaded from Mac Safari (or iPhone Safari via tunnel) yields real Gemini analysis."
@@ -121,11 +123,11 @@ This single commit (after owner approval) covers everything below. Each item ref
 
 ### Plans
 
-- [x] Create this master pivot plan: `docs/exec-plans/active/2026-04-27-pivot-to-web.md`.
-- [x] Move old hello-world plan: `docs/exec-plans/active/2026-04-27-hello-world.md` → `docs/exec-plans/superseded/2026-04-27-hello-world.md`. Header `status: superseded`, `superseded_by`, `superseded_on`, `supersession_reason`. Banner at top.
+- [x] Create this master pivot plan: `docs/exec-plans/active/EP-pivot-to-web.md` (originally created as `2026-04-27-pivot-to-web.md`; renamed under `EP-` scheme on 2026-04-27).
+- [x] Move old hello-world plan: `docs/exec-plans/active/EP-hello-world.md` → `docs/exec-plans/superseded/EP-hello-world.md`. Header `status: superseded`, `superseded_by`, `superseded_on`, `supersession_reason`. Banner at top.
 - [x] Update `docs/exec-plans/index.md`: add `superseded/` to folder structure; list this plan under "Active"; new "Superseded" section listing the moved plan; rules for handling supersession.
 - [x] Update `docs/exec-plans/active/roadmap.md`: § 1 "Current state" reflects web stack + frozen `mobile/`; § 5 Phase 1 gains Track D; § 5 Phase 9 swaps "web via RN-for-Web" for "optional native iOS/Android shell"; § 7 "Not planned now" updated; § 8 decision log entry added.
-- [x] Update `docs/exec-plans/active/mvp-product-spec.md`: § "Place in roadmap" mentions Track D; A.4 "Local hello world" reworded to "web app calls it via Vite proxy"; decision log entry added.
+- [x] Update `docs/exec-plans/active/EP-mvp-product-spec.md`: § "Place in roadmap" mentions Track D; A.4 "Local hello world" reworded to "web app calls it via Vite proxy"; decision log entry added.
 
 ### Stack / architecture / agent map
 
@@ -142,7 +144,7 @@ This single commit (after owner approval) covers everything below. Each item ref
 ### References
 
 - [x] Move Expo refs to `docs/references/deprecated/`:
-  - [x] `references/expo.md` → `references/deprecated/expo.md`. Header `status: deprecated`, `deprecated_on: 2026-04-27`, `deprecated_by: ../../exec-plans/active/2026-04-27-pivot-to-web.md`, `deprecation_reason`. Banner at top.
+  - [x] `references/expo.md` → `references/deprecated/expo.md`. Header `status: deprecated`, `deprecated_on: 2026-04-27`, `deprecated_by: ../../exec-plans/active/EP-pivot-to-web.md`, `deprecation_reason`. Banner at top.
   - [x] `references/expo-router.md` → `references/deprecated/expo-router.md`. Same header treatment.
   - [x] `references/expo-localization.md` → `references/deprecated/expo-localization.md`. Same header treatment.
 - [x] Update `docs/references/index.md`: split into "Active" / "Deprecated" / "Planned"; "Planned" lists web pivot follow-ups (`react.md`, `vite.md`, `react-router.md`, etc.) as high-priority.
@@ -193,8 +195,8 @@ This single commit (after owner approval) covers everything below. Each item ref
 | Path | Role |
 |---|---|
 | `roadmap.md` | Top-level roadmap; Track D added; Phase 9 updated; decision log carries pivot entry. |
-| `mvp-product-spec.md` | A.4 "Local hello world" retargeted to web client; decision log entry added. |
-| `../superseded/2026-04-27-hello-world.md` | Predecessor plan (mobile-via-ngrok); superseded by this one. |
+| `EP-mvp-product-spec.md` | A.4 "Local hello world" retargeted to web client; decision log entry added. |
+| `../superseded/EP-hello-world.md` | Predecessor plan (mobile-via-ngrok); superseded by this one. |
 | `../../stack.md` | Single source of truth for stack; "Choice notes" + decision log carry the pivot. |
 | `../../FRONTEND.md` | Rewritten end-to-end for the web client. |
 | `../../product.md` | § 9 "Platforms" updated to web; native deferred. |

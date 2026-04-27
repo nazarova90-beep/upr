@@ -2,7 +2,7 @@
 status: approved
 last_updated: 2026-04-27
 owner: Кристина
-related: stack.md, ../ARCHITECTURE.md, BACKEND.md, ui/index.md, SECURITY.md, exec-plans/active/2026-04-27-pivot-to-web.md
+related: stack.md, ../ARCHITECTURE.md, BACKEND.md, ui/index.md, SECURITY.md, exec-plans/active/EP-pivot-to-web.md
 ---
 
 # Frontend — web client
@@ -13,7 +13,7 @@ related: stack.md, ../ARCHITECTURE.md, BACKEND.md, ui/index.md, SECURITY.md, exe
 - Single codebase, runs in any modern browser (Safari, Chrome, Firefox, Edge).
 - Dev mode: Vite dev server on `localhost:5173` proxying `/api/*` → `localhost:8000` (FastAPI).
 - Pivot rationale: `stack.md` → "Choice notes" + "Decision log" 2026-04-27.
-- Pivot plan: `exec-plans/active/2026-04-27-pivot-to-web.md`.
+- Pivot plan: `exec-plans/active/EP-pivot-to-web.md`.
 
 ## Browsers
 

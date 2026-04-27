@@ -3,14 +3,14 @@ status: deprecated
 last_updated: 2026-04-27
 owner: Кристина
 deprecated_on: 2026-04-27
-deprecated_by: ../../exec-plans/active/2026-04-27-pivot-to-web.md
+deprecated_by: ../../exec-plans/active/EP-pivot-to-web.md
 deprecation_reason: Frontend pivot from React Native + Expo to React + Vite + TypeScript (web). Expo and Expo Go no longer in active stack. Mobile skeleton frozen on disk; not actively developed.
 related: ../../FRONTEND.md, ../../stack.md, ../index.md
 ---
 
 # Expo (React Native) — research note (DEPRECATED 2026-04-27)
 
-> **Deprecated by frontend pivot to web on 2026-04-27.** See `../../exec-plans/active/2026-04-27-pivot-to-web.md`.
+> **Deprecated by frontend pivot to web on 2026-04-27.** See `../../exec-plans/active/EP-pivot-to-web.md`.
 >
 > Kept as historical record of the original mobile-stack research. The Expo Go vs Dev Build decision matrix and the SDK 54 verification notes informed the choice that this pivot replaces. Active web stack: `../../FRONTEND.md`.
 
@@ -104,4 +104,4 @@ Save file in editor
 ## Decision history
 
 - 2026-04-19: Stack decision — Flutter → React Native + Expo (TypeScript). Recorded in `docs/stack.md` decision log.
-- 2026-04-27: **Deprecated.** Frontend pivot to React + Vite + TypeScript (web). Recorded in `docs/stack.md` decision log and `exec-plans/active/2026-04-27-pivot-to-web.md`.
+- 2026-04-27: **Deprecated.** Frontend pivot to React + Vite + TypeScript (web). Recorded in `docs/stack.md` decision log and `exec-plans/active/EP-pivot-to-web.md`.

@@ -13,7 +13,7 @@ Source: MCP `user-context7`, library ID `/i18next/i18next` (Source Reputation: H
 
 i18n engine for JS/TS. Loads JSON dictionaries (`ru.json`, future `en.json`, …), returns text by key. Supports interpolation (`Hello {{name}}`), pluralization, nested keys, namespaces.
 
-Stack relations: engine only. React components use via `react-i18next.md`. Browser language detection: planned `i18next-browser-languagedetector.md` (replaces deprecated `deprecated/expo-localization.md` after 2026-04-27 web pivot — see `../exec-plans/active/2026-04-27-pivot-to-web.md`).
+Stack relations: engine only. React components use via `react-i18next.md`. Browser language detection: planned `i18next-browser-languagedetector.md` (replaces deprecated `deprecated/expo-localization.md` after 2026-04-27 web pivot — see `../exec-plans/active/EP-pivot-to-web.md`).
 
 ## Version
 

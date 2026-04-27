@@ -1,6 +1,6 @@
 # UPR backend
 
-Python + FastAPI server. Status: structural skeleton only (Phase 1 / Track C — see `../docs/exec-plans/completed/2026-04-27-phase1-track-c-skeleton.md`). No endpoints, empty DB, stub AI provider. Next step: hello-world.
+Python + FastAPI server. Status: structural skeleton only (Phase 1 / Track C — see `../docs/exec-plans/completed/EP-phase1-track-c-skeleton.md`). No endpoints, empty DB, stub AI provider. Next step: hello-world.
 
 ## Dependencies
 

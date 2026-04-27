@@ -33,4 +33,4 @@ Full picture: `docs/product.md`. Roadmap: `docs/exec-plans/active/roadmap.md`.
 
 ## Status
 
-Product design for MVP largely complete. Stack chosen (`docs/stack.md`). Skeleton of `mobile/` and `backend/` committed (`docs/exec-plans/completed/2026-04-27-phase1-track-c-skeleton.md`). Next: Phase 2 (thin slice).
+Product design for MVP largely complete. Stack chosen (`docs/stack.md`). Skeleton of `mobile/` and `backend/` committed (`docs/exec-plans/completed/EP-phase1-track-c-skeleton.md`). Next: Phase 2 (thin slice).

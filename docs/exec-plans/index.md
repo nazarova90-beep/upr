@@ -2,58 +2,50 @@
 status: in-progress
 last_updated: 2026-04-27
 owner: Кристина
-related: ../../AGENTS.md, tech-debt-tracker.md, active/roadmap.md
+related: PLANS.md, ../../AGENTS.md, tech-debt-tracker.md, active/roadmap.md
 ---
 
-# Exec plans
+# Exec plans — index
 
-Plans as first-class documents.
+Catalogue of every plan in the repository. Format spec: `PLANS.md`.
 
-## Hierarchy
+Updated together with the plan it tracks. Index out of sync with disk = bug.
 
-1. **Top-level roadmap** — one per project, describes all phases. `active/roadmap.md`.
-2. **Detailed exec-plans** — per phase or per large task, with `[ ]` / `[x]` checklist and decision log. Created at start of the phase, not earlier.
+## Top-level artifacts (not plans)
 
-Light plans for small tasks are optional. Create an exec-plan only for non-trivial work.
+| File | Purpose |
+|---|---|
+| `PLANS.md` | Format spec — what an ExecPlan / Light plan is, mandatory sections, lifecycle. |
+| `active/roadmap.md` | Top-level roadmap (phases + exit triggers). One per project. |
+| `tech-debt-tracker.md` | Log of shortcuts and deferred fixes. |
+
+## Plans
+
+| ID | Title | Tier | Status | Started | Closed | File |
+|---|---|---|---|---|---|---|
+| `EP-mvp-product-spec` | MVP product specification | ExecPlan | active | 2026-04-18 | — | `active/EP-mvp-product-spec.md` |
+| `EP-pivot-to-web` | Frontend pivot mobile → web | ExecPlan | active | 2026-04-27 | — | `active/EP-pivot-to-web.md` |
+| `EP-phase1-track-c-skeleton` | Phase 1 / Track C — `backend/` + `mobile/` skeleton | ExecPlan | completed | 2026-04-19 | 2026-04-27 | `completed/EP-phase1-track-c-skeleton.md` |
+| `EP-hello-world` | Hello-world (mobile-via-ngrok) | ExecPlan | superseded | 2026-04-21 | — | `superseded/EP-hello-world.md` |
+
+## Decommissioned
+
+One-line entries for plans deleted from disk on cancellation. Git history preserves the file content.
+
+_None yet._
 
 ## Folder structure
 
 | Path | Contents |
 |---|---|
+| `PLANS.md` | Format spec. |
+| `index.md` | This file. |
 | `active/roadmap.md` | Top-level roadmap. |
-| `active/` (rest) | Detailed plans for current phases. |
-| `completed/` | Closed plans and archived transcripts. |
-| `superseded/` | Plans replaced before completion by a different plan. Header field `superseded_by` points to replacement. |
+| `active/EP-*.md` | Plans currently in progress. |
+| `completed/EP-*.md` | Closed plans. |
+| `superseded/EP-*.md` | Plans replaced before completion by a different plan. YAML carries `superseded_by`. |
 | `tech-debt-tracker.md` | Tech-debt log. |
 
-## Active
+## Update obligation
 
-- `active/roadmap.md` — top-level roadmap.
-- `active/mvp-product-spec.md` — MVP product-spec work (Track A of Phase 1 closed; Track B / Track C / Track D tracked here).
-- `active/2026-04-27-pivot-to-web.md` — frontend pivot mobile (RN + Expo) → web (React + Vite). Drives doc commit + future web skeleton + future web hello-world plans.
-
-## Completed
-
-- `completed/2026-04-27-phase1-track-c-skeleton.md` — `backend/` + `mobile/` skeleton (Track C of Phase 1).
-- `completed/2026-04-18-mvp-product-spec-discussion.txt` — first product-discussion transcript.
-
-## Superseded
-
-- `superseded/2026-04-27-hello-world.md` — original mobile-via-ngrok hello-world plan. Superseded 2026-04-27 by `active/2026-04-27-pivot-to-web.md`. Replaced by future `active/2026-04-27-web-hello-world.md`.
-
-## Plan template
-
-1. **Goal** — desired outcome.
-2. **Context** — why now, prior state.
-3. **Steps** — numbered checklist `[ ]` / `[x]`.
-4. **Open questions**.
-5. **Decision log** — date + decision.
-6. **Related documents** — destination for results.
-
-## Rules
-
-- Plan created in `active/` at task start.
-- Updated as work progresses (check marks, decision log).
-- On completion → moves to `completed/` with date prefix in filename.
-- If cancelled → moves to `completed/` with status `cancelled`.
-- If superseded by a different plan before completion → moves to `superseded/`; header gets `status: superseded`, `superseded_by: <path>`, `superseded_on: YYYY-MM-DD`, `supersession_reason: <text>`. Original checklist preserved as historical record.
+Every plan transition (create / complete / supersede / cancel) → update both the plan file and this index in the same commit. Rule lives in `PLANS.md` § 7.

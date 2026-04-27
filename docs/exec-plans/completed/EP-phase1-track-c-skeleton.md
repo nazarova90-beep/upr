@@ -1,8 +1,10 @@
 ---
+id: EP-phase1-track-c-skeleton
+tier: ExecPlan
 status: completed
 last_updated: 2026-04-27
 owner: Кристина
-related: ../active/roadmap.md, ../active/mvp-product-spec.md, ../../BACKEND.md, ../../FRONTEND.md, ../../../ARCHITECTURE.md, ../../references/index.md
+related: ../active/roadmap.md, ../active/EP-mvp-product-spec.md, ../PLANS.md, ../../BACKEND.md, ../../FRONTEND.md, ../../../ARCHITECTURE.md, ../../references/index.md
 ---
 
 # Plan: Phase 1 / Track C — structural skeleton (CLOSED 2026-04-27)
@@ -29,7 +31,7 @@ Structural skeleton of two code projects — `backend/` (FastAPI) and `mobile/` 
 ## Context
 
 - Track C documentation ready: `docs/stack.md`, `docs/BACKEND.md`, `docs/FRONTEND.md`, `ARCHITECTURE.md`, `docs/references/expo.md`.
-- `mobile/` and `backend/` did not exist (per A.4 in `mvp-product-spec.md`).
+- `mobile/` and `backend/` did not exist (per A.4 in `EP-mvp-product-spec.md`).
 - Local: Node.js v22, Python 3.13, pip.
 - Stack: React Native + Expo (TypeScript) + Python/FastAPI + SQLModel/SQLAlchemy + SQLite (`stack.md`, decision log 2026-04-19).
 
@@ -120,7 +122,7 @@ Customizations:
 - [x] `mobile/app/index.tsx` — workout screen stub (`View` + title)
 - [x] `mobile/app/chat/[exerciseId].tsx` — chat screen stub
 - [x] `mobile/.env.example` + `mobile/README.md` (stubs)
-- [x] Update `mvp-product-spec.md` A.4: structure → `[x]`; hello-world + DB schema autogen → `[ ]`
+- [x] Update `EP-mvp-product-spec.md` A.4: structure → `[x]`; hello-world + DB schema autogen → `[ ]`
 - [x] Commit 3
 
 ## Open questions

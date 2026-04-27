@@ -2,7 +2,7 @@
 status: in-progress
 last_updated: 2026-04-27
 owner: Кристина
-related: ../product.md, exercise-chat.md, exercises-base.md, ../exec-plans/active/roadmap.md, ../exec-plans/active/mvp-product-spec.md
+related: ../product.md, exercise-chat.md, exercises-base.md, ../exec-plans/active/roadmap.md, ../exec-plans/active/EP-mvp-product-spec.md
 ---
 
 # Workout

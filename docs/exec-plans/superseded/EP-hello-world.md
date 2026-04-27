@@ -1,16 +1,18 @@
 ---
+id: EP-hello-world
+tier: ExecPlan
 status: superseded
 last_updated: 2026-04-27
 owner: Кристина
-related: ../active/2026-04-27-pivot-to-web.md, ../active/roadmap.md, ../active/mvp-product-spec.md, ../completed/2026-04-27-phase1-track-c-skeleton.md, ../../BACKEND.md, ../../FRONTEND.md, ../../../ARCHITECTURE.md, ../../references/index.md
-superseded_by: ../active/2026-04-27-pivot-to-web.md
+related: ../active/EP-pivot-to-web.md, ../active/roadmap.md, ../active/EP-mvp-product-spec.md, ../completed/EP-phase1-track-c-skeleton.md, ../PLANS.md, ../../BACKEND.md, ../../FRONTEND.md, ../../../ARCHITECTURE.md, ../../references/index.md
+superseded_by: EP-pivot-to-web
 superseded_on: 2026-04-27
 supersession_reason: Frontend pivot from React Native + Expo (mobile) to React + Vite + TypeScript (web). Reasons in pivot plan. Mobile-via-ngrok connection method becomes irrelevant; new web-hello-world plan to be authored after pivot doc commit.
 ---
 
 # Plan: Hello-world (closing item of Phase 1 / Track C) — SUPERSEDED 2026-04-27
 
-> **Superseded by `../active/2026-04-27-pivot-to-web.md`.**
+> **Superseded by `../active/EP-pivot-to-web.md`.**
 >
 > This plan targeted React Native + Expo on iPhone. After 2026-04-27 frontend pivot to web, the goal "prove backend ↔ frontend wiring" is reassigned to a future `2026-04-27-web-hello-world.md` plan. Backend `/health` content drafted here remains reusable. Mobile-side commits and ngrok integration are no longer planned.
 >
@@ -21,7 +23,7 @@ supersession_reason: Frontend pivot from React Native + Expo (mobile) to React +
 
 ---
 
-Detailed exec-plan for the last unchecked item of `mvp-product-spec.md` § A.4 — "Local hello world: backend serves `/health`, mobile app calls it." Bridge between Phase 1 (skeletons) and Phase 2 (thin slice with Gemini). Track C split decision recorded 2026-04-27 in `../completed/2026-04-27-phase1-track-c-skeleton.md` decision log.
+Detailed exec-plan for the last unchecked item of `EP-mvp-product-spec.md` § A.4 — "Local hello world: backend serves `/health`, mobile app calls it." Bridge between Phase 1 (skeletons) and Phase 2 (thin slice with Gemini). Track C split decision recorded 2026-04-27 in `../completed/EP-phase1-track-c-skeleton.md` decision log.
 
 ## Goal
 
@@ -84,7 +86,7 @@ flowchart LR
 
 ### Commit 0 — exec-plan (this file)
 
-- [x] Create `docs/exec-plans/active/2026-04-27-hello-world.md` (this file)
+- [x] Create `docs/exec-plans/active/EP-hello-world.md` (this file; originally created as `2026-04-27-hello-world.md`, renamed 2026-04-27 under `EP-` scheme)
 - [ ] Update `docs/exec-plans/index.md` — add this plan under "Active"
 - [ ] Owner approves plan
 - [ ] Commit 0
@@ -129,10 +131,10 @@ Architecture: HTTP client lives in `mobile/src/api/` (per `FRONTEND.md` § "Proj
 
 Triggered only after owner reports successful iPhone test.
 
-- [ ] `docs/exec-plans/active/mvp-product-spec.md` — A.4 line "Local hello world" → `[x]`; bump `last_updated`
-- [ ] `docs/exec-plans/active/roadmap.md` § 1 "Current state (committed)" — add bullet "Hello-world (mac → ngrok → iPhone) — closed YYYY-MM-DD (`../completed/2026-04-27-hello-world.md`)"; bump `last_updated`
+- [ ] `docs/exec-plans/active/EP-mvp-product-spec.md` — A.4 line "Local hello world" → `[x]`; bump `last_updated`
+- [ ] `docs/exec-plans/active/roadmap.md` § 1 "Current state (committed)" — add bullet "Hello-world (mac → ngrok → iPhone) — closed YYYY-MM-DD (`../completed/EP-hello-world.md`)"; bump `last_updated`
 - [ ] `docs/exec-plans/tech-debt-tracker.md` — add entry: "[YYYY-MM-DD] Dev-only health-check button on Workout screen. **Where:** `mobile/app/index.tsx`. **What:** debug button + status text in production-bound screen. **Why:** smoke test for hello-world / Phase 2. **Plan:** remove in Phase 3 polish (`roadmap.md` § 5). **Priority:** low. **Linked:** this plan."
-- [ ] This file (`2026-04-27-hello-world.md`) — `status: completed`; move to `docs/exec-plans/completed/`
+- [ ] This file (`EP-hello-world.md`) — `status: completed`; move to `docs/exec-plans/completed/`
 - [ ] `docs/exec-plans/index.md` — move entry from "Active" to "Completed"
 - [ ] Commit 4
 
@@ -154,16 +156,16 @@ Triggered only after owner reports successful iPhone test.
 | 2026-04-27 | Logging stays on stdlib `logging.basicConfig` at this stage. Reason: structured logs / structlog are tied to observability stack (Phase 6 per `stack.md`); premature now. | "Commit 2" subsection. |
 | 2026-04-27 | Health-check button gated by `__DEV__` flag in mobile. Reason: guarantees auto-removal from any future release build, complementing the tech-debt-tracker entry. | "Open questions" → answered. |
 | 2026-04-27 | Plan = exec-plan-first workflow (`plan_then_code` chosen 2026-04-27 chat). | Owner choice. |
-| 2026-04-27 | **SUPERSEDED.** Frontend pivot to web makes mobile-via-ngrok connection design obsolete. Backend `/health` design and `__DEV__`-gated debug button pattern remain reusable for the future `2026-04-27-web-hello-world.md` plan. See `../active/2026-04-27-pivot-to-web.md`. | Pivot plan. |
+| 2026-04-27 | **SUPERSEDED.** Frontend pivot to web makes mobile-via-ngrok connection design obsolete. Backend `/health` design and `__DEV__`-gated debug button pattern remain reusable for the future `EP-web-hello-world.md` plan. See `../active/EP-pivot-to-web.md`. | Pivot plan. |
 
 ## Related documents
 
 | Path | Role |
 |---|---|
-| `../active/2026-04-27-pivot-to-web.md` | **Supersedes this plan.** |
+| `../active/EP-pivot-to-web.md` | **Supersedes this plan.** |
 | `../active/roadmap.md` | Top-level roadmap; § 1 was to be updated at Commit 4. |
-| `../active/mvp-product-spec.md` | A.4 checkbox was to be flipped at Commit 4. Retargeted to web hello-world. |
-| `../completed/2026-04-27-phase1-track-c-skeleton.md` | Predecessor plan; "next plan" reference (mobile skeleton, now frozen). |
+| `../active/EP-mvp-product-spec.md` | A.4 checkbox was to be flipped at Commit 4. Retargeted to web hello-world. |
+| `../completed/EP-phase1-track-c-skeleton.md` | Predecessor plan; "next plan" reference (mobile skeleton, now frozen). |
 | `../tech-debt-tracker.md` | Health-check button removal entry was to be added at Commit 4 (n/a now). |
 | `../../references/ngrok.md` | New ref planned at Commit 1; not written; ngrok no longer mandatory. |
 | `../../references/index.md` | Was to be updated at Commit 1. |

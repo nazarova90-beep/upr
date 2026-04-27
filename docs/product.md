@@ -105,7 +105,7 @@ Market contains apps with **video-based technique scoring** (narrow-specialized 
 - Message retention: **2 months free**, **unlimited paid**.
 
 ### Platforms
-- Web client (browser app, PWA-capable) — primary surface in MVP. React + Vite + TypeScript. Runs in Mac Safari, iPhone Safari, desktop browsers. See `stack.md` and `exec-plans/active/2026-04-27-pivot-to-web.md`.
+- Web client (browser app, PWA-capable) — primary surface in MVP. React + Vite + TypeScript. Runs in Mac Safari, iPhone Safari, desktop browsers. See `stack.md` and `exec-plans/active/EP-pivot-to-web.md`.
 - Native iOS/Android shell — deferred to ≥ Phase 9 (optional, owner-approved).
 
 ### UI language

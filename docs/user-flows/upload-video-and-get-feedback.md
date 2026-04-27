@@ -2,7 +2,7 @@
 status: in-progress
 last_updated: 2026-04-27
 owner: Кристина
-related: ../product-specs/exercise-chat.md, ../product-specs/videosinstruction.md, ../product-specs/exercises-base.md, ../product-specs/workout.md, ../exec-plans/active/roadmap.md, ../exec-plans/active/mvp-product-spec.md
+related: ../product-specs/exercise-chat.md, ../product-specs/videosinstruction.md, ../product-specs/exercises-base.md, ../product-specs/workout.md, ../exec-plans/active/roadmap.md, ../exec-plans/active/EP-mvp-product-spec.md
 ---
 
 # User flow: upload video and get feedback (Single-scenario MVP)

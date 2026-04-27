@@ -2,7 +2,7 @@
 
 > **This client is frozen as of 2026-04-27.**
 >
-> The active client surface is `web/` (React + Vite + TypeScript). Pivot reasons and migration plan: `../docs/exec-plans/active/2026-04-27-pivot-to-web.md`.
+> The active client surface is `web/` (React + Vite + TypeScript). Pivot reasons and migration plan: `../docs/exec-plans/active/EP-pivot-to-web.md`.
 >
 > This skeleton is kept on disk by owner decision (see same plan, "Decision log") as a historical reference and as a base if a native iOS/Android shell is ever revived (≥ Phase 9, optional). No further code or doc updates are planned here.
 >
@@ -15,7 +15,7 @@
 
 ---
 
-React Native + Expo (TypeScript) structural skeleton. Stub screens, Lucent design tokens, i18n infra. No real UI, no backend calls. Next step (now obsolete): hello-world via Expo Go + ngrok — superseded by web hello-world (`../docs/exec-plans/superseded/2026-04-27-hello-world.md` for original plan, replacement to be authored after web skeleton is in place).
+React Native + Expo (TypeScript) structural skeleton. Stub screens, Lucent design tokens, i18n infra. No real UI, no backend calls. Next step (now obsolete): hello-world via Expo Go + ngrok — superseded by web hello-world (`../docs/exec-plans/superseded/EP-hello-world.md` for original plan, replacement to be authored after web skeleton is in place).
 
 ## Stack (frozen)
 
@@ -56,7 +56,7 @@ npm install
 npx expo start
 ```
 
-Original intent: open Expo Go on iPhone (same Wi-Fi as Mac), scan QR from terminal. The "same Wi-Fi" assumption is what was broken by always-on VPN — see `../docs/exec-plans/superseded/2026-04-27-hello-world.md` "Connection method" section for full context.
+Original intent: open Expo Go on iPhone (same Wi-Fi as Mac), scan QR from terminal. The "same Wi-Fi" assumption is what was broken by always-on VPN — see `../docs/exec-plans/superseded/EP-hello-world.md` "Connection method" section for full context.
 
 For active dev workflow on web client, see `../web/README.md` (created when web skeleton plan executes).
 
@@ -69,8 +69,8 @@ For active dev workflow on web client, see `../web/README.md` (created when web 
 
 ## Related
 
-- `../docs/exec-plans/active/2026-04-27-pivot-to-web.md` — **freeze rationale and active client direction.**
+- `../docs/exec-plans/active/EP-pivot-to-web.md` — **freeze rationale and active client direction.**
 - `../docs/FRONTEND.md` — active client overview (now web).
 - `../docs/ui/design-system/README.md` — Lucent (design token source — same in both stacks).
-- `../docs/exec-plans/completed/2026-04-27-phase1-track-c-skeleton.md` — phase plan that produced this skeleton.
-- `../docs/exec-plans/superseded/2026-04-27-hello-world.md` — original hello-world plan (mobile-via-ngrok), superseded by pivot.
+- `../docs/exec-plans/completed/EP-phase1-track-c-skeleton.md` — phase plan that produced this skeleton.
+- `../docs/exec-plans/superseded/EP-hello-world.md` — original hello-world plan (mobile-via-ngrok), superseded by pivot.

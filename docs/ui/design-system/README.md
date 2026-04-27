@@ -30,7 +30,7 @@ Source-of-truth design system: colors, typography, spacing, radii, icons, base c
 ## Usage rules
 
 1. Don't edit files casually. Change deliberately, bump `last_updated`.
-2. These files are **not** application code, but the active client (web — React + Vite + TypeScript; see `../../stack.md`, `../../FRONTEND.md`) consumes them directly. CSS variables in `style.css` import into `web/src/styles/tokens.css`. No translation to TS constants required (was needed in deprecated mobile/RN stack — see `../../exec-plans/active/2026-04-27-pivot-to-web.md`).
+2. These files are **not** application code, but the active client (web — React + Vite + TypeScript; see `../../stack.md`, `../../FRONTEND.md`) consumes them directly. CSS variables in `style.css` import into `web/src/styles/tokens.css`. No translation to TS constants required (was needed in deprecated mobile/RN stack — see `../../exec-plans/active/EP-pivot-to-web.md`).
 3. **HTML/CSS here is the source of truth.** App-vs-style-guide divergence — fix app.
 4. Icons: **Material Symbols Rounded** font (Google Fonts). No separate icons folder; icons by name (e.g. `home`, `settings`).
 5. Body font: **Manrope** (Google Fonts).
@@ -41,7 +41,7 @@ Static HTML page + CSS. Imported 2026-04-19. External source: `~/Desktop/luc/` o
 
 ## Forward plan (web client)
 
-Task "wire Lucent tokens into web client" — covered by future web-skeleton plan (see `../../exec-plans/active/2026-04-27-pivot-to-web.md` § "Future work"):
+Task "wire Lucent tokens into web client" — covered by future web-skeleton plan (see `../../exec-plans/active/EP-pivot-to-web.md` § "Future work"):
 
 - Import `style.css` directly into `web/src/styles/tokens.css` (or include via `@import`).
 - Use CSS variables in component-level CSS modules (`.module.css`).

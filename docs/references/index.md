@@ -32,7 +32,7 @@ If a library is used in the project, its key rules must live here.
 
 ## Deprecated
 
-Plans superseded by `../exec-plans/active/2026-04-27-pivot-to-web.md`. Files moved to `deprecated/` and kept as historical record.
+Plans superseded by `../exec-plans/active/EP-pivot-to-web.md`. Files moved to `deprecated/` and kept as historical record.
 
 | File | Status | Subject |
 |---|---|---|

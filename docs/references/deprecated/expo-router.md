@@ -3,14 +3,14 @@ status: deprecated
 last_updated: 2026-04-27
 owner: Кристина
 deprecated_on: 2026-04-27
-deprecated_by: ../../exec-plans/active/2026-04-27-pivot-to-web.md
+deprecated_by: ../../exec-plans/active/EP-pivot-to-web.md
 deprecation_reason: Frontend pivot from React Native + Expo to React + Vite + TypeScript (web). Replacement router for web client: `react-router` v7 (see `../react-router.md`).
 related: ../../FRONTEND.md, ../../stack.md, expo.md, ../index.md
 ---
 
 # Expo Router — research note (DEPRECATED 2026-04-27)
 
-> **Deprecated by frontend pivot to web on 2026-04-27.** See `../../exec-plans/active/2026-04-27-pivot-to-web.md`.
+> **Deprecated by frontend pivot to web on 2026-04-27.** See `../../exec-plans/active/EP-pivot-to-web.md`.
 >
 > Replacement: `react-router` v7 for web client (see `../react-router.md`).
 >

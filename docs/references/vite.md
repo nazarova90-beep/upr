@@ -16,7 +16,7 @@ Build tool and dev server for the web client. Replaces classic bundler stacks (w
 1. **Dev server** at `http://localhost:5173` with HMR (Hot Module Replacement — code reloads in the browser without losing state).
 2. **Production build** to `web/dist/` (static files: HTML, JS, CSS, assets) for later static hosting (Phase 5: Cloudflare Pages / Vercel / Netlify).
 
-Pairs with `react.md` (UI), TypeScript (language), `react-i18next.md` (i18n). Selected in `stack.md` and pivot plan `exec-plans/active/2026-04-27-pivot-to-web.md`.
+Pairs with `react.md` (UI), TypeScript (language), `react-i18next.md` (i18n). Selected in `stack.md` and pivot plan `exec-plans/active/EP-pivot-to-web.md`.
 
 ## Version
 

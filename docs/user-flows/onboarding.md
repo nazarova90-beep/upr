@@ -11,7 +11,7 @@ First-entry scenario for a new user: install → "ready to start first workout".
 
 ## Status
 
-Partial. Audience-interview takeaways for the first 5–10 minutes are fixed (below). Detailed screen-by-screen flow, texts, step order — next iteration. Plan: `../exec-plans/active/mvp-product-spec.md`.
+Partial. Audience-interview takeaways for the first 5–10 minutes are fixed (below). Detailed screen-by-screen flow, texts, step order — next iteration. Plan: `../exec-plans/active/EP-mvp-product-spec.md`.
 
 ## First-5-minutes elements (from audience interviews)
 
