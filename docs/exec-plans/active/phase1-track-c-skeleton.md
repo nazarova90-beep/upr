@@ -1,5 +1,5 @@
 ---
-status: in-progress
+status: done
 last_updated: 2026-04-27
 owner: Кристина
 related: roadmap.md, mvp-product-spec.md, ../../BACKEND.md, ../../FRONTEND.md, ../../../ARCHITECTURE.md, ../../references/index.md
@@ -120,7 +120,7 @@ npx create-expo-app@latest mobile --template default
 - [x] `mobile/app/chat/[exerciseId].tsx` — экран чата (заглушка)
 - [x] `mobile/.env.example` + `mobile/README.md` (заглушки)
 - [x] Обновить чек-лист A.4 в [mvp-product-spec.md](mvp-product-spec.md): структура — `[x]`, hello-world и автогенерация схемы БД — оставить `[ ]`
-- [ ] Закоммитить **Commit 3**
+- [x] Закоммитить **Commit 3**
 
 ## Открытые вопросы
 
