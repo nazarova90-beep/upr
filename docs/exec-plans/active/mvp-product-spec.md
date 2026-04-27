@@ -1,8 +1,8 @@
 ---
 status: in-progress
-last_updated: 2026-04-19
+last_updated: 2026-04-27
 owner: Кристина
-related: ../../product-specs/index.md, roadmap.md, ../../user-flows/upload-video-and-get-feedback.md
+related: ../../product.md, ../../product-specs/index.md, roadmap.md, ../../user-flows/upload-video-and-get-feedback.md
 ---
 
 # План: продуктовая спецификация MVP
@@ -24,17 +24,18 @@ related: ../../product-specs/index.md, roadmap.md, ../../user-flows/upload-video
 > **Структура чек-листа после уточнения 2026-04-19.** Чек-лист разделён по двум блокам, согласованным с roadmap'ом:
 >
 > - **Блок A — Single-scenario MVP** — то, что нужно прямо сейчас, чтобы один сценарий («заход без логина → тренировка с тремя упражнениями → загрузка видео → разбор + чат с AI») работал целиком. **Это и есть Track A Фазы 1 + наполнение для Фаз 2–3 roadmap'а.**
-> - **Блок B — Post-MVP / Full MVP** — всё, что описано в `product-specs/product.md` сверх Single-scenario MVP. Эти пункты **не отменены**, они переезжают в **Фазу 4** roadmap'а («Расширение до Full MVP»).
+> - **Блок B — Post-MVP / Full MVP** — всё, что описано в `../../product.md` (раздел «Что входит в Full MVP») сверх Single-scenario MVP. Эти пункты **не отменены**, они переезжают в **Фазу 4** roadmap'а («Расширение до Full MVP»).
 
 ### Фундамент (готово)
-- [x] Концепция и ЦА (`product-specs/product.md`)
+- [x] Концепция и ЦА (`docs/product.md`)
 - [x] Главная фича: чат с упражнением (`product-specs/exercise-chat.md`)
 - [x] Работа с видео (`product-specs/videosinstruction.md`)
-- [x] Главный пользовательский сценарий (внутри `product.md`)
+- [x] Главный пользовательский сценарий (внутри `docs/product.md`)
 - [x] Структура документации в стиле OpenAI Harness
 - [x] Выбор стека backend/frontend/database (`stack.md`)
 - [x] Базовая фиксация архитектуры (`ARCHITECTURE.md`)
 - [x] Главный roadmap проекта (`roadmap.md`)
+- [x] Оптимизация документации под наш масштаб (2026-04-27): объединены `product.md`/`product-specs/product.md`/`PRODUCT_SENSE.md`; убран `RELIABILITY.md`; сжаты `SECURITY.md`, `BACKEND.md`, `DATABASE.md`; полный security-чек-лист сохранён в `design-docs/security-future-reference.md`.
 
 ---
 

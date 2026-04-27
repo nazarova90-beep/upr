@@ -15,7 +15,7 @@ related: docs/stack.md, docs/BACKEND.md, docs/FRONTEND.md, docs/DATABASE.md
 
 ## Краткое резюме стека (детали в `docs/stack.md`)
 
-- **Mobile:** Flutter.
+- **Mobile:** React Native + Expo (TypeScript). Разработка через Expo Go без локальной установки Xcode/Android Studio. Решение принято 2026-04-19, см. журнал в `docs/stack.md` и справку `docs/references/expo.md`.
 - **Backend:** Python + FastAPI.
 - **ORM / DB:** SQLAlchemy + SQLModel поверх SQLite (на MVP) с готовностью к PostgreSQL.
 - **Storage видео:** локальная папка через абстракцию `storage/` (на MVP), готовность к S3.
@@ -32,7 +32,7 @@ related: docs/stack.md, docs/BACKEND.md, docs/FRONTEND.md, docs/DATABASE.md
 
 ## Сквозные требования (будут уточняться со стеком)
 
-- **Локализация (i18n):** в MVP интерфейс только на русском, но клиент и контентные строки проектируются так, чтобы позже добавить языки без переписывания UI. См. `docs/FRONTEND.md`, `docs/product-specs/product.md`.
+- **Локализация (i18n):** в MVP интерфейс только на русском, но клиент и контентные строки проектируются так, чтобы позже добавить языки без переписывания UI. См. `docs/FRONTEND.md`, `docs/product.md` → раздел «Что входит в Full MVP».
 
 ## Высокоуровневые домены (предварительный список)
 
@@ -52,5 +52,4 @@ related: docs/stack.md, docs/BACKEND.md, docs/FRONTEND.md, docs/DATABASE.md
 - `docs/BACKEND.md` — бэкенд.
 - `docs/FRONTEND.md` — мобильное приложение.
 - `docs/DATABASE.md` — база данных.
-- `docs/SECURITY.md` — безопасность.
-- `docs/RELIABILITY.md` — надёжность.
+- `docs/SECURITY.md` — активные правила безопасности (полный чек-лист на будущее — `docs/design-docs/security-future-reference.md`).

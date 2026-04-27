@@ -1,13 +1,15 @@
 ---
-status: done
+status: completed
 last_updated: 2026-04-27
 owner: Кристина
-related: roadmap.md, mvp-product-spec.md, ../../BACKEND.md, ../../FRONTEND.md, ../../../ARCHITECTURE.md, ../../references/index.md
+related: ../active/roadmap.md, ../active/mvp-product-spec.md, ../../BACKEND.md, ../../FRONTEND.md, ../../../ARCHITECTURE.md, ../../references/index.md
 ---
 
-# План: Phase 1 / Track C — структурный скелет
+# План: Phase 1 / Track C — структурный скелет (ЗАВЕРШЁН 2026-04-27)
 
-> **Место в общем плане.** Этот документ — детальный exec-plan для **Track C Фазы 1** из главного roadmap'а ([roadmap.md](roadmap.md), раздел 5 → «Фаза 1 / Track C — Технический скелет»). Параллельно идут Track A (продуктовые спеки — закрыт 2026-04-19) и Track B (мокапы — отдельный план).
+> **Место в общем плане.** Этот документ — детальный exec-plan для **Track C Фазы 1** из главного roadmap'а ([roadmap.md](../active/roadmap.md), раздел 5 → «Фаза 1 / Track C — Технический скелет»). Параллельно шли Track A (продуктовые спеки — закрыт 2026-04-19) и Track B (мокапы — отдельный план).
+>
+> **Завершён 2026-04-27:** все три коммита (справки по библиотекам, `backend/` скелет, `mobile/` скелет) выполнены.
 
 ## Цель
 
@@ -139,8 +141,8 @@ npx create-expo-app@latest mobile --template default
 
 ## Связанные документы
 
-- [roadmap.md](roadmap.md) — главный план верхнего уровня (этот exec-plan — детализация Track C Фазы 1).
-- [mvp-product-spec.md](mvp-product-spec.md) — раздел A.4 (продуктовый чек-лист скелета).
+- [roadmap.md](../active/roadmap.md) — главный план верхнего уровня (этот exec-plan — детализация Track C Фазы 1).
+- [mvp-product-spec.md](../active/mvp-product-spec.md) — раздел A.4 (продуктовый чек-лист скелета).
 - [BACKEND.md](../../BACKEND.md) — структура бэкенда по доменам.
 - [FRONTEND.md](../../FRONTEND.md) — стек и библиотеки мобильного.
 - [DATABASE.md](../../DATABASE.md) — список сущностей.

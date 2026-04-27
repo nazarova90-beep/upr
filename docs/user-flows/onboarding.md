@@ -1,8 +1,8 @@
 ---
 status: draft
-last_updated: 2026-04-19
+last_updated: 2026-04-27
 owner: Кристина
-related: index.md, ../product-specs/product.md, ../PRODUCT_SENSE.md, ../SECURITY.md
+related: index.md, ../product.md, ../SECURITY.md
 ---
 
 # User Flow: Онбординг
@@ -15,7 +15,7 @@ related: index.md, ../product-specs/product.md, ../PRODUCT_SENSE.md, ../SECURITY
 
 ## Зафиксировано из интервью ЦА (первый вход)
 
-Источник полной расшифровки: `../product-specs/product.md` → раздел «Инсайты из интервью с представителем ЦА». Здесь — только то, что напрямую задаёт онбординг.
+Источник: `../product.md` → раздел «Инсайты из интервью с ЦА». Здесь — только то, что напрямую задаёт онбординг.
 
 **Чтобы человек не удалил приложение в первые минуты, важно совместить:**
 
