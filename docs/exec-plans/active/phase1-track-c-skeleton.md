@@ -81,22 +81,22 @@ flowchart LR
 
 Структура соответствует [BACKEND.md](../../BACKEND.md), раздел «Структура проекта». Менеджер пакетов — **pip + venv** (boring default).
 
-- [ ] `backend/pyproject.toml` — декларация зависимостей, Python 3.13
-- [ ] `backend/.python-version` — 3.13
-- [ ] `backend/.env.example` — шаблон без секретов
-- [ ] `backend/README.md` — короткая заглушка «как поднять»
-- [ ] `backend/app/__init__.py`
-- [ ] `backend/app/main.py` — `app = FastAPI()` без эндпоинтов
-- [ ] `backend/app/core/{__init__,config,logging}.py` — заглушки
-- [ ] `backend/app/workout/{__init__,routes,service,models}.py` — заглушки
-- [ ] `backend/app/exercise_chat/{__init__,routes,service,models}.py` — заглушки
-- [ ] `backend/app/video_analysis/{__init__,routes,service,models}.py` — заглушки
-- [ ] `backend/app/ai_coach/{__init__,routes,service,models}.py` — заглушки
-- [ ] `backend/app/ai_provider/{__init__,base,gemini}.py` — абстракция + заглушка-реализация
-- [ ] `backend/app/storage/{__init__,base,local}.py` — абстракция + заглушка-реализация
-- [ ] `backend/app/db/__init__.py`, `backend/app/db/session.py` — заглушка `create_engine(...)`
-- [ ] `backend/app/db/models/{__init__,exercise,workout,exercise_chat,chat_message,video_analysis}.py` — пустые SQLModel-классы
-- [ ] `backend/tests/{__init__.py,conftest.py}` — пусто
+- [x] `backend/pyproject.toml` — декларация зависимостей, Python 3.13
+- [x] `backend/.python-version` — 3.13
+- [x] `backend/.env.example` — шаблон без секретов
+- [x] `backend/README.md` — короткая заглушка «как поднять»
+- [x] `backend/app/__init__.py`
+- [x] `backend/app/main.py` — `app = FastAPI()` без эндпоинтов
+- [x] `backend/app/core/{__init__,config,logging}.py` — заглушки
+- [x] `backend/app/workout/{__init__,routes,service,models}.py` — заглушки
+- [x] `backend/app/exercise_chat/{__init__,routes,service,models}.py` — заглушки
+- [x] `backend/app/video_analysis/{__init__,routes,service,models}.py` — заглушки
+- [x] `backend/app/ai_coach/{__init__,routes,service,models}.py` — заглушки
+- [x] `backend/app/ai_provider/{__init__,base,gemini}.py` — абстракция + заглушка-реализация
+- [x] `backend/app/storage/{__init__,base,local}.py` — абстракция + заглушка-реализация
+- [x] `backend/app/db/__init__.py`, `backend/app/db/session.py` — заглушка `create_engine(...)`
+- [x] `backend/app/db/models/{__init__,exercise,workout,exercise_chat,chat_message,video_analysis}.py` — пустые SQLModel-классы
+- [x] `backend/tests/{__init__.py,conftest.py}` — пусто
 - [ ] Закоммитить **Commit 2**
 
 ### Commit 3 — `mobile/` (структура без логики)
