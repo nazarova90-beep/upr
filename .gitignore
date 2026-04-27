@@ -3,7 +3,7 @@
 # -----------------------------------------------------------------------------
 # Список файлов и папок, которые Git НЕ должен сохранять в репозиторий.
 # Состав сделан под наш стек из docs/stack.md:
-#   - Мобильное приложение: Flutter (Dart)
+#   - Мобильное приложение: React Native + Expo (TypeScript), Node.js
 #   - Бэкенд: Python + FastAPI
 #   - БД на MVP: SQLite (один файл на диске)
 #   - Хранилище видео на MVP: локальная папка
@@ -122,64 +122,68 @@ ipython_config.py
 
 
 # -----------------------------------------------------------------------------
-# Flutter / Dart (мобильное приложение)
+# Node.js / React Native / Expo (мобильное приложение)
 # -----------------------------------------------------------------------------
-# Источник: официальный шаблон Flutter .gitignore.
-# Эти файлы создаются командой `flutter` автоматически — в репо им не место.
+# Источник: официальный шаблон Expo + React Native .gitignore.
+# Эти файлы создаются автоматически инструментами Node/Expo — в репо им не место.
 
-# Общее
-.dart_tool/
-.flutter-plugins
-.flutter-plugins-dependencies
-.packages
-.pub-cache/
-.pub/
-build/
-.metadata
+# Зависимости (огромная папка с библиотеками, восстанавливается из package.json)
+node_modules/
 
-# Сгенерированные локальные настройки
-**/generated_plugin_registrant.*
-**/generated/
+# Кэши и логи менеджеров пакетов (npm, yarn, pnpm)
+.npm/
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+.pnpm-store/
 
-# Покрытие тестами
+# Локальные блок-файлы менеджеров пакетов на неосновных тулах
+# (используем один менеджер; чужие — игнорируем).
+# yarn.lock и pnpm-lock.yaml оставляем под выбор; по умолчанию используем npm → package-lock.json
+yarn-error.log
+pnpm-debug.log
+
+# Сборки и кэши Expo / React Native
+.expo/
+.expo-shared/
+dist/
+web-build/
+expo-env.d.ts
+
+# EAS (облачная сборка Expo, если будет использоваться)
+.eas/
+
+# Metro bundler (главный сборщик React Native) — кэши
+.metro-health-check*
+.haste_cache/
+
+# Тесты и покрытие (Jest)
 coverage/
 
-# Web (если включится Flutter Web)
-lib/generated_plugin_registrant.dart
+# TypeScript — кэши и инкрементальные сборки
+*.tsbuildinfo
 
-# iOS — личные/сгенерированные файлы Xcode
-**/ios/Flutter/.last_build_id
-**/ios/Flutter/Flutter.framework
-**/ios/Flutter/Flutter.podspec
-**/ios/Flutter/Generated.xcconfig
-**/ios/Flutter/ephemeral
-**/ios/Flutter/app.flx
-**/ios/Flutter/app.zip
-**/ios/Flutter/flutter_assets/
-**/ios/Flutter/flutter_export_environment.sh
-**/ios/ServiceDefinitions.json
-**/ios/Runner/GeneratedPluginRegistrant.*
-**/ios/Pods/
-**/ios/.symlinks/
-**/ios/Podfile.lock
-**/ios/build/
-**/ios/DerivedData/
-**/ios/*.xcworkspace/xcuserdata/
-**/ios/*.xcodeproj/xcuserdata/
-**/ios/*.xcodeproj/project.xcworkspace/xcuserdata/
+# iOS — нативные файлы Xcode (появляются после "expo prebuild" или dev build)
+ios/Pods/
+ios/build/
+ios/DerivedData/
+ios/.xcode.env.local
+ios/*.xcworkspace/xcuserdata/
+ios/*.xcodeproj/xcuserdata/
+ios/Podfile.lock
 
-# Android — личные/сгенерированные файлы Gradle
-**/android/**/gradle-wrapper.jar
-**/android/.gradle
-**/android/captures/
-**/android/gradlew
-**/android/gradlew.bat
-**/android/local.properties
-**/android/**/GeneratedPluginRegistrant.java
-**/android/key.properties
-**/android/app/debug
-**/android/app/profile
-**/android/app/release
+# Android — нативные файлы Gradle (появляются после "expo prebuild" или dev build)
+android/.gradle/
+android/build/
+android/app/build/
+android/captures/
+android/local.properties
+android/gradle/
+android/gradlew
+android/gradlew.bat
+android/key.properties
 
 
 # -----------------------------------------------------------------------------
