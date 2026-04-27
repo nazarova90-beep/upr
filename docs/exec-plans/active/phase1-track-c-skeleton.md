@@ -75,7 +75,7 @@ flowchart LR
 - [x] `docs/references/expo-localization.md`
 
 - [x] Обновить таблицу в `docs/references/index.md` (8 новых строк)
-- [ ] Закоммитить **Commit 1**
+- [x] Закоммитить **Commit 1**
 
 ### Commit 2 — `backend/` (структура без логики)
 
@@ -97,7 +97,7 @@ flowchart LR
 - [x] `backend/app/db/__init__.py`, `backend/app/db/session.py` — заглушка `create_engine(...)`
 - [x] `backend/app/db/models/{__init__,exercise,workout,exercise_chat,chat_message,video_analysis}.py` — пустые SQLModel-классы
 - [x] `backend/tests/{__init__.py,conftest.py}` — пусто
-- [ ] Закоммитить **Commit 2**
+- [x] Закоммитить **Commit 2**
 
 ### Commit 3 — `mobile/` (структура без логики)
 
@@ -109,17 +109,17 @@ npx create-expo-app@latest mobile --template default
 
 После генерации — кастомизируем:
 
-- [ ] `mobile/src/theme/{colors,spacing,radius,typography,index}.ts` — Lucent-токены (цвета и базовые отступы; **без загрузки Manrope**)
-- [ ] `mobile/src/i18n/index.ts` — `i18next.init` + `expo-localization`
-- [ ] `mobile/src/i18n/locales/ru.json` — пустой словарь (или один тестовый ключ)
-- [ ] `mobile/src/components/.gitkeep`
-- [ ] `mobile/src/api/.gitkeep`
-- [ ] `mobile/src/domain/{exercise,workout,chat}.ts` — TS-типы (зеркалят backend-модели; пустые заглушки)
-- [ ] `mobile/app/_layout.tsx` — корневой layout, инициализирует i18n
-- [ ] `mobile/app/index.tsx` — экран тренировки (заглушка: `View` с заголовком)
-- [ ] `mobile/app/chat/[exerciseId].tsx` — экран чата (заглушка)
-- [ ] `mobile/.env.example` + `mobile/README.md` (заглушки)
-- [ ] Обновить чек-лист A.4 в [mvp-product-spec.md](mvp-product-spec.md): первые два пункта — `[x]`, hello-world и автогенерация схемы БД — оставить `[ ]`
+- [x] `mobile/src/theme/{colors,spacing,radius,typography,index}.ts` — Lucent-токены (цвета и базовые отступы; **без загрузки Manrope**)
+- [x] `mobile/src/i18n/index.ts` — `i18next.init` + `expo-localization`
+- [x] `mobile/src/i18n/locales/ru.json` — пустой словарь (один уровень `common: {}`)
+- [x] `mobile/src/components/.gitkeep`
+- [x] `mobile/src/api/.gitkeep`
+- [x] `mobile/src/domain/{exercise,workout,chat}.ts` — TS-типы (зеркалят backend-модели; пустые заглушки)
+- [x] `mobile/app/_layout.tsx` — корневой layout, инициализирует i18n
+- [x] `mobile/app/index.tsx` — экран тренировки (заглушка: `View` с заголовком)
+- [x] `mobile/app/chat/[exerciseId].tsx` — экран чата (заглушка)
+- [x] `mobile/.env.example` + `mobile/README.md` (заглушки)
+- [x] Обновить чек-лист A.4 в [mvp-product-spec.md](mvp-product-spec.md): структура — `[x]`, hello-world и автогенерация схемы БД — оставить `[ ]`
 - [ ] Закоммитить **Commit 3**
 
 ## Открытые вопросы

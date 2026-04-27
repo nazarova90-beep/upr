@@ -7,7 +7,7 @@ related: ../../product-specs/index.md, roadmap.md, ../../user-flows/upload-video
 
 # План: продуктовая спецификация MVP
 
-> **Место в общем плане:** этот документ — **часть Фазы 1 / Track A** главного roadmap'а проекта (`roadmap.md`). Здесь живёт продуктовая ветка работ. Параллельно в Track B идут UI-мокапы, в Track C — технический скелет (пустые проекты Flutter / FastAPI). Все три трека сходятся в точке синхронизации в конце Фазы 1, после чего проект переходит в Фазу 2 (thin slice).
+> **Место в общем плане:** этот документ — **часть Фазы 1 / Track A** главного roadmap'а проекта (`roadmap.md`). Здесь живёт продуктовая ветка работ. Параллельно в Track B идут UI-мокапы, в Track C — технический скелет (пустые проекты Expo / FastAPI). Все три трека сходятся в точке синхронизации в конце Фазы 1, после чего проект переходит в Фазу 2 (thin slice).
 
 ## Цель
 
@@ -69,9 +69,9 @@ related: ../../product-specs/index.md, roadmap.md, ../../user-flows/upload-video
   - [ ] Состояние ошибки / нерелевантного видео внутри чата
 
 #### A.4. Технический скелет (Фаза 1 / Track C)
-- [ ] Создать Flutter-проект, перенести дизайн-токены Lucent в `ThemeData`, i18n через ARB
-- [ ] Создать FastAPI-проект по доменам из `BACKEND.md`
-- [ ] Базовые ORM-модели для Single-scenario MVP: Exercise, Workout (захардкоженная), ExerciseChat, ChatMessage, VideoAnalysis. **User — захардкоженный синглтон без таблицы.**
+- [x] Создать **Expo-проект (TypeScript)**, перенести дизайн-токены Lucent в `theme.ts` (константы для `StyleSheet`), i18n через `i18next` <!-- структура готова: mobile/src/theme/* + mobile/src/i18n/*. Manrope/Material Symbols — отдельный шаг. -->
+- [x] Создать FastAPI-проект по доменам из `BACKEND.md` <!-- backend/app/{workout,exercise_chat,video_analysis,ai_coach}/ + ai_provider/ + storage/ + db/ — пустые routers/services/models. -->
+- [x] Базовые ORM-модели для Single-scenario MVP: Exercise, Workout (захардкоженная), ExerciseChat, ChatMessage, VideoAnalysis. **User — захардкоженный синглтон без таблицы.** <!-- Пустые SQLModel-классы созданы в backend/app/db/models/. Поля заполним в Phase 2. -->
 - [ ] Локальный «hello world» (бэк отвечает на `/health`, мобильное приложение его дёргает)
 - [ ] Полная схема БД (`DATABASE.md` + `generated/db-schema.md`) появляется автогенерацией после моделей
 
@@ -126,13 +126,14 @@ related: ../../product-specs/index.md, roadmap.md, ../../user-flows/upload-video
 | 2026-04-18 | Структура документации по подходу OpenAI Harness | `design-docs/core-beliefs.md`, `AGENTS.md` |
 | 2026-04-18 | Безопасность вынесена в отдельный детальный SECURITY.md | `docs/SECURITY.md` |
 | 2026-04-19 | ЦА сужена до 18+; детские режимы и согласия родителей исключены | `docs/product.md`, `docs/SECURITY.md` |
-| 2026-04-19 | Стек MVP: Flutter + Python/FastAPI + SQLite (через ORM) + Gemini Free Tier + MediaPipe; план масштабирования по этапам | `docs/stack.md` |
+| 2026-04-19 | Стек MVP (первоначально): Flutter + Python/FastAPI + SQLite (через ORM) + Gemini Free Tier + MediaPipe; план масштабирования по этапам | `docs/stack.md` |
 | 2026-04-19 | Админка отложена; заранее заложена возможность через SQLAdmin поверх ORM-моделей | `docs/stack.md` (раздел «Будущая админка») |
 | 2026-04-19 | Принят общий **roadmap проекта** (параллельные треки в Фазе 1, триггеры перехода). Этот план встроен в roadmap как Track A Фазы 1. | `roadmap.md` |
 | 2026-04-19 | **Сужение скоупа MVP:** введено разделение на **Single-scenario MVP** (один сценарий: заход без логина → тренировка с 3 захардкоженными упражнениями → загрузка видео → разбор + чат с AI) и **Full MVP** (полный пакет из `product-specs/product.md`). Сначала делаем Single-scenario MVP, Full MVP не отменяется и переезжает в новую Фазу 4 roadmap'а. Чек-лист этого плана пересобран на блоки A (Single-scenario) и B (Post-MVP). **Дневник подходов** перенесён в Блок B. | `roadmap.md`, этот файл |
 | 2026-04-19 | Из списка упражнений на экране тренировки **переход сразу в чат**. Никакого «экрана упражнения» с описанием техники / дневником в Single-scenario MVP — нет. Чат и есть «экран упражнения», кнопка «загрузить видео» — внутри чата. Single-scenario MVP теперь = **2 главных экрана**: тренировка и чат. | `roadmap.md` (раздел 3, журнал решений), этот файл (Блок A) |
 | 2026-04-19 | В Single-scenario MVP **нет съёмки видео внутри приложения**. Только подгрузка готового файла через системный пикер галереи. Из скоупа уходят: in-app камера, превью записи, обработка разрешений на камеру, прерывания записи. | `roadmap.md` (журнал решений), этот файл (Блок A) |
 | 2026-04-19 | **Track A Фазы 1 закрыт.** Зафиксированы: 3 стартовых упражнения (румынская тяга, подъём на бицепс, вертикальная тяга блока) с минимальным набором полей `id`/`name`/`technique`; единственная захардкоженная тренировка «Вайбкодинговая тренировка» от 19.04.2026 с описанной анатомией экрана тренировки и карточки упражнения; единственный user flow в `user-flows/upload-video-and-get-feedback.md`; врезки «Single-scenario MVP: что упрощено» в `exercise-chat.md` и `videosinstruction.md`. Готово к старту Track B (мокапы) — следующий план. | Этот файл (Блок A.1, A.2 → `[x]`); `exercises-base.md`; `workout.md`; `user-flows/upload-video-and-get-feedback.md`; `exercise-chat.md`; `videosinstruction.md` |
+| 2026-04-19 | **Frontend-стек пересмотрен на старте Track B: Flutter → React Native + Expo (TypeScript).** Причина — порог входа: Flutter требует Xcode (~15 ГБ) или Android Studio (~10 ГБ); Expo через Expo Go даёт разработку прямо на iPhone владельца через QR-код, без тяжёлой нативной инфраструктуры. Все возможности Single-scenario MVP (пикер видео, плеер, аплоад, тёмная тема, Manrope, i18n) поддерживаются Expo Go без development build (проверено через MCP `user-context7`). Track C обновлён: вместо «Flutter-проект + ARB + ThemeData» теперь «Expo-проект + i18next + theme.ts». **Следствие для Track B:** мокапы могут быть live-экранами в самом Expo-проекте — это потенциально объединяет Track B и Track C в одну ветку работы (решение принимаем при старте Track B). | `docs/stack.md` (журнал решений), `docs/FRONTEND.md`, `docs/references/expo.md`, `docs/exec-plans/active/roadmap.md` (журнал решений), этот файл (Track C → пункт обновлён). |
 
 ## Связанные документы
 
